@@ -49,7 +49,7 @@ class LoginPage extends StatelessWidget {
                 hintText: 'Phone Number',
                 obscureText: false,
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 10),
               const MyTextField(
                 icon: Icon(Icons.lock_outline),
                 hintText: 'Password',
