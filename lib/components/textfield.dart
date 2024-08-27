@@ -63,7 +63,7 @@ class _MyTextFieldState extends State<MyTextField> {
             borderRadius: BorderRadius.all(Radius.circular(10)),
             borderSide: BorderSide(color: Color(0xFF7BB442)),
           ),
-          fillColor: Colors.white,
+          fillColor: const Color(0xFFE8FFD1),
           filled: true,
           hintText: widget.hintText,
           hintStyle:
