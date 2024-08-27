@@ -49,19 +49,19 @@ class SignupPage extends StatelessWidget {
                 hintText: 'Username',
                 obscureText: false,
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 14),
               const MyTextField(
                 icon: Icon(Icons.phone_outlined),
                 hintText: 'Phone Number',
                 obscureText: false,
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 14),
               const MyTextField(
                 icon: Icon(Icons.mail_outline),
                 hintText: 'Email',
                 obscureText: false,
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 14),
               const MyTextField(
                 icon: Icon(Icons.lock_outline),
                 hintText: 'Password',
