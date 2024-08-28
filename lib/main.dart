@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nurse_app/pages/splash_screen.dart';
 import 'package:nurse_app/pages/login_page.dart';
 import 'package:nurse_app/pages/signup_page.dart';
+import 'package:nurse_app/pages/navbar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const SignupPage(),
+        '/home': (context) => const Navbar(),
       },
     );
   }
