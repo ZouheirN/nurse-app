@@ -95,7 +95,7 @@ class HomePage extends StatelessWidget {
               const SizedBox(height: 10),
               MySecondButton(
                 onTap: () {
-                  Navigator.pushNamed(context, '/home');
+                  Navigator.pushNamed(context, '/immediateRequest');
                 },
                 buttonText: 'Immediate Request',
               ),
