@@ -11,6 +11,7 @@ dependencies:
 
   cupertino_icons: ^1.0.8
   intl_phone_field: ^3.2.0
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:
@@ -19,8 +20,7 @@ dev_dependencies:
   flutter_lints: ^4.0.0
 
 flutter:
-
   uses-material-design: true
 
   assets:
-  - assets/images/
+    - assets/images/
