@@ -102,7 +102,7 @@ class HomePage extends StatelessWidget {
               const SizedBox(height: 15),
               MySecondButton(
                 onTap: () {
-                  Navigator.pushNamed(context, '/home');
+                  Navigator.pushNamed(context, '/makeAppointment');
                 },
                 buttonText: 'Make an Appointment',
               ),
