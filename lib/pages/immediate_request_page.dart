@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:nurse_app/components/labeled_dropdown.dart';
 import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/second_button.dart';
 import 'package:nurse_app/components/labeled_textfield.dart';
+import 'package:nurse_app/components/third_button.dart';
 
 class ImmediateRequestPage extends StatelessWidget {
   const ImmediateRequestPage({super.key});
@@ -120,7 +122,7 @@ class ImmediateRequestPage extends StatelessWidget {
               const PhoneNumberField(),
               const SizedBox(height: 7),
               const LabeledTextfield(
-                label: 'Descibe your problem',
+                label: 'Describe your problem',
                 keyboardType: TextInputType.text,
               ),
               const SizedBox(height: 7),
@@ -128,6 +130,25 @@ class ImmediateRequestPage extends StatelessWidget {
                 label: 'Address',
                 keyboardType: TextInputType.text,
               ),
+              const SizedBox(height: 7),
+              const LabeledDropdown(
+                services: [
+                  'service 1',
+                  'service 2',
+                  'service 3',
+                  'service 4',
+                  'service 5',
+                  'service 6',
+                ],
+              ),
+              const SizedBox(height: 20),
+              MyThirdButton(
+                onTap: () {
+                  Navigator.pushNamed(context, '/home');
+                },
+                buttonText: 'Submit',
+              ),
+              const SizedBox(height: 200),
             ],
           ),
         ),
