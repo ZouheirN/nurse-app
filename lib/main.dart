@@ -4,6 +4,7 @@ import 'package:nurse_app/pages/login_page.dart';
 import 'package:nurse_app/pages/signup_page.dart';
 import 'package:nurse_app/pages/navbar.dart';
 import 'package:nurse_app/pages/immediate_request_page.dart';
+import 'package:nurse_app/pages/make_appointment_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +22,8 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const SignupPage(),
         '/home': (context) => const Navbar(),
-        '/immediateRequest': (context) => const ImmediateRequestPage()
+        '/immediateRequest': (context) => const ImmediateRequestPage(),
+        '/makeAppointment': (context) => const MakeAppointmentPage(),
       },
     );
   }
