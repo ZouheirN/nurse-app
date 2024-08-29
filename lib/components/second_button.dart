@@ -12,7 +12,7 @@ class MySecondButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: 50,
-        margin: const EdgeInsets.symmetric(horizontal: 60),
+        margin: const EdgeInsets.symmetric(horizontal: 70),
         decoration: BoxDecoration(
           color: const Color(0xFF7BB442),
           borderRadius: BorderRadius.circular(10),
