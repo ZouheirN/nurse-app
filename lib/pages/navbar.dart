@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nurse_app/pages/home_page.dart';
+import 'package:nurse_app/pages/social_profiles_page.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({super.key});
@@ -13,7 +14,7 @@ class _NavbarState extends State<Navbar> {
   List<Widget> widgetList = const [
     HomePage(),
     HomePage(),
-    HomePage(),
+    SocialProfilesPage(),
     HomePage(),
   ];
 
