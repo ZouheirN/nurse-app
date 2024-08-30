@@ -155,7 +155,7 @@ class MakeAppointmentPage extends StatelessWidget {
               const SizedBox(height: 20),
               MyThirdButton(
                 onTap: () {
-                  Navigator.pushNamed(context, '/home');
+                  Navigator.pushNamed(context, '/pendingPage');
                 },
                 buttonText: 'Submit',
               ),
