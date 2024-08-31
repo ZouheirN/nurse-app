@@ -1,9 +1,76 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:nurse_app/components/button.dart';
 import 'package:nurse_app/components/textfield.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:nurse_app/consts.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  LoginPage({super.key});
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  void login(String email, password, BuildContext context) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$HOST/login'),
+        body: {
+          'email': email,
+          'password': password,
+        },
+      );
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        final token = jsonData['token'];
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(KEY_ACCESS_TOKEN, token);
+
+        Navigator.pushNamed(context, '/home');
+      } else {
+        // Error handling
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Login Failed'),
+              content:
+                  const Text('Invalid email or password. Please try again.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text('An error occurred. Please try again later.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,21 +111,24 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 15),
-              const MyTextField(
-                icon: Icon(Icons.phone_outlined),
-                hintText: 'Phone Number',
+              MyTextField(
+                controller: emailController,
+                icon: const Icon(Icons.mail_outline),
+                hintText: 'Email',
                 obscureText: false,
               ),
               const SizedBox(height: 10),
-              const MyTextField(
-                icon: Icon(Icons.lock_outline),
+              MyTextField(
+                controller: passwordController,
+                icon: const Icon(Icons.lock_outline),
                 hintText: 'Password',
                 obscureText: true,
               ),
               const SizedBox(height: 12),
               MyButton(
                 onTap: () {
-                  Navigator.pushNamed(context, '/home');
+                  login(emailController.text.toString(),
+                      passwordController.text.toString(), context);
                 },
                 buttonText: 'Login',
               ),
@@ -67,7 +137,7 @@ class LoginPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    'Don\'t have account?',
+                    'Don\'t have an account?',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 16,
