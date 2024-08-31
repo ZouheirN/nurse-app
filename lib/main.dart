@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nurse_app/pages/notification_page.dart';
 import 'package:nurse_app/pages/pending_page.dart';
 import 'package:nurse_app/pages/splash_screen.dart';
 import 'package:nurse_app/pages/login_page.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         '/immediateRequest': (context) => const ImmediateRequestPage(),
         '/makeAppointment': (context) => const MakeAppointmentPage(),
         '/pendingPage': (context) => const PendingPage(),
+        '/notification': (context) => const NotificationPage(),
       },
     );
   }
