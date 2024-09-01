@@ -36,7 +36,9 @@ class HomePage extends StatelessWidget {
                       Icons.notifications_none,
                       color: Color(0xFF7BB442),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/notification');
+                    },
                   ),
                 ],
               ),
