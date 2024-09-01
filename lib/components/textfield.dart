@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class MyTextField extends StatefulWidget {
   final Icon icon;
   final String hintText;
+  final TextInputType inputType;
   final bool obscureText;
   final TextEditingController? controller;
 
@@ -10,6 +11,7 @@ class MyTextField extends StatefulWidget {
     super.key,
     required this.icon,
     required this.hintText,
+    required this.inputType,
     required this.obscureText,
     this.controller,
   });
@@ -40,6 +42,7 @@ class _MyTextFieldState extends State<MyTextField> {
       padding: const EdgeInsets.symmetric(horizontal: 27),
       child: TextField(
         controller: widget.controller,
+        keyboardType: widget.inputType,
         obscureText: _obscureText,
         decoration: InputDecoration(
           prefixIcon: Padding(
