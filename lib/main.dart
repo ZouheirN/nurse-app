@@ -7,6 +7,7 @@ import 'package:nurse_app/pages/signup_page.dart';
 import 'package:nurse_app/pages/navbar.dart';
 import 'package:nurse_app/pages/immediate_request_page.dart';
 import 'package:nurse_app/pages/make_appointment_page.dart';
+import 'package:nurse_app/pages/verify_email_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         '/makeAppointment': (context) => const MakeAppointmentPage(),
         '/pendingPage': (context) => const PendingPage(),
         '/notification': (context) => const NotificationPage(),
+        '/verifyEmail': (context) => VerifyEmailPage(),
       },
     );
   }
