@@ -4,12 +4,14 @@ class MyTextField extends StatefulWidget {
   final Icon icon;
   final String hintText;
   final bool obscureText;
+  final TextEditingController? controller;
 
   const MyTextField({
     super.key,
     required this.icon,
     required this.hintText,
     required this.obscureText,
+    this.controller,
   });
 
   @override
@@ -37,6 +39,7 @@ class _MyTextFieldState extends State<MyTextField> {
       height: 50,
       padding: const EdgeInsets.symmetric(horizontal: 27),
       child: TextField(
+        controller: widget.controller,
         obscureText: _obscureText,
         decoration: InputDecoration(
           prefixIcon: Padding(
