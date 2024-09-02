@@ -1,73 +1,76 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nurse_app/consts.dart';
 
-class VerifyEmailPage extends StatelessWidget {
+class VerifyEmailPage extends StatefulWidget {
+  @override
+  _VerifyEmailPageState createState() => _VerifyEmailPageState();
+}
+
+class _VerifyEmailPageState extends State<VerifyEmailPage> {
   final List<TextEditingController> controllers =
       List.generate(6, (index) => TextEditingController());
 
-  void verifyEmail(
-      String email, String confirmationCode, BuildContext context) async {
-    try {
-      final response = await http.post(
-        Uri.parse('https://devzurapi.alahmadnursecare.com/api/verify-email'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'email': '$KEY_USER_EMAIL',
-          'confirmation_code': confirmationCode,
-        }),
-      );
+  bool isCodeComplete() {
+    return controllers.every((controller) => controller.text.isNotEmpty);
+  }
 
-      if (response.statusCode == 200) {
-        Navigator.pushNamed(context, '/home');
-      } else {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Verification Failed'),
-              content:
-                  const Text('The confirmation code you entered is incorrect.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
+  void verifyEmail(String confirmationCode, BuildContext context) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final email = prefs.getString(KEY_USER_EMAIL);
+
+      if (email != null) {
+        final response = await http.post(
+          Uri.parse('$HOST/verify-email'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'email': email,
+            'confirmation_code': confirmationCode,
+          }),
         );
+
+        if (response.statusCode == 200) {
+          Navigator.pushNamed(context, '/home');
+        } else {
+          _showErrorDialog(context, 'Verification Failed',
+              'The confirmation code you entered is incorrect.');
+        }
+      } else {
+        _showErrorDialog(
+            context, 'Error', 'No email found. Please try again later.');
       }
     } catch (e) {
       print(e.toString());
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: const Text('An error occurred. Please try again later.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+      _showErrorDialog(
+          context, 'Error', 'An error occurred. Please try again later.');
     }
+  }
+
+  void _showErrorDialog(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final String email = ModalRoute.of(context)!.settings.arguments as String;
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -110,6 +113,7 @@ class VerifyEmailPage extends StatelessWidget {
                       ),
                     ),
                     onChanged: (value) {
+                      setState(() {});
                       if (value.length == 1 && index < 5) {
                         FocusScope.of(context).nextFocus();
                       }
@@ -126,10 +130,12 @@ class VerifyEmailPage extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
               ),
-              onPressed: () {
-                String code = controllers.map((c) => c.text).join();
-                verifyEmail(email, code, context);
-              },
+              onPressed: isCodeComplete()
+                  ? () {
+                      String code = controllers.map((c) => c.text).join();
+                      verifyEmail(code, context);
+                    }
+                  : null,
               child: const Text('Verify'),
             ),
           ],
