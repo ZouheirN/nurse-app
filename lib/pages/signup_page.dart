@@ -1,23 +1,34 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:nurse_app/components/button.dart';
-import 'package:nurse_app/components/textfield.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:nurse_app/components/button.dart';
+import 'package:nurse_app/components/textfield.dart';
 import 'package:nurse_app/consts.dart';
 
-class SignupPage extends StatelessWidget {
-  SignupPage({super.key});
+class SignupPage extends StatefulWidget {
+  @override
+  _SignupPageState createState() => _SignupPageState();
+}
 
+class _SignupPageState extends State<SignupPage> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneNumberController = TextEditingController();
   final passwordController = TextEditingController();
   final passwordConfirmationController = TextEditingController();
 
-  void signup(String name, phoneNumber, email, password, passwordConfirmation,
-      BuildContext context) async {
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneNumberController.dispose();
+    passwordController.dispose();
+    passwordConfirmationController.dispose();
+    super.dispose();
+  }
+
+  void signup(String name, String phoneNumber, String email, String password,
+      String passwordConfirmation, BuildContext context) async {
     try {
       final response = await http.post(
         Uri.parse('$HOST/register'),
@@ -29,53 +40,41 @@ class SignupPage extends StatelessWidget {
           'password_confirmation': passwordConfirmation,
         },
       );
+
       if (response.statusCode == 201) {
-        final jsonData = json.decode(response.body);
-        final token = jsonData['token'];
-
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(KEY_ACCESS_TOKEN, token);
+        await prefs.setString(KEY_USER_EMAIL, email);
 
-        Navigator.pushNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/verifyEmail');
       } else {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Sign Up Failed'),
-              content: const Text('Failed to sign up. Please try again.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
+        _showErrorDialog(context, 'Sign Up Failed',
+            'Failed to sign up. Please check your information and try again.');
       }
     } catch (e) {
       print(e.toString());
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: const Text('An error occurred. Please try again later.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+      _showErrorDialog(context, 'Error',
+          'An error occurred. Please check your connection and try again later.');
     }
+  }
+
+  void _showErrorDialog(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -160,11 +159,11 @@ class SignupPage extends StatelessWidget {
               MyButton(
                 onTap: () {
                   signup(
-                      nameController.text.toString(),
-                      phoneNumberController.text.toString(),
-                      emailController.text.toString(),
-                      passwordController.text.toString(),
-                      passwordConfirmationController.text.toString(),
+                      nameController.text,
+                      phoneNumberController.text,
+                      emailController.text,
+                      passwordController.text,
+                      passwordConfirmationController.text,
                       context);
                 },
                 buttonText: 'Sign Up',
