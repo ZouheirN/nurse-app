@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:nurse_app/pages/immediate_request_details_page.dart';
 import 'package:nurse_app/pages/notification_page.dart';
 import 'package:nurse_app/pages/pending_page.dart';
+import 'package:nurse_app/pages/scheduled_request_details_page.dart';
 import 'package:nurse_app/pages/splash_screen.dart';
 import 'package:nurse_app/pages/login_page.dart';
 import 'package:nurse_app/pages/signup_page.dart';
@@ -30,6 +32,8 @@ class MyApp extends StatelessWidget {
         '/pendingPage': (context) => const PendingPage(),
         '/notification': (context) => const NotificationPage(),
         '/verifyEmail': (context) => VerifyEmailPage(),
+        '/immediateRequestDetails' : (context) => const ImmediateRequestDetailsPage(),
+        '/scheduledRequestDetails' : (context) => const ScheduledRequestDetailsPage(),
       },
     );
   }
