@@ -66,27 +66,30 @@ class HistoryPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 15),
-              const Center(
+              Center(
                 child: HistoryCard(
                   title: 'Critical Care: 20\$',
                   description: 'Check out the details',
                   time: '12:00',
+                  onTap: () {},
                 ),
               ),
               const SizedBox(height: 10),
-              const Center(
+              Center(
                 child: HistoryCard(
                   title: 'Home Visit: 100\$',
                   description: 'Check out the details',
                   time: '12:00',
+                  onTap: () {},
                 ),
               ),
               const SizedBox(height: 10),
-              const Center(
+              Center(
                 child: HistoryCard(
                   title: 'Rehabilitation Support: 30\$',
                   description: 'Check out the details',
                   time: '12:00',
+                  onTap: () {},
                 ),
               ),
               const SizedBox(height: 30),
