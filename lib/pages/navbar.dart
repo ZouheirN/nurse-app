@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nurse_app/pages/history_page.dart';
 import 'package:nurse_app/pages/home_page.dart';
+import 'package:nurse_app/pages/settings_page.dart';
 import 'package:nurse_app/pages/social_profiles_page.dart';
 
 class Navbar extends StatefulWidget {
@@ -16,7 +17,7 @@ class _NavbarState extends State<Navbar> {
     HomePage(),
     HistoryPage(),
     SocialProfilesPage(),
-    HomePage(),
+    SettingsPage(),
   ];
 
   @override
