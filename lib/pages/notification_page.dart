@@ -56,35 +56,39 @@ class NotificationPage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 15),
-              const Center(
+              Center(
                 child: NotificationCard(
                   title: 'Your request was accepted',
                   description: 'Check out the details',
                   time: '12:00',
+                  onTap: () {},
                 ),
               ),
               const SizedBox(height: 10),
-              const Center(
+              Center(
                 child: NotificationCard(
                   title: 'Your request was accepted',
                   description: 'Check out the details',
                   time: '12:00',
+                  onTap: () {},
                 ),
               ),
               const SizedBox(height: 10),
-              const Center(
+              Center(
                 child: NotificationCard(
                   title: 'Your request was accepted',
                   description: 'Check out the details',
                   time: '12:00',
+                  onTap: () {},
                 ),
               ),
               const SizedBox(height: 10),
-              const Center(
+              Center(
                 child: NotificationCard(
                   title: 'Your request was accepted',
                   description: 'Check out the details',
                   time: '12:00',
+                  onTap: () {},
                 ),
               ),
               const SizedBox(height: 30),
