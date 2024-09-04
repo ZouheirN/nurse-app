@@ -142,15 +142,33 @@ class MakeAppointmentPage extends StatelessWidget {
                   'service 6',
                 ],
               ),
-              const SizedBox(height: 7),
-              LabeledDateField(
-                label: 'Start Date',
-                currentDate: DateTime.now(),
-              ),
-              const SizedBox(height: 7),
-              LabeledDateField(
-                label: 'End Date',
-                currentDate: DateTime.now(),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE7E7E7),
+                    border: Border.all(
+                      color: const Color(0xFFE7E7E7),
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Column(
+                    children: [
+                      LabeledDateField(
+                        label: 'Start Date',
+                        currentDate: DateTime.now(),
+                      ),
+                      const SizedBox(height: 7),
+                      LabeledDateField(
+                        label: 'End Date',
+                        currentDate: DateTime.now(),
+                      ),
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
               MyThirdButton(
