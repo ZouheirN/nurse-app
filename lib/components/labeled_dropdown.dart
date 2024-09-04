@@ -61,16 +61,16 @@ class _LabeledDropdownState extends State<LabeledDropdown> {
                 isExpanded: true,
                 decoration: InputDecoration(
                   enabledBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Color(0xFFE7E7E7)),
+                    borderRadius: BorderRadius.all(Radius.circular(3)),
+                    borderSide: BorderSide(color: Color(0xFF7BB442), width: 2),
                   ),
                   focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Color(0xFFE7E7E7)),
+                    borderRadius: BorderRadius.all(Radius.circular(3)),
+                    borderSide: BorderSide(color: Color(0xFF7BB442), width: 2),
                   ),
                   fillColor: _isFocused
-                      ? const Color.fromARGB(255, 245, 245, 245)
-                      : const Color(0xFFE7E7E7),
+                      ? Colors.white
+                      : Colors.white,
                   filled: true,
                   contentPadding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
