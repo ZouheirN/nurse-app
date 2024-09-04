@@ -76,7 +76,7 @@ class ScheduledRequestDetailsPage extends StatelessWidget {
 
             const SizedBox(height: 20),
             const Padding(
-              padding: EdgeInsets.only(right: 80),
+              padding: EdgeInsets.only(right: 110),
               child: Text(
                 'Scheduled Date:',
                 style: TextStyle(

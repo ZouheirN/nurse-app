@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:nurse_app/pages/immediate_request_details_page.dart';
-import 'package:nurse_app/pages/notification_page.dart';
-import 'package:nurse_app/pages/pending_page.dart';
-import 'package:nurse_app/pages/scheduled_request_details_page.dart';
-import 'package:nurse_app/pages/splash_screen.dart';
-import 'package:nurse_app/pages/login_page.dart';
-import 'package:nurse_app/pages/signup_page.dart';
-import 'package:nurse_app/pages/navbar.dart';
-import 'package:nurse_app/pages/immediate_request_page.dart';
-import 'package:nurse_app/pages/make_appointment_page.dart';
-import 'package:nurse_app/pages/verify_email_page.dart';
+import 'package:nurse_app/pages/user/immediate_request_details_page.dart';
+import 'package:nurse_app/pages/user/notification_page.dart';
+import 'package:nurse_app/pages/user/pending_page.dart';
+import 'package:nurse_app/pages/user/scheduled_request_details_page.dart';
+import 'package:nurse_app/pages/user/splash_screen.dart';
+import 'package:nurse_app/pages/user/login_page.dart';
+import 'package:nurse_app/pages/user/signup_page.dart';
+import 'package:nurse_app/pages/user/navbar.dart';
+import 'package:nurse_app/pages/user/immediate_request_page.dart';
+import 'package:nurse_app/pages/user/make_appointment_page.dart';
+import 'package:nurse_app/pages/user/verify_email_page.dart';
 
 void main() {
   runApp(const MyApp());

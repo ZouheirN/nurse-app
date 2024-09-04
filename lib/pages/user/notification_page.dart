@@ -61,7 +61,9 @@ class NotificationPage extends StatelessWidget {
                   title: 'Your request was accepted',
                   description: 'Check out the details',
                   time: '12:00',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/scheduledRequestDetails');
+                  },
                 ),
               ),
               const SizedBox(height: 10),
@@ -70,7 +72,9 @@ class NotificationPage extends StatelessWidget {
                   title: 'Your request was accepted',
                   description: 'Check out the details',
                   time: '12:00',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/immediateRequestDetails');
+                  },
                 ),
               ),
               const SizedBox(height: 10),
