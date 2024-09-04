@@ -49,7 +49,7 @@ class _LabeledDateFieldState extends State<LabeledDateField> {
     return Container(
       height: 65,
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -58,6 +58,7 @@ class _LabeledDateFieldState extends State<LabeledDateField> {
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
+              color: Color(0xFF7BB442)
             ),
           ),
           const SizedBox(height: 3),
@@ -73,12 +74,12 @@ class _LabeledDateFieldState extends State<LabeledDateField> {
                           ? 'dd/mm/yyyy'
                           : "${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}",
                       enabledBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Color(0xFFE7E7E7)),
+                        borderRadius: BorderRadius.all(Radius.circular(3)),
+                        borderSide: BorderSide(color: Color(0xFF7BB442), width: 2),
                       ),
                       focusedBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Color(0xFFE7E7E7)),
+                        borderRadius: BorderRadius.all(Radius.circular(3)),
+                        borderSide: BorderSide(color: Color(0xFF7BB442), width: 2),
                       ),
                       fillColor: _isFocused
                           ? const Color.fromARGB(255, 245, 245, 245)
