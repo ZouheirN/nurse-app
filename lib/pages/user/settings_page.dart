@@ -31,7 +31,9 @@ class SettingsPage extends StatelessWidget {
                       child: SettingsButton(
                         icon: const Icon(Icons.account_circle),
                         buttonText: 'Account Details',
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(context, '/editProfile');
+                        },
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -39,7 +41,9 @@ class SettingsPage extends StatelessWidget {
                       child: SettingsButton(
                         icon: const Icon(Icons.location_on),
                         buttonText: 'Update Location',
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(context, '/updateLocation');
+                        },
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -53,7 +57,6 @@ class SettingsPage extends StatelessWidget {
                   ],
                 ),
               ),
-              // The "Powered By" section at the bottom
               Padding(
                 padding: const EdgeInsets.only(bottom: 30),
                 child: Center(
