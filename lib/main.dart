@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nurse_app/pages/admin/add_nurse_page.dart';
 import 'package:nurse_app/pages/admin/admin_dashboard_page.dart';
+import 'package:nurse_app/pages/admin/edit_nurse_page.dart';
 import 'package:nurse_app/pages/admin/manage_nurses_page.dart';
 import 'package:nurse_app/pages/user/immediate_request_details_page.dart';
 import 'package:nurse_app/pages/user/notification_page.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
         '/adminDashboard' : (context) => const AdminDashboardPage(),
         '/manageNurses' : (context) => const ManageNursesPage(),
         '/addNurse' : (context) => const AddNursePage(),
+        '/editNurse' : (context) => const EditNursePage(),
       },
     );
   }
