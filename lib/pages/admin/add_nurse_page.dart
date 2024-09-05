@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nurse_app/components/phone_field_admin.dart';
 import 'package:nurse_app/components/labeled_textfield_admin.dart';
+import 'package:nurse_app/components/third_button.dart';
 
 class AddNursePage extends StatelessWidget {
   const AddNursePage({super.key});
@@ -35,7 +36,7 @@ class AddNursePage extends StatelessWidget {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -43,18 +44,22 @@ class AddNursePage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 40),
-                  LabeledTextfieldAdmin(
+                  const SizedBox(height: 40),
+                  const LabeledTextfieldAdmin(
                     label: 'Nurse Name',
                     keyboardType: TextInputType.name,
                   ),
-                  SizedBox(height: 10),
-                  PhoneFieldAdmin(),
-                  LabeledTextfieldAdmin(
+                  const SizedBox(height: 10),
+                  const PhoneFieldAdmin(),
+                  const LabeledTextfieldAdmin(
                     label: 'Nurse Address',
                     keyboardType: TextInputType.text,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 20),
+                  MyThirdButton(
+                    onTap: () {},
+                    buttonText: 'Add Nurse',
+                  )
                 ],
               ),
             ),
