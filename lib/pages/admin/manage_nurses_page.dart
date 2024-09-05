@@ -35,54 +35,59 @@ class ManageNursesPage extends StatelessWidget {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: Stack(
-        children: [
-          Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 20),
-                AdminCard(
-                  imagePath: 'assets/images/image-gallery.png',
-                  text: 'Add Nurse',
-                  onTap: () {},
-                ),
-                const SizedBox(height: 20),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Nurses',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 20),
+                  AdminCard(
+                    imagePath: 'assets/images/image-gallery.png',
+                    text: 'Add Nurse',
+                    onTap: () {
+                      Navigator.pushNamed(context, '/addNurse');
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Nurses',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                NurseCard(
-                  imagePath: 'assets/images/dr.png',
-                  title: 'John Doe',
-                  onTap: () {},
-                ),
-                const SizedBox(height: 10),
-                NurseCard(
-                  imagePath: 'assets/images/dr.png',
-                  title: 'Jane Smith',
-                  onTap: () {},
-                ),
-                const SizedBox(height: 10),
-                NurseCard(
-                  imagePath: 'assets/images/dr.png',
-                  title: 'David Johnson',
-                  onTap: () {},
-                )
-              ],
+                  const SizedBox(height: 10),
+                  NurseCard(
+                    imagePath: 'assets/images/dr.png',
+                    title: 'John Doe',
+                    onTap: () {},
+                  ),
+                  const SizedBox(height: 10),
+                  NurseCard(
+                    imagePath: 'assets/images/dr.png',
+                    title: 'Jane Smith',
+                    onTap: () {},
+                  ),
+                  const SizedBox(height: 10),
+                  NurseCard(
+                    imagePath: 'assets/images/dr.png',
+                    title: 'David Johnson',
+                    onTap: () {},
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
