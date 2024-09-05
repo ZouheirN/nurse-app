@@ -69,7 +69,9 @@ class ManageNursesPage extends StatelessWidget {
                   NurseCard(
                     imagePath: 'assets/images/dr.png',
                     title: 'John Doe',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(context, '/editNurse');
+                    },
                   ),
                   const SizedBox(height: 10),
                   NurseCard(
