@@ -48,7 +48,9 @@ class AdminDashboardPage extends StatelessWidget {
                 AdminCard(
                   imagePath: 'assets/images/job-application.png',
                   text: 'Manage Orders',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/manageOrders');
+                  },
                 ),
               ],
             ),
