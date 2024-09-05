@@ -40,7 +40,9 @@ class AdminDashboardPage extends StatelessWidget {
                 AdminCard(
                   imagePath: 'assets/images/register.png',
                   text: 'Manage Services',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/manageServices');
+                  },
                 ),
                 const SizedBox(height: 20),
                 AdminCard(
