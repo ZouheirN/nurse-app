@@ -53,8 +53,8 @@ class ServiceCard extends StatelessWidget {
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      maxLines: 3,
+                      overflow: TextOverflow.visible,
                     ),
                   ],
                 ),
@@ -63,16 +63,24 @@ class ServiceCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    price,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      decoration: salePrice != null
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none,
-                      // color: salePrice != null ? Colors.red : Colors.black,
-                    ),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Text(
+                        price,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          // color: salePrice != null ? Colors.red : Colors.black,
+                        ),
+                      ),
+                      if (salePrice != null)
+                        Positioned.fill(
+                          child: CustomPaint(
+                            painter: DiagonalLinePainter(),
+                          ),
+                        ),
+                    ],
                   ),
                   if (salePrice != null)
                     Text(
@@ -91,4 +99,18 @@ class ServiceCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class DiagonalLinePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.red
+      ..strokeWidth = 1.5;
+
+    canvas.drawLine(Offset(0, size.height), Offset(size.width, 0), paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
