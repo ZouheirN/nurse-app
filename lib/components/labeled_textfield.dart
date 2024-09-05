@@ -32,7 +32,7 @@ class _LabeledTextfieldState extends State<LabeledTextfield> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 65,
+      height: 70,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: Column(
