@@ -47,7 +47,9 @@ class ManageServicesPage extends StatelessWidget {
                   AdminCard(
                     imagePath: 'assets/images/image-gallery.png',
                     text: 'Add Service',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(context, '/addService');
+                    },
                   ),
                   const SizedBox(height: 20),
                   const Padding(
