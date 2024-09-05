@@ -58,7 +58,7 @@ class EditNursePage extends StatelessWidget {
                   const SizedBox(height: 20),
                   MyThirdButton(
                     onTap: () {},
-                    buttonText: 'Add Nurse',
+                    buttonText: 'Update Nurse',
                   )
                 ],
               ),
