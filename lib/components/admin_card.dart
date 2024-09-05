@@ -17,8 +17,8 @@ class AdminCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 330,
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
+        // width: 330,
+        padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -27,6 +27,7 @@ class AdminCard extends StatelessWidget {
             width: 1,
           ),
         ),
+        width: MediaQuery.of(context).size.width * 0.9,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
