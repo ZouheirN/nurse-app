@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nurse_app/pages/admin/admin_dashboard_page.dart';
 import 'package:nurse_app/pages/user/immediate_request_details_page.dart';
 import 'package:nurse_app/pages/user/notification_page.dart';
 import 'package:nurse_app/pages/user/pending_page.dart';
@@ -10,6 +11,8 @@ import 'package:nurse_app/pages/user/navbar.dart';
 import 'package:nurse_app/pages/user/immediate_request_page.dart';
 import 'package:nurse_app/pages/user/make_appointment_page.dart';
 import 'package:nurse_app/pages/user/verify_email_page.dart';
+import 'package:nurse_app/pages/user/update_location_page.dart';
+import 'package:nurse_app/pages/user/edit_profile_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,6 +37,9 @@ class MyApp extends StatelessWidget {
         '/verifyEmail': (context) => VerifyEmailPage(),
         '/immediateRequestDetails' : (context) => const ImmediateRequestDetailsPage(),
         '/scheduledRequestDetails' : (context) => const ScheduledRequestDetailsPage(),
+        '/editProfile' : (context) => const EditProfilePage(),
+        '/updateLocation' : (context) => const UpdateLocationPage(),
+        '/adminDashboard' : (context) => const AdminDashboardPage(),
       },
     );
   }
