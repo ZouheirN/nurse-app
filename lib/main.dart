@@ -9,6 +9,7 @@ import 'package:nurse_app/pages/admin/manage_nurses_page.dart';
 import 'package:nurse_app/pages/admin/manage_orders_page.dart';
 import 'package:nurse_app/pages/admin/manage_services_page.dart';
 import 'package:nurse_app/pages/admin/order_details_page.dart';
+import 'package:nurse_app/pages/admin/order_process_page.dart';
 import 'package:nurse_app/pages/admin/scheduled_order_page.dart';
 import 'package:nurse_app/pages/user/immediate_request_details_page.dart';
 import 'package:nurse_app/pages/user/notification_page.dart';
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
         '/orderDetails' : (context) => const OrderDetailsPage(),
         '/immediateOrder' : (context) => const ImmediateOrderPage(),
         '/scheduledOrder' : (context) => const ScheduledOrderPage(),
+        '/orderProcess' : (context) => const OrderProcessPage(),
       },
     );
   }
