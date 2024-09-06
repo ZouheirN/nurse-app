@@ -4,10 +4,12 @@ import 'package:nurse_app/pages/admin/add_service_page.dart';
 import 'package:nurse_app/pages/admin/admin_dashboard_page.dart';
 import 'package:nurse_app/pages/admin/edit_nurse_page.dart';
 import 'package:nurse_app/pages/admin/edit_service_page.dart';
+import 'package:nurse_app/pages/admin/immediate_order_page.dart';
 import 'package:nurse_app/pages/admin/manage_nurses_page.dart';
 import 'package:nurse_app/pages/admin/manage_orders_page.dart';
 import 'package:nurse_app/pages/admin/manage_services_page.dart';
 import 'package:nurse_app/pages/admin/order_details_page.dart';
+import 'package:nurse_app/pages/admin/scheduled_order_page.dart';
 import 'package:nurse_app/pages/user/immediate_request_details_page.dart';
 import 'package:nurse_app/pages/user/notification_page.dart';
 import 'package:nurse_app/pages/user/pending_page.dart';
@@ -56,6 +58,8 @@ class MyApp extends StatelessWidget {
         '/editService' : (context) => const EditServicePage(),
         '/manageOrders' : (context) => const ManageOrdersPage(),
         '/orderDetails' : (context) => const OrderDetailsPage(),
+        '/immediateOrder' : (context) => const ImmediateOrderPage(),
+        '/scheduledOrder' : (context) => const ScheduledOrderPage(),
       },
     );
   }
