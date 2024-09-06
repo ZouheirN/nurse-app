@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nurse_app/components/third_button.dart';
+import 'package:nurse_app/components/status_button.dart';
 import 'package:nurse_app/components/labeled_textfield.dart';
 import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/labeled_mini_textfield_order.dart';
@@ -83,25 +83,25 @@ class OrderProcessPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 35),
-                    child: Row(
-                      children: [
-                        MyThirdButton(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/immediateOrder');
-                          },
-                          buttonText: 'Accept',
-                        ),
-                        const SizedBox(width: 10),
-                        MyThirdButton(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/immediateOrder');
-                          },
-                          buttonText: 'Accept',
-                        ),
-                      ],
+                  const SizedBox(height: 40),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          StatusButton(
+                            onTap: () {},
+                            buttonText: 'Pending',
+                            color: const Color(0xFF8E8E8E),
+                          ),
+                          StatusButton(
+                            onTap: () {},
+                            buttonText: 'Completed',
+                            color: Colors.green,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
