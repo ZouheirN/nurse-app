@@ -1,7 +1,8 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 class LabeledDropdown extends StatefulWidget {
+  final String label;
   final List<String> services;
   final String? initialValue;
   final void Function(String?)? onChanged;
@@ -9,6 +10,7 @@ class LabeledDropdown extends StatefulWidget {
 
   const LabeledDropdown({
     super.key,
+    required this.label,
     required this.services,
     this.initialValue,
     this.onChanged,
@@ -45,9 +47,9 @@ class _LabeledDropdownState extends State<LabeledDropdown> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Services',
-            style: TextStyle(
+          Text(
+            widget.label,
+            style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),

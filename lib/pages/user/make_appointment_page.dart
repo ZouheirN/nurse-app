@@ -133,6 +133,7 @@ class MakeAppointmentPage extends StatelessWidget {
               ),
               const SizedBox(height: 7),
               const LabeledDropdown(
+                label: 'Services',
                 services: [
                   'service 1',
                   'service 2',

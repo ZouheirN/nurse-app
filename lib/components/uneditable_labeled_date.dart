@@ -34,7 +34,7 @@ class _UneditableLabeledDateState extends State<UneditableLabeledDate> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 65,
+      height: 70,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
