@@ -70,9 +70,7 @@ class _LabeledDropdownState extends State<LabeledDropdown> {
                     borderRadius: BorderRadius.all(Radius.circular(3)),
                     borderSide: BorderSide(color: Color(0xFF7BB442), width: 2),
                   ),
-                  fillColor: _isFocused
-                      ? Colors.white
-                      : Colors.white,
+                  fillColor: _isFocused ? Colors.white : Colors.white,
                   filled: true,
                   contentPadding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -82,10 +80,28 @@ class _LabeledDropdownState extends State<LabeledDropdown> {
                           value: item,
                           child: Text(
                             item,
-                            style: const TextStyle(fontSize: 16),
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: item == selectedValue
+                                  ? Colors.black
+                                  : Colors.white,
+                            ),
                           ),
                         ))
                     .toList(),
+                dropdownStyleData: DropdownStyleData(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: const Color(0xFF7BB442),
+                  ),
+                  scrollbarTheme: const ScrollbarThemeData(
+                    radius: Radius.circular(40),
+                  ),
+                ),
+                menuItemStyleData: const MenuItemStyleData(
+                  height: 40,
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                ),
                 onChanged: (value) {
                   setState(() {
                     selectedValue = value;
