@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class ServiceCard extends StatelessWidget {
+class ServiceCardAdmin extends StatelessWidget {
   final String title;
   final String price;
   final String? salePrice;
   final VoidCallback onTap;
 
-  const ServiceCard({
+  const ServiceCardAdmin({
     super.key,
     required this.title,
     required this.price,

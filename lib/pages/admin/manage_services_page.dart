@@ -66,7 +66,7 @@ class ManageServicesPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  ServiceCard(
+                  ServiceCardAdmin(
                     title: 'Service Name',
                     price: '20\$',
                     onTap: () {
@@ -74,7 +74,7 @@ class ManageServicesPage extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 10),
-                  ServiceCard(
+                  ServiceCardAdmin(
                     title: 'Service Name',
                     price: '20\$',
                     salePrice: '15\$',
