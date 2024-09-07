@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:nurse_app/components/gender_selection_field.dart';
 import 'package:nurse_app/components/labeled_date.dart';
-import 'package:nurse_app/components/labeled_dropdown.dart';
 import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/second_button.dart';
 import 'package:nurse_app/components/labeled_textfield.dart';
+import 'package:nurse_app/components/service_card.dart';
 import 'package:nurse_app/components/third_button.dart';
 
 class MakeAppointmentPage extends StatelessWidget {
@@ -11,6 +12,51 @@ class MakeAppointmentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<Service> services = [
+      Service(
+        imagePath: 'assets/images/logo.png',
+        title: 'Service 1',
+        price: 20,
+        salePrice: 15,
+      ),
+      Service(
+        imagePath: 'assets/images/logo.png',
+        title: 'Service 2',
+        price: 30,
+        salePrice: 25,
+      ),
+      Service(
+        imagePath: 'assets/images/logo.png',
+        title: 'Service 3',
+        price: 40,
+        salePrice: null,
+      ),
+      Service(
+        imagePath: 'assets/images/logo.png',
+        title: 'Service 4',
+        price: 50,
+        salePrice: 45,
+      ),
+      Service(
+        imagePath: 'assets/images/logo.png',
+        title: 'Service 5',
+        price: 60,
+        salePrice: 50,
+      ),
+      Service(
+        imagePath: 'assets/images/logo.png',
+        title: 'Service 6',
+        price: 70,
+        salePrice: 65,
+      ),
+      Service(
+        imagePath: 'assets/images/logo.png',
+        title: 'Service 7',
+        price: 80,
+        salePrice: null,
+      ),
+    ];
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -132,16 +178,33 @@ class MakeAppointmentPage extends StatelessWidget {
                 keyboardType: TextInputType.text,
               ),
               const SizedBox(height: 7),
-              const LabeledDropdown(
-                label: 'Services',
-                services: [
-                  'service 1',
-                  'service 2',
-                  'service 3',
-                  'service 4',
-                  'service 5',
-                  'service 6',
-                ],
+              const GenderSelectionField(),
+              const SizedBox(height: 7),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 40),
+                child: Text(
+                  'Select Service',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: services.map((service) {
+                    return ServiceCard(
+                      imagePath: service.imagePath,
+                      title: service.title,
+                      price: service.price,
+                      salePrice: service.salePrice,
+                    );
+                  }).toList(),
+                ),
               ),
               const SizedBox(height: 20),
               Padding(
@@ -178,11 +241,25 @@ class MakeAppointmentPage extends StatelessWidget {
                 },
                 buttonText: 'Submit',
               ),
-              const SizedBox(height: 200),
+              const SizedBox(height: 50),
             ],
           ),
         ),
       ),
     );
   }
+}
+
+class Service {
+  final String imagePath;
+  final String title;
+  final int price;
+  final int? salePrice;
+
+  Service({
+    required this.imagePath,
+    required this.title,
+    required this.price,
+    this.salePrice,
+  });
 }
