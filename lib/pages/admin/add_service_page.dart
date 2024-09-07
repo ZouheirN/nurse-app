@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nurse_app/components/pick_image.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/components/labeled_textfield_admin.dart';
 import 'package:nurse_app/components/labeled_mini_textfield_admin.dart';
@@ -68,6 +69,11 @@ class AddServicePage extends StatelessWidget {
                         ),
                       ],
                     ),
+                  ),
+                  const SizedBox(height: 20),
+                  PickImage(
+                    label: 'Nurse Picture',
+                    onImageSelected: (image) {},
                   ),
                   const SizedBox(height: 20),
                   MyThirdButton(
