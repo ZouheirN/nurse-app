@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nurse_app/components/gender_selection_field.dart';
 import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/second_button.dart';
 import 'package:nurse_app/components/labeled_textfield.dart';
@@ -175,7 +176,9 @@ class ImmediateRequestPage extends StatelessWidget {
                 label: 'Address',
                 keyboardType: TextInputType.text,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 7),
+              const GenderSelectionField(),
+              const SizedBox(height: 7),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 child: Text(
@@ -209,7 +212,7 @@ class ImmediateRequestPage extends StatelessWidget {
                 },
                 buttonText: 'Submit',
               ),
-              const SizedBox(height: 200),
+              const SizedBox(height: 50),
             ],
           ),
         ),
