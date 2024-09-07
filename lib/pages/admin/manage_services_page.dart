@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nurse_app/components/admin_card.dart';
-import 'package:nurse_app/components/service_card.dart';
+import 'package:nurse_app/components/service_card_admin.dart';
 
 class ManageServicesPage extends StatelessWidget {
   const ManageServicesPage({super.key});
@@ -69,7 +69,9 @@ class ManageServicesPage extends StatelessWidget {
                   ServiceCard(
                     title: 'Service Name',
                     price: '20\$',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(context, '/editService');
+                    },
                   ),
                   const SizedBox(height: 10),
                   ServiceCard(

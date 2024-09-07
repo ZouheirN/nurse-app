@@ -68,10 +68,10 @@ class ServiceCard extends StatelessWidget {
                     children: [
                       Text(
                         price,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
-                          // color: salePrice != null ? Colors.red : Colors.black,
+                          color: salePrice != null ? Colors.grey : Colors.black,
                         ),
                       ),
                       if (salePrice != null)
