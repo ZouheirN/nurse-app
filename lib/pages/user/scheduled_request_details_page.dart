@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nurse_app/components/text_data.dart';
+import 'package:nurse_app/components/star_rating.dart';
 import 'package:nurse_app/components/uneditable_labeled_date.dart';
 
 class ScheduledRequestDetailsPage extends StatelessWidget {
@@ -73,6 +74,8 @@ class ScheduledRequestDetailsPage extends StatelessWidget {
               label: 'Time to get: ',
               data: '20 mins',
             ),
+            const SizedBox(height: 10),
+            StarRating(onRatingChanged: (rating) {}),
 
             const SizedBox(height: 20),
             const Padding(

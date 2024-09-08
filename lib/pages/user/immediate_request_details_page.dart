@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nurse_app/components/star_rating.dart';
 import 'package:nurse_app/components/text_data.dart';
 
 class ImmediateRequestDetailsPage extends StatelessWidget {
@@ -72,6 +73,8 @@ class ImmediateRequestDetailsPage extends StatelessWidget {
               label: 'Time to get: ',
               data: '20 mins',
             ),
+            const SizedBox(height: 10),
+            StarRating(onRatingChanged: (rating) {}),
             const SizedBox(height: 10),
             const TextData(
               label: 'Request Date: ',
