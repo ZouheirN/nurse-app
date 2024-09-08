@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nurse_app/pages/admin/add_nurse_page.dart';
 import 'package:nurse_app/pages/admin/add_service_page.dart';
 import 'package:nurse_app/pages/admin/admin_dashboard_page.dart';
+import 'package:nurse_app/pages/admin/admin_settings_page.dart';
 import 'package:nurse_app/pages/admin/edit_nurse_page.dart';
 import 'package:nurse_app/pages/admin/edit_service_page.dart';
 import 'package:nurse_app/pages/admin/immediate_order_page.dart';
@@ -62,6 +63,7 @@ class MyApp extends StatelessWidget {
         '/immediateOrder' : (context) => const ImmediateOrderPage(),
         '/scheduledOrder' : (context) => const ScheduledOrderPage(),
         '/orderProcess' : (context) => const OrderProcessPage(),
+        '/adminSettings' : (context) => const AdminSettingsPage(),
       },
     );
   }
