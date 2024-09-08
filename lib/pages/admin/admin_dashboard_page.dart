@@ -26,12 +26,12 @@ class AdminDashboardPage extends StatelessWidget {
         children: [
           Center(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 20),
                 AdminCard(
                   imagePath: 'assets/images/nurse.png',
-                  text: 'Manage Nurses',
+                  text: 'Manage Nurses    ',
                   onTap: () {
                     Navigator.pushNamed(context, '/manageNurses');
                   },
@@ -39,7 +39,7 @@ class AdminDashboardPage extends StatelessWidget {
                 const SizedBox(height: 20),
                 AdminCard(
                   imagePath: 'assets/images/register.png',
-                  text: 'Manage Services',
+                  text: 'Manage Services  ',
                   onTap: () {
                     Navigator.pushNamed(context, '/manageServices');
                   },
@@ -47,9 +47,17 @@ class AdminDashboardPage extends StatelessWidget {
                 const SizedBox(height: 20),
                 AdminCard(
                   imagePath: 'assets/images/job-application.png',
-                  text: 'Manage Orders',
+                  text: 'Manage Orders    ',
                   onTap: () {
                     Navigator.pushNamed(context, '/manageOrders');
+                  },
+                ),
+                const SizedBox(height: 20),
+                AdminCard(
+                  imagePath: 'assets/images/settings.png',
+                  text: 'Account Settings',
+                  onTap: () {
+                    Navigator.pushNamed(context, '/adminSettings');
                   },
                 ),
               ],
