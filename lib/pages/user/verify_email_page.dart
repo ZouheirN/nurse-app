@@ -33,6 +33,12 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
         );
 
         if (response.statusCode == 200) {
+          final jsonData = json.decode(response.body);
+          final token = jsonData['token'];
+
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString(KEY_ACCESS_TOKEN, token);
+
           Navigator.pushNamed(context, '/home');
         } else {
           _showErrorDialog(context, 'Verification Failed',
