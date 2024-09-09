@@ -25,8 +25,15 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
+	<string>This app requires access to the camera to capture photos and videos.</string>
 	<key>NSMicrophoneUsageDescription</key>
+	<string>This app requires access to the microphone to record audio.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app requires access to your photo library to select and upload images.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to location when open.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app needs access to location when in the background.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
