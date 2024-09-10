@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class LabeledTextfieldAdmin extends StatefulWidget {
   final String label;
   final TextInputType keyboardType;
+  final TextEditingController? controller;
 
   const LabeledTextfieldAdmin({
     super.key,
     required this.label,
     this.keyboardType = TextInputType.text,
+    this.controller,
   });
 
   @override
@@ -50,6 +52,7 @@ class _LabeledTextfieldAdminState extends State<LabeledTextfieldAdmin> {
             child: Focus(
               onFocusChange: _onFocusChange,
               child: TextField(
+                controller: widget.controller,
                 keyboardType: widget.keyboardType,
                 decoration: InputDecoration(
                   enabledBorder: const OutlineInputBorder(
