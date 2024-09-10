@@ -1,10 +1,75 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:nurse_app/consts.dart';
+import 'package:http/http.dart' as http;
 import 'package:nurse_app/components/third_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nurse_app/components/labeled_edit_textfield.dart';
 import 'package:nurse_app/components/edit_phone_number_field.dart';
 
-class EditProfilePage extends StatelessWidget {
+class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
+
+  @override
+  State<EditProfilePage> createState() => _EditProfilePageState();
+}
+
+class _EditProfilePageState extends State<EditProfilePage> {
+  List<Map<String, dynamic>> profile = [];
+  String name = '';
+  String phoneNumber = '';
+  String email = '';
+  String location = '';
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProfileData();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    locationController.dispose();
+    super.dispose();
+  }
+
+  Future<void> fetchProfileData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString(KEY_ACCESS_TOKEN);
+
+    final response = await http.get(
+      Uri.parse('$HOST/me'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+
+      setState(() {
+        name = jsonData['name'] ?? '';
+        phoneNumber = jsonData['phone_number'] ?? '';
+        email = jsonData['email'] ?? '';
+        location = jsonData['location'] ?? '';
+
+        nameController.text = name;
+        phoneController.text = phoneNumber;
+        emailController.text = email;
+        locationController.text = location;
+      });
+    } else {
+      print('Failed to load user data');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,25 +121,28 @@ class EditProfilePage extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Column(
+                child: Column(
                   children: [
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     LabeledEditTextfield(
                       label: 'Username',
                       keyboardType: TextInputType.name,
+                      controller: nameController,
                     ),
-                    SizedBox(height: 7),
-                    EditPhoneNumberField(),
+                    const SizedBox(height: 7),
+                    EditPhoneNumberField(controller: phoneController),
                     LabeledEditTextfield(
                       label: 'Email',
                       keyboardType: TextInputType.emailAddress,
+                      controller: emailController,
                     ),
-                    SizedBox(height: 7),
+                    const SizedBox(height: 7),
                     LabeledEditTextfield(
                       label: 'Location',
                       keyboardType: TextInputType.text,
+                      controller: locationController,
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
