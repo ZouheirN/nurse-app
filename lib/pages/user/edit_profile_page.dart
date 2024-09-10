@@ -16,7 +16,7 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  List<Map<String, dynamic>> profile = [];
+  late int userId;
   String name = '';
   String phoneNumber = '';
   String email = '';
@@ -56,6 +56,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       final jsonData = json.decode(response.body);
 
       setState(() {
+        userId = jsonData['id'];
         name = jsonData['name'] ?? '';
         phoneNumber = jsonData['phone_number'] ?? '';
         email = jsonData['email'] ?? '';
@@ -68,6 +69,63 @@ class _EditProfilePageState extends State<EditProfilePage> {
       });
     } else {
       print('Failed to load user data');
+    }
+  }
+
+  Future<void> updateProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString(KEY_ACCESS_TOKEN);
+
+    final response = await http.put(
+      Uri.parse('$HOST/users/$userId'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'name': nameController.text,
+        'phone_number': phoneController.text,
+        'email': emailController.text,
+        'location': locationController.text,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Update Success'),
+            content: const Text('Profile updated successfully.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Update Failed'),
+            content: const Text('Failed to update profile.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -148,7 +206,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
               const SizedBox(height: 20),
               MyThirdButton(
-                onTap: () {},
+                onTap: () {
+                  updateProfile();
+                },
                 buttonText: 'Save',
               ),
             ],
