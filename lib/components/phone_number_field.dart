@@ -3,10 +3,12 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 
 class PhoneNumberField extends StatefulWidget {
   final String initialCountryCode;
+  final TextEditingController? controller;
 
   const PhoneNumberField({
     super.key,
     this.initialCountryCode = 'LB',
+    this.controller,
   });
 
   @override
@@ -49,6 +51,7 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
             child: Focus(
               onFocusChange: _onFocusChange,
               child: IntlPhoneField(
+                controller: widget.controller,
                 initialCountryCode: widget.initialCountryCode,
                 decoration: InputDecoration(
                   enabledBorder: const OutlineInputBorder(
