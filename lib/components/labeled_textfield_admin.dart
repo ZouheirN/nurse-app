@@ -13,7 +13,7 @@ class LabeledTextfieldAdmin extends StatefulWidget {
   });
 
   @override
-  _LabeledTextfieldAdminState createState() => _LabeledTextfieldAdminState();
+  State<LabeledTextfieldAdmin> createState() => _LabeledTextfieldAdminState();
 }
 
 class _LabeledTextfieldAdminState extends State<LabeledTextfieldAdmin> {
