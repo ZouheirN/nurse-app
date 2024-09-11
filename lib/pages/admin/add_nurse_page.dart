@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:nurse_app/components/gender_selection_field_admin.dart';
 import 'package:nurse_app/consts.dart';
 import 'package:http/http.dart' as http;
 import 'package:nurse_app/components/admin_header.dart';
@@ -17,19 +20,19 @@ class AddNursePage extends StatefulWidget {
 
 class _AddNursePageState extends State<AddNursePage> {
   final nameController = TextEditingController();
-  final emailController = TextEditingController();
+  final addressController = TextEditingController();
   final phoneNumberController = TextEditingController();
+  final genderController = GenderSelectionController();
 
   @override
   void dispose() {
     nameController.dispose();
-    emailController.dispose();
+    addressController.dispose();
     phoneNumberController.dispose();
     super.dispose();
   }
 
-  void createNurse(String name, String phoneNumber, String email,
-      BuildContext context) async {
+  void createNurse(String name, String phoneNumber, String address, BuildContext context) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString(KEY_ACCESS_TOKEN);
@@ -42,7 +45,8 @@ class _AddNursePageState extends State<AddNursePage> {
         body: {
           'name': name,
           'phone_number': phoneNumber,
-          'email': email,
+          'address': address,
+          'gender': genderController.getGender(),
         },
       );
 
@@ -65,12 +69,15 @@ class _AddNursePageState extends State<AddNursePage> {
           },
         );
       } else {
+        final errorData = json.decode(response.body);
+        final errorMessage = errorData['message'];
+
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Failed create nurse'),
-              content: const Text('Failed to create nurse. Please try again.'),
+              title: const Text('Create Failed'),
+              content: Text(errorMessage),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -89,8 +96,7 @@ class _AddNursePageState extends State<AddNursePage> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Error'),
-            content: const Text(
-                'An error occurred. Please check your connection and try again later.'),
+            content: const Text('An error occurred. Please try again later.'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -129,8 +135,10 @@ class _AddNursePageState extends State<AddNursePage> {
                   LabeledTextfieldAdmin(
                     label: 'Nurse Address',
                     keyboardType: TextInputType.text,
-                    controller: emailController,
+                    controller: addressController,
                   ),
+                  const SizedBox(height: 10),
+                  GenderSelectionFieldAdmin(controller: genderController),
                   const SizedBox(height: 20),
                   PickImage(
                     label: 'Nurse Picture',
@@ -138,7 +146,14 @@ class _AddNursePageState extends State<AddNursePage> {
                   ),
                   const SizedBox(height: 20),
                   MyThirdButton(
-                    onTap: () {},
+                    onTap: () {
+                      createNurse(
+                        nameController.text,
+                        phoneNumberController.text,
+                        addressController.text,
+                        context,
+                      );
+                    },
                     buttonText: 'Add Nurse',
                   ),
                 ],
