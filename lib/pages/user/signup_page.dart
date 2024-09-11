@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:nurse_app/consts.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nurse_app/components/button.dart';
 import 'package:nurse_app/components/textfield.dart';
-import 'package:nurse_app/consts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
+
   @override
-  _SignupPageState createState() => _SignupPageState();
+  State<SignupPage> createState() => _SignupPageState();
 }
 
 class _SignupPageState extends State<SignupPage> {
@@ -43,9 +45,9 @@ class _SignupPageState extends State<SignupPage> {
 
       if (response.statusCode == 201) {
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(KEY_USER_EMAIL, email);
+        await prefs.setString(KEY_USER_NUMBER, phoneNumber);
 
-        Navigator.pushReplacementNamed(context, '/verifyEmail');
+        Navigator.pushReplacementNamed(context, '/verifySms');
       } else {
         _showErrorDialog(context, 'Sign Up Failed',
             'Failed to sign up. Please check your information and try again.');
@@ -120,7 +122,7 @@ class _SignupPageState extends State<SignupPage> {
                 controller: nameController,
                 icon: const Icon(Icons.person_outlined),
                 hintText: 'Username',
-                inputType: TextInputType.text,
+                inputType: TextInputType.name,
                 obscureText: false,
               ),
               const SizedBox(height: 14),
