@@ -29,7 +29,12 @@ class LoginPage extends StatelessWidget {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString(KEY_ACCESS_TOKEN, token);
 
-        Navigator.pushNamed(context, '/home');
+        final roleId = jsonData['user']['role_id'];
+        if (roleId == 1) {
+          Navigator.pushNamed(context, '/adminDashboard');
+        } else if (roleId == 2) {
+          Navigator.pushNamed(context, '/home');
+        }
       } else {
         // Error handling
         showDialog(
