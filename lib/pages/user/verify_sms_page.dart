@@ -4,12 +4,14 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nurse_app/consts.dart';
 
-class VerifyEmailPage extends StatefulWidget {
+class VerifySmsPage extends StatefulWidget {
+  const VerifySmsPage({super.key});
+
   @override
-  _VerifyEmailPageState createState() => _VerifyEmailPageState();
+  State<VerifySmsPage> createState() => _VerifySmsPageState();
 }
 
-class _VerifyEmailPageState extends State<VerifyEmailPage> {
+class _VerifySmsPageState extends State<VerifySmsPage> {
   final List<TextEditingController> controllers =
       List.generate(6, (index) => TextEditingController());
 
@@ -17,17 +19,17 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     return controllers.every((controller) => controller.text.isNotEmpty);
   }
 
-  void verifyEmail(String confirmationCode, BuildContext context) async {
+  void verifySms(String confirmationCode, BuildContext context) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final email = prefs.getString(KEY_USER_EMAIL);
+      final phoneNumber = prefs.getString(KEY_USER_NUMBER);
 
-      if (email != null) {
+      if (phoneNumber != null) {
         final response = await http.post(
-          Uri.parse('$HOST/verify-email'),
+          Uri.parse('$HOST/verify-sms'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
-            'email': email,
+            'phoneNumber': phoneNumber,
             'confirmation_code': confirmationCode,
           }),
         );
@@ -46,7 +48,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
         }
       } else {
         _showErrorDialog(
-            context, 'Error', 'No email found. Please try again later.');
+            context, 'Error', 'No number found. Please try again later.');
       }
     } catch (e) {
       print(e.toString());
@@ -84,7 +86,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'Enter the code sent to your email',
+              'Enter the code you receive via SMS',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -139,7 +141,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
               onPressed: isCodeComplete()
                   ? () {
                       String code = controllers.map((c) => c.text).join();
-                      verifyEmail(code, context);
+                      verifySms(code, context);
                     }
                   : null,
               child: const Text('Verify'),
