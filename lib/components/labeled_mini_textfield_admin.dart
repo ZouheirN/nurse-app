@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class LabeledMiniTextfieldAdmin extends StatefulWidget {
   final String label;
   final TextInputType keyboardType;
-  final TextEditingController controller;
+  final TextEditingController? controller;
 
   const LabeledMiniTextfieldAdmin({
     super.key,
     required this.label,
     this.keyboardType = TextInputType.text,
-    required this.controller,
+    this.controller,
   });
 
   @override
