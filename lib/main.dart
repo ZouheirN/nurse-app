@@ -22,7 +22,7 @@ import 'package:nurse_app/pages/user/signup_page.dart';
 import 'package:nurse_app/pages/user/navbar.dart';
 import 'package:nurse_app/pages/user/immediate_request_page.dart';
 import 'package:nurse_app/pages/user/make_appointment_page.dart';
-import 'package:nurse_app/pages/user/verify_email_page.dart';
+import 'package:nurse_app/pages/user/verify_sms_page.dart';
 import 'package:nurse_app/pages/user/update_location_page.dart';
 import 'package:nurse_app/pages/user/edit_profile_page.dart';
 
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
         '/makeAppointment': (context) => const MakeAppointmentPage(),
         '/pendingPage': (context) => const PendingPage(),
         '/notification': (context) => const NotificationPage(),
-        '/verifyEmail': (context) => VerifyEmailPage(),
+        '/verifySms': (context) => VerifySmsPage(),
         '/immediateRequestDetails' : (context) => const ImmediateRequestDetailsPage(),
         '/scheduledRequestDetails' : (context) => const ScheduledRequestDetailsPage(),
         '/editProfile' : (context) => const EditProfilePage(),
