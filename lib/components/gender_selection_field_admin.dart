@@ -35,9 +35,9 @@ class _GenderSelectionFieldAdminState extends State<GenderSelectionFieldAdmin> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Select Nurse Gender',
+            'Nurse Gender',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -70,12 +70,10 @@ class _GenderSelectionFieldAdminState extends State<GenderSelectionFieldAdmin> {
         width: MediaQuery.of(context).size.width * 0.35,
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected
-              ? const Color.fromARGB(255, 245, 245, 245)
-              : const Color(0xFFE7E7E7),
+          color: const Color(0xFFE8FFD1),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isSelected ? Colors.green : Colors.transparent,
+            color: isSelected ? const Color(0xFF7BB442) : Colors.transparent,
             width: 2,
           ),
         ),
