@@ -59,10 +59,12 @@ class _HeaderState extends State<Header> {
     }
   }
 
-  Future<void> fetchLocationFromCoordinates(double latitude, double longitude) async {
+  Future<void> fetchLocationFromCoordinates(
+      double latitude, double longitude) async {
     try {
       final response = await http.get(
-        Uri.parse('https://nominatim.openstreetmap.org/reverse?format=json&lat=$latitude&lon=$longitude'),
+        Uri.parse(
+            'https://nominatim.openstreetmap.org/reverse?format=json&lat=$latitude&lon=$longitude'),
       );
 
       if (response.statusCode == 200) {
@@ -95,7 +97,7 @@ class _HeaderState extends State<Header> {
                 IconButton(
                   icon: const Icon(Icons.location_on),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/adminDashboard');
+                    Navigator.pushNamed(context, '/updateLocation');
                   },
                 ),
                 Text(
@@ -122,7 +124,9 @@ class _HeaderState extends State<Header> {
           children: [
             IconButton(
               icon: const Icon(Icons.person),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, '/editProfile');
+              },
             ),
             Text(
               'Welcome Back $name',
