@@ -1,10 +1,70 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:nurse_app/components/admin_card.dart';
 import 'package:nurse_app/components/admin_header.dart';
 import 'package:nurse_app/components/nurse_card.dart';
+import 'package:nurse_app/consts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ManageNursesPage extends StatelessWidget {
+class ManageNursesPage extends StatefulWidget {
   const ManageNursesPage({super.key});
+
+  @override
+  _ManageNursesPageState createState() => _ManageNursesPageState();
+}
+
+class _ManageNursesPageState extends State<ManageNursesPage> {
+  List<dynamic> nurses = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchNurses();
+  }
+
+  Future<void> fetchNurses() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString(KEY_ACCESS_TOKEN);
+
+    final response = await http.get(
+      Uri.parse('$HOST/nurses'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      setState(() {
+        nurses = data['nurses'];
+        isLoading = false;
+      });
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Update Failed'),
+            content: const Text('Failed to fetch nurses.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,25 +102,22 @@ class ManageNursesPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  NurseCard(
-                    imagePath: 'assets/images/dr.png',
-                    title: 'John Doe',
-                    onTap: () {
-                      Navigator.pushNamed(context, '/editNurse');
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  NurseCard(
-                    imagePath: 'assets/images/dr.png',
-                    title: 'Jane Smith',
-                    onTap: () {},
-                  ),
-                  const SizedBox(height: 10),
-                  NurseCard(
-                    imagePath: 'assets/images/dr.png',
-                    title: 'David Johnson',
-                    onTap: () {},
-                  ),
+                  isLoading
+                      ? const CircularProgressIndicator()
+                      : Column(
+                          children: nurses.map((nurse) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              child: NurseCard(
+                                imagePath: 'assets/images/dr.png',
+                                title: nurse['name'],
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/editNurse');
+                                },
+                              ),
+                            );
+                          }).toList(),
+                        ),
                 ],
               ),
             ),
