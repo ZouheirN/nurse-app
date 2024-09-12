@@ -92,8 +92,64 @@ class _EditNursePageState extends State<EditNursePage> {
     }
   }
 
-  // Function to handle nurse update
-  
+  Future<void> updateNurse() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString(KEY_ACCESS_TOKEN);
+
+    final response = await http.put(
+      Uri.parse('$HOST/admin/nurses/${widget.nurseId}'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'name': nameController.text,
+        'phone_number': phoneController.text,
+        'address': addressController.text,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Update Success'),
+            content: const Text('Nurse updated successfully.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      final errorData = json.decode(response.body);
+      final errorMessage = errorData['message'];
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Update Failed'),
+            content: Text(errorMessage),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,7 +185,9 @@ class _EditNursePageState extends State<EditNursePage> {
                       ),
                       const SizedBox(height: 20),
                       MyThirdButton(
-                        onTap: () {},
+                        onTap: () {
+                          updateNurse();
+                        },
                         buttonText: 'Update Nurse',
                       ),
                     ],
