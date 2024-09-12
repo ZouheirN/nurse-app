@@ -54,7 +54,10 @@ class MyApp extends StatelessWidget {
         '/adminDashboard' : (context) => const AdminDashboardPage(),
         '/manageNurses' : (context) => const ManageNursesPage(),
         '/addNurse' : (context) => const AddNursePage(),
-        '/editNurse' : (context) => const EditNursePage(),
+        '/editNurse': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments as int;
+          return EditNursePage(nurseId: args);
+        },
         '/manageServices' : (context) => const ManageServicesPage(),
         '/addService' : (context) => const AddServicePage(),
         '/editService' : (context) => const EditServicePage(),
