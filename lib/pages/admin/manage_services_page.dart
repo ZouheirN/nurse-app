@@ -1,10 +1,70 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:nurse_app/consts.dart';
+import 'package:http/http.dart' as http;
 import 'package:nurse_app/components/admin_card.dart';
 import 'package:nurse_app/components/admin_header.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nurse_app/components/service_card_admin.dart';
 
-class ManageServicesPage extends StatelessWidget {
+class ManageServicesPage extends StatefulWidget {
   const ManageServicesPage({super.key});
+
+  @override
+  State<ManageServicesPage> createState() => _ManageServicesPageState();
+}
+
+class _ManageServicesPageState extends State<ManageServicesPage> {
+  List<dynamic> services = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchServices();
+  }
+
+  Future<void> fetchServices() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString(KEY_ACCESS_TOKEN);
+
+    final response = await http.get(
+      Uri.parse('$HOST/services'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      setState(() {
+        services = data['services'];
+        isLoading = false;
+      });
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Fetch Failed'),
+            content: const Text('Failed to fetch services.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,20 +102,28 @@ class ManageServicesPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  ServiceCardAdmin(
-                    title: 'Service Name',
-                    price: '20\$',
-                    onTap: () {
-                      Navigator.pushNamed(context, '/editService');
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  ServiceCardAdmin(
-                    title: 'Service Name',
-                    price: '20\$',
-                    salePrice: '15\$',
-                    onTap: () {},
-                  ),
+                  isLoading
+                      ? const CircularProgressIndicator()
+                      : Column(
+                          children: services.map((service) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              child: ServiceCardAdmin(
+                                imagePath: 'assets/images/square_logo.png',
+                                title: service['name'],
+                                price: service['price'],
+                                salePrice: service['discount_price'],
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    '/editService',
+                                    arguments: service['id'],
+                                  );
+                                },
+                              ),
+                            );
+                          }).toList(),
+                        ),
                 ],
               ),
             ),
