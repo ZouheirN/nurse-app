@@ -92,6 +92,68 @@ class _EditServicePageState extends State<EditServicePage> {
     }
   }
 
+  Future<void> updateService() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString(KEY_ACCESS_TOKEN);
+
+    final int updatedPrice = int.tryParse(priceController.text) ?? 0;
+    final int updatedDiscountPrice =
+        int.tryParse(discountPriceController.text) ?? 0;
+
+    final response = await http.put(
+      Uri.parse('$HOST/admin/services/${widget.serviceId}'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'name': nameController.text,
+        'price': updatedPrice,
+        'discount_price': updatedDiscountPrice,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Update Success'),
+            content: const Text('Service updated successfully.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      final errorData = json.decode(response.body);
+      final errorMessage = errorData['message'];
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Update Failed'),
+            content: Text(errorMessage),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -140,7 +202,9 @@ class _EditServicePageState extends State<EditServicePage> {
                       ),
                       const SizedBox(height: 20),
                       MyThirdButton(
-                        onTap: () {},
+                        onTap: () {
+                          updateService();
+                        },
                         buttonText: 'Update Service',
                       ),
                     ],
