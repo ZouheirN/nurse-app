@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ServiceCardAdmin extends StatelessWidget {
+  final String imagePath;
   final String title;
   final String price;
   final String? salePrice;
@@ -8,6 +9,7 @@ class ServiceCardAdmin extends StatelessWidget {
 
   const ServiceCardAdmin({
     super.key,
+    required this.imagePath,
     required this.title,
     required this.price,
     this.salePrice,
@@ -36,7 +38,7 @@ class ServiceCardAdmin extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.asset(
-                  'assets/images/square_logo.png',
+                  imagePath,
                   width: 60,
                   height: 60,
                   fit: BoxFit.cover,
