@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:nurse_app/consts.dart';
 import 'package:http/http.dart' as http;
 import 'package:nurse_app/components/admin_card.dart';
-import 'package:nurse_app/components/admin_header.dart';
 import 'package:nurse_app/components/nurse_card.dart';
-import 'package:nurse_app/consts.dart';
+import 'package:nurse_app/components/admin_header.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ManageNursesPage extends StatefulWidget {
@@ -46,7 +46,7 @@ class _ManageNursesPageState extends State<ManageNursesPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Update Failed'),
+            title: const Text('Fetch Failed'),
             content: const Text('Failed to fetch nurses.'),
             actions: [
               TextButton(
@@ -112,7 +112,11 @@ class _ManageNursesPageState extends State<ManageNursesPage> {
                                 imagePath: 'assets/images/dr.png',
                                 title: nurse['name'],
                                 onTap: () {
-                                  Navigator.pushNamed(context, '/editNurse');
+                                  Navigator.pushNamed(
+                                    context,
+                                    '/editNurse',
+                                    arguments: nurse['id'],
+                                  );
                                 },
                               ),
                             );
