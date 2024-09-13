@@ -30,7 +30,7 @@ class _AddServicePageState extends State<AddServicePage> {
     super.dispose();
   }
 
-  void createService(String serviceName, int price, int discountPrice,
+  void createService(String serviceName, double price, double discountPrice,
       String? image, BuildContext context) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -138,14 +138,16 @@ class _AddServicePageState extends State<AddServicePage> {
                         Expanded(
                           child: LabeledMiniTextfieldAdmin(
                             label: 'Service Price',
-                            keyboardType: TextInputType.number,
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
                             controller: priceController,
                           ),
                         ),
                         Expanded(
                           child: LabeledMiniTextfieldAdmin(
                             label: 'Sale Price',
-                            keyboardType: TextInputType.number,
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
                             controller: discountPriceController,
                           ),
                         ),
@@ -157,16 +159,17 @@ class _AddServicePageState extends State<AddServicePage> {
                     label: 'Nurse Picture',
                     onImageSelected: (image) {
                       setState(() {
-                        selectedImage = image
-                            ?.path; // Adjust this according to how the image is handled
+                        selectedImage = image?.path;
                       });
                     },
                   ),
                   const SizedBox(height: 20),
                   MyThirdButton(
                     onTap: () {
-                      final int price = int.tryParse(priceController.text) ?? 0;
-                      final int discountPrice = int.tryParse(discountPriceController.text) ?? 0;
+                      final double price =
+                          double.tryParse(priceController.text) ?? 0.0;
+                      final double discountPrice =
+                          double.tryParse(discountPriceController.text) ?? 0.0;
                       createService(
                         nameController.text,
                         price,
