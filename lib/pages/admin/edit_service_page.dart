@@ -69,13 +69,13 @@ class _EditServicePageState extends State<EditServicePage> {
       if (foundService != null) {
         setState(() {
           name = foundService['name'] ?? '';
-          price = foundService['price'] ?? '';
-          discountPrice = foundService['discount_price'] ?? '';
+          price = foundService['price'].toString();
+          discountPrice = foundService['discount_price']?.toString();
           image = foundService['service_pic'];
 
           nameController.text = name;
           priceController.text = price;
-          discountPriceController.text = discountPrice!;
+          discountPriceController.text = discountPrice ?? '';
           isLoading = false;
         });
       } else {
@@ -96,9 +96,9 @@ class _EditServicePageState extends State<EditServicePage> {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString(KEY_ACCESS_TOKEN);
 
-    final int updatedPrice = int.tryParse(priceController.text) ?? 0;
-    final int updatedDiscountPrice =
-        int.tryParse(discountPriceController.text) ?? 0;
+    final double updatedPrice = double.tryParse(priceController.text) ?? 0.0;
+    final double updatedDiscountPrice =
+        double.tryParse(discountPriceController.text) ?? 0.0;
 
     final response = await http.put(
       Uri.parse('$HOST/admin/services/${widget.serviceId}'),
@@ -134,6 +134,7 @@ class _EditServicePageState extends State<EditServicePage> {
     } else {
       final errorData = json.decode(response.body);
       final errorMessage = errorData['message'];
+
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -156,60 +157,79 @@ class _EditServicePageState extends State<EditServicePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (hasError) {
+      return const Scaffold(
+        body: Center(child: Text('Error loading service data')),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const AdminHeader(title: 'Edit Service'),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : hasError
-              ? const Center(child: Text('Error loading service details'))
-              : SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 40),
-                      LabeledTextfieldAdmin(
-                        label: 'Service Name',
-                        keyboardType: TextInputType.name,
-                        controller: nameController,
-                      ),
-                      const SizedBox(height: 10),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 35),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: LabeledMiniTextfieldAdmin(
-                                label: 'Service Price',
-                                keyboardType: TextInputType.number,
-                                controller: priceController,
-                              ),
-                            ),
-                            Expanded(
-                              child: LabeledMiniTextfieldAdmin(
-                                label: 'Sale Price',
-                                keyboardType: TextInputType.number,
-                                controller: discountPriceController,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      PickImage(
-                        label: 'Nurse Picture',
-                        onImageSelected: (image) {},
-                      ),
-                      const SizedBox(height: 20),
-                      MyThirdButton(
-                        onTap: () {
-                          updateService();
-                        },
-                        buttonText: 'Update Service',
-                      ),
-                    ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 40),
+                  LabeledTextfieldAdmin(
+                    label: 'Service Name',
+                    keyboardType: TextInputType.name,
+                    controller: nameController,
                   ),
-                ),
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 35),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: LabeledMiniTextfieldAdmin(
+                            label: 'Service Price',
+                            keyboardType:
+                                const TextInputType.numberWithOptions(decimal: true),
+                            controller: priceController,
+                          ),
+                        ),
+                        Expanded(
+                          child: LabeledMiniTextfieldAdmin(
+                            label: 'Sale Price',
+                            keyboardType:
+                                const TextInputType.numberWithOptions(decimal: true),
+                            controller: discountPriceController,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  PickImage(
+                    label: 'Nurse Picture',
+                    onImageSelected: (image) {
+                      setState(() {
+                        selectedImage = image?.path;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  MyThirdButton(
+                    onTap: updateService,
+                    buttonText: 'Update Service',
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
