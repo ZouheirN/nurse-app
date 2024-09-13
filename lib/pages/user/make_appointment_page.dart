@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:nurse_app/components/gender_selection_field.dart';
 import 'package:nurse_app/components/header.dart';
 import 'package:nurse_app/components/labeled_date.dart';
@@ -7,57 +10,70 @@ import 'package:nurse_app/components/second_button.dart';
 import 'package:nurse_app/components/labeled_textfield.dart';
 import 'package:nurse_app/components/service_card.dart';
 import 'package:nurse_app/components/third_button.dart';
+import 'package:nurse_app/consts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class MakeAppointmentPage extends StatelessWidget {
+class MakeAppointmentPage extends StatefulWidget {
   const MakeAppointmentPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<Service> services = [
-      Service(
-        imagePath: 'assets/images/logo.png',
-        title: 'Service 1',
-        price: 20,
-        salePrice: 15,
-      ),
-      Service(
-        imagePath: 'assets/images/logo.png',
-        title: 'Service 2',
-        price: 30,
-        salePrice: 25,
-      ),
-      Service(
-        imagePath: 'assets/images/logo.png',
-        title: 'Service 3',
-        price: 40,
-        salePrice: null,
-      ),
-      Service(
-        imagePath: 'assets/images/logo.png',
-        title: 'Service 4',
-        price: 50,
-        salePrice: 45,
-      ),
-      Service(
-        imagePath: 'assets/images/logo.png',
-        title: 'Service 5',
-        price: 60,
-        salePrice: 50,
-      ),
-      Service(
-        imagePath: 'assets/images/logo.png',
-        title: 'Service 6',
-        price: 70,
-        salePrice: 65,
-      ),
-      Service(
-        imagePath: 'assets/images/logo.png',
-        title: 'Service 7',
-        price: 80,
-        salePrice: null,
-      ),
-    ];
+  State<MakeAppointmentPage> createState() => _MakeAppointmentPageState();
+}
 
+class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
+  List<dynamic> services = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchServices();
+  }
+
+  Future<void> fetchServices() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString(KEY_ACCESS_TOKEN);
+
+    final response = await http.get(
+      Uri.parse('$HOST/services'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      setState(() {
+        services = data['services'];
+        isLoading = false;
+      });
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Fetch Failed'),
+            content: const Text('Failed to fetch services.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -139,7 +155,7 @@ class MakeAppointmentPage extends StatelessWidget {
               ),
               const SizedBox(height: 7),
               const GenderSelectionField(),
-              const SizedBox(height: 7),
+              const SizedBox(height: 10),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 child: Text(
@@ -151,19 +167,26 @@ class MakeAppointmentPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
-                  children: services.map((service) {
-                    return ServiceCard(
-                      imagePath: service.imagePath,
-                      title: service.title,
-                      price: service.price,
-                      salePrice: service.salePrice,
-                    );
-                  }).toList(),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: isLoading
+                      ? const CircularProgressIndicator()
+                      : Wrap(
+                          spacing: 10,
+                          runSpacing: 10,
+                          children: services.map((service) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              child: ServiceCard(
+                                imagePath: 'assets/images/square_logo.png',
+                                title: service['name'],
+                                price: service['price'],
+                                salePrice: service['discount_price'],
+                              ),
+                            );
+                          }).toList(),
+                        ),
                 ),
               ),
               const SizedBox(height: 20),
