@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class ServiceCard extends StatefulWidget {
   final String imagePath;
   final String title;
-  final int price;
-  final int? salePrice;
+  final String price;
+  final String? salePrice;
 
   const ServiceCard({
     super.key,
@@ -15,7 +15,7 @@ class ServiceCard extends StatefulWidget {
   });
 
   @override
-  _ServiceCardState createState() => _ServiceCardState();
+  State<ServiceCard> createState() => _ServiceCardState();
 }
 
 class _ServiceCardState extends State<ServiceCard> {
@@ -27,12 +27,22 @@ class _ServiceCardState extends State<ServiceCard> {
     });
   }
 
+  String formatPrice(String price) {
+    double priceValue = double.parse(price);
+
+    if (priceValue == priceValue.roundToDouble()) {
+      return priceValue.toInt().toString();
+    } else {
+      return priceValue.toStringAsFixed(2);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: _toggleSelection,
       child: Container(
-        width: 85,
+        width: MediaQuery.of(context).size.width * 0.24,
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -54,8 +64,8 @@ class _ServiceCardState extends State<ServiceCard> {
           children: [
             Image.asset(
               widget.imagePath,
-              height: 60,
-              width: 85,
+              height: MediaQuery.of(context).size.width * 0.17,
+              width: MediaQuery.of(context).size.width * 0.24,
             ),
             const SizedBox(height: 8),
             Text(
@@ -72,34 +82,44 @@ class _ServiceCardState extends State<ServiceCard> {
                   ? MainAxisAlignment.spaceBetween
                   : MainAxisAlignment.center,
               children: [
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Text(
-                      '${widget.price}\$',
-                      style: TextStyle(
-                        color: widget.salePrice != null
-                            ? Colors.grey
-                            : Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    if (widget.salePrice != null)
-                      Positioned.fill(
-                        child: CustomPaint(
-                          painter: DiagonalLinePainter(),
+                Flexible(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          '${formatPrice(widget.price)}\$',
+                          style: TextStyle(
+                            color: widget.salePrice != null
+                                ? Colors.grey
+                                : Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
-                  ],
+                      if (widget.salePrice != null)
+                        Positioned.fill(
+                          child: CustomPaint(
+                            painter: DiagonalLinePainter(),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
                 if (widget.salePrice != null) ...[
                   const SizedBox(width: 5),
-                  Text(
-                    '${widget.salePrice}\$',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
+                  Flexible(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        '${formatPrice(widget.salePrice!)}\$',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ),
                   ),
                 ],
