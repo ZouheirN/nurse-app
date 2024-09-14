@@ -11,6 +11,7 @@ import 'package:nurse_app/components/labeled_textfield.dart';
 import 'package:nurse_app/components/service_card.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/consts.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MakeAppointmentPage extends StatefulWidget {
@@ -48,22 +49,13 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
         isLoading = false;
       });
     } else {
-      showDialog(
+      final errorData = json.decode(response.body);
+      final errorMessage = errorData['message'];
+
+      QuickAlert.show(
         context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Fetch Failed'),
-            content: const Text('Failed to fetch services.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
+        type: QuickAlertType.error,
+        text: errorMessage,
       );
 
       setState(() {
