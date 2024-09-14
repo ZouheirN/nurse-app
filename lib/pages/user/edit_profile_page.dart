@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:nurse_app/consts.dart';
 import 'package:http/http.dart' as http;
 import 'package:nurse_app/components/third_button.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nurse_app/components/labeled_edit_textfield.dart';
 import 'package:nurse_app/components/edit_phone_number_field.dart';
@@ -91,40 +92,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
 
     if (response.statusCode == 200) {
-      showDialog(
+      QuickAlert.show(
         context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Update Success'),
-            content: const Text('Profile updated successfully.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
+        type: QuickAlertType.success,
+        text: 'Profile updated successfully.',
       );
     } else {
-      showDialog(
+      final errorData = json.decode(response.body);
+      final errorMessage = errorData['message'];
+
+      QuickAlert.show(
         context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Update Failed'),
-            content: const Text('Failed to update profile.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
+        type: QuickAlertType.error,
+        text: errorMessage,
       );
     }
   }
