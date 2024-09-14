@@ -6,6 +6,7 @@ import 'package:nurse_app/components/admin_header.dart';
 import 'package:nurse_app/components/labeled_textfield.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/components/labeled_dropdown.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ImmediateOrderPage extends StatefulWidget {
@@ -44,22 +45,10 @@ class _ImmediateOrderPageState extends State<ImmediateOrderPage> {
         isLoading = false;
       });
     } else {
-      showDialog(
+      QuickAlert.show(
         context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Fetch Failed'),
-            content: const Text('Failed to fetch nurses.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
+        type: QuickAlertType.error,
+        text: 'Failed to fetch nurses.',
       );
 
       setState(() {

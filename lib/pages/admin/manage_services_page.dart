@@ -4,6 +4,7 @@ import 'package:nurse_app/consts.dart';
 import 'package:http/http.dart' as http;
 import 'package:nurse_app/components/admin_card.dart';
 import 'package:nurse_app/components/admin_header.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nurse_app/components/service_card_admin.dart';
 
@@ -42,22 +43,10 @@ class _ManageServicesPageState extends State<ManageServicesPage> {
         isLoading = false;
       });
     } else {
-      showDialog(
+      QuickAlert.show(
         context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Fetch Failed'),
-            content: const Text('Failed to fetch services.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
+        type: QuickAlertType.error,
+        text: 'Failed to fetch services.',
       );
 
       setState(() {
