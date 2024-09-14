@@ -6,6 +6,7 @@ import 'package:nurse_app/components/pick_image.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/components/labeled_textfield_admin.dart';
 import 'package:nurse_app/components/labeled_mini_textfield_admin.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nurse_app/consts.dart';
 
@@ -51,62 +52,30 @@ class _AddServicePageState extends State<AddServicePage> {
       );
 
       if (response.statusCode == 201) {
-        showDialog(
+        QuickAlert.show(
           context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Service Created'),
-              content: const Text('Service created successfully.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
+          type: QuickAlertType.success,
+          text: 'Service created successfully',
+          onConfirmBtnTap: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
           },
         );
       } else {
         final errorData = json.decode(response.body);
         final errorMessage = errorData['message'];
 
-        showDialog(
+        QuickAlert.show(
           context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Create Failed'),
-              content: Text(errorMessage),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
+          type: QuickAlertType.error,
+          text: errorMessage,
         );
       }
     } catch (e) {
-      showDialog(
+      QuickAlert.show(
         context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: const Text('An error occurred. Please try again later.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
+        type: QuickAlertType.error,
+        text: 'An error occurred, please try again later.',
       );
     }
   }
