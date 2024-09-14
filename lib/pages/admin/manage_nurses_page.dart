@@ -11,7 +11,7 @@ class ManageNursesPage extends StatefulWidget {
   const ManageNursesPage({super.key});
 
   @override
-  _ManageNursesPageState createState() => _ManageNursesPageState();
+  State<ManageNursesPage> createState() => _ManageNursesPageState();
 }
 
 class _ManageNursesPageState extends State<ManageNursesPage> {
