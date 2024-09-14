@@ -96,6 +96,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
         context: context,
         type: QuickAlertType.success,
         text: 'Profile updated successfully.',
+        onConfirmBtnTap: () {
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+        },
       );
     } else {
       final errorData = json.decode(response.body);
