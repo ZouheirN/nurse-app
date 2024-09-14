@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:nurse_app/components/button.dart';
 import 'package:nurse_app/components/textfield.dart';
 import 'package:http/http.dart' as http;
+import 'package:quickalert/quickalert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nurse_app/consts.dart';
 
@@ -36,43 +37,20 @@ class LoginPage extends StatelessWidget {
           Navigator.pushNamed(context, '/home');
         }
       } else {
-        // Error handling
-        showDialog(
+        final errorData = json.decode(response.body);
+        final errorMessage = errorData['message'];
+
+        QuickAlert.show(
           context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Login Failed'),
-              content:
-                  const Text('Invalid email or password. Please try again.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
+          type: QuickAlertType.error,
+          text: errorMessage,
         );
       }
     } catch (e) {
-      showDialog(
+      QuickAlert.show(
         context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: const Text('An error occurred. Please try again later.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
+        type: QuickAlertType.error,
+        text: 'An error occurred, please try again later.',
       );
     }
   }
