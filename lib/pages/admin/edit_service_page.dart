@@ -98,8 +98,16 @@ class _EditServicePageState extends State<EditServicePage> {
     final token = prefs.getString(KEY_ACCESS_TOKEN);
 
     final double updatedPrice = double.tryParse(priceController.text) ?? 0.0;
-    final double updatedDiscountPrice =
-        double.tryParse(discountPriceController.text) ?? 0.0;
+    final String discountPriceText = discountPriceController.text;
+
+    final Map<String, dynamic> requestBody = {
+      'name': nameController.text,
+      'price': updatedPrice,
+      if (discountPriceText.isNotEmpty)
+        'discount_price': double.tryParse(discountPriceText) ?? 0.0
+      else
+        'discount_price': null,
+    };
 
     final response = await http.put(
       Uri.parse('$HOST/admin/services/${widget.serviceId}'),
@@ -107,11 +115,7 @@ class _EditServicePageState extends State<EditServicePage> {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       },
-      body: json.encode({
-        'name': nameController.text,
-        'price': updatedPrice,
-        'discount_price': updatedDiscountPrice,
-      }),
+      body: json.encode(requestBody),
     );
 
     if (response.statusCode == 200) {
@@ -194,11 +198,7 @@ class _EditServicePageState extends State<EditServicePage> {
                   const SizedBox(height: 20),
                   PickImage(
                     label: 'Nurse Picture',
-                    onImageSelected: (image) {
-                      setState(() {
-                        selectedImage = image?.path;
-                      });
-                    },
+                    onImageSelected: (image) {},
                   ),
                   const SizedBox(height: 20),
                   MyThirdButton(
