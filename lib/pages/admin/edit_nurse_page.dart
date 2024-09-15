@@ -107,6 +107,7 @@ class _EditNursePageState extends State<EditNursePage> {
         'name': nameController.text,
         'phone_number': phoneController.text,
         'address': addressController.text,
+        'profile_picture': selectedImage ?? profilePicture,
       }),
     );
 
@@ -163,7 +164,12 @@ class _EditNursePageState extends State<EditNursePage> {
                       const SizedBox(height: 20),
                       PickImage(
                         label: 'Nurse Picture',
-                        onImageSelected: (image) {},
+                        initialImageUrl: profilePicture,
+                        onImageSelected: (imageUrl) {
+                          setState(() {
+                            selectedImage = imageUrl;
+                          });
+                        },
                       ),
                       const SizedBox(height: 20),
                       MyThirdButton(
