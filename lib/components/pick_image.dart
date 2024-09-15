@@ -1,12 +1,14 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 
 class PickImage extends StatefulWidget {
   final String label;
   final String text;
   final String imagePath;
-  final void Function(File? image)? onImageSelected;
+  final void Function(String? imageUrl)? onImageSelected;
 
   const PickImage({
     super.key,
@@ -22,6 +24,7 @@ class PickImage extends StatefulWidget {
 
 class _PickImageState extends State<PickImage> {
   File? _selectedImage;
+  String? _imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +47,16 @@ class _PickImageState extends State<PickImage> {
               _selectedImage!,
               width: 85,
               height: 85,
+              fit: BoxFit.cover,
+            )
+          else if (_imageUrl != null)
+            Image.network(
+              _imageUrl!,
+              width: 85,
+              height: 85,
+              fit: BoxFit.cover,
             ),
-          if (_selectedImage != null) const SizedBox(height: 3),
+          const SizedBox(height: 3),
           InkWell(
             onTap: _pickImageFromGallery,
             child: Row(
@@ -74,20 +85,58 @@ class _PickImageState extends State<PickImage> {
   }
 
   Future<void> _pickImageFromGallery() async {
-    final returnedImage =
+    final pickedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
-    if (returnedImage != null) {
+    if (pickedImage != null) {
       setState(() {
-        _selectedImage = File(returnedImage.path);
+        _selectedImage = File(pickedImage.path);
+        _imageUrl = null;
       });
+      final imageUrl = await _uploadImage(_selectedImage!);
+      if (imageUrl != null) {
+        setState(() {
+          _imageUrl = imageUrl;
+          _selectedImage = null;
+        });
+      }
       if (widget.onImageSelected != null) {
-        widget.onImageSelected!(_selectedImage);
+        widget.onImageSelected!(imageUrl);
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('No image selected')),
       );
+    }
+  }
+
+  Future<String?> _uploadImage(File image) async {
+    const String apiKey = 'KEY';
+    final Uri uploadUrl =
+        Uri.parse('https://api.imgbb.com/1/upload?key=$apiKey');
+
+    try {
+      final request = http.MultipartRequest('POST', uploadUrl)
+        ..files.add(
+          http.MultipartFile.fromBytes(
+            'image',
+            await image.readAsBytes(),
+            filename: 'image.jpg',
+          ),
+        );
+
+      final response = await request.send();
+      final responseBody = await response.stream.bytesToString();
+      final responseData = json.decode(responseBody);
+
+      if (response.statusCode == 200) {
+        return responseData['data']['url'];
+      } else {
+        throw Exception('Failed to upload image');
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
+      return null;
     }
   }
 }
