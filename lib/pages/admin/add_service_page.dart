@@ -21,7 +21,8 @@ class _AddServicePageState extends State<AddServicePage> {
   final nameController = TextEditingController();
   final priceController = TextEditingController();
   final discountPriceController = TextEditingController();
-  String? selectedImage;
+  String? _serviceImageUrl;
+  bool _isSubmitting = false;
 
   @override
   void dispose() {
@@ -31,11 +32,39 @@ class _AddServicePageState extends State<AddServicePage> {
     super.dispose();
   }
 
+  bool _validateInputs() {
+    if (nameController.text.isEmpty || priceController.text.isEmpty) {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        text: 'Service name and price are required.',
+      );
+      return false;
+    }
+    return true;
+  }
+
   void createService(String serviceName, double price, double discountPrice,
-      String? image, BuildContext context) async {
+      String? imageUrl, BuildContext context) async {
+    if (!_validateInputs()) return;
+
+    setState(() {
+      _isSubmitting = true;
+    });
+
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString(KEY_ACCESS_TOKEN);
+
+      final Map<String, dynamic> requestBody = {
+        'name': serviceName,
+        'price': price,
+        'service_pic': imageUrl ?? '',
+      };
+
+      if (discountPrice != 0) {
+        requestBody['discount_price'] = discountPrice;
+      }
 
       final response = await http.post(
         Uri.parse('$HOST/admin/services'),
@@ -43,13 +72,12 @@ class _AddServicePageState extends State<AddServicePage> {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({
-          'name': serviceName,
-          'price': price,
-          'discount_price': discountPrice,
-          'image': image,
-        }),
+        body: jsonEncode(requestBody),
       );
+
+      setState(() {
+        _isSubmitting = false;
+      });
 
       if (response.statusCode == 201) {
         QuickAlert.show(
@@ -72,6 +100,9 @@ class _AddServicePageState extends State<AddServicePage> {
         );
       }
     } catch (e) {
+      setState(() {
+        _isSubmitting = false;
+      });
       QuickAlert.show(
         context: context,
         type: QuickAlertType.error,
@@ -125,29 +156,35 @@ class _AddServicePageState extends State<AddServicePage> {
                   ),
                   const SizedBox(height: 20),
                   PickImage(
-                    label: 'Nurse Picture',
-                    onImageSelected: (image) {
+                    label: 'Service Picture',
+                    onImageSelected: (imageUrl) {
                       setState(() {
-                        selectedImage = image?.path;
+                        _serviceImageUrl = imageUrl;
                       });
                     },
                   ),
                   const SizedBox(height: 20),
                   MyThirdButton(
-                    onTap: () {
-                      final double price =
-                          double.tryParse(priceController.text) ?? 0.0;
-                      final double discountPrice =
-                          double.tryParse(discountPriceController.text) ?? 0.0;
-                      createService(
-                        nameController.text,
-                        price,
-                        discountPrice,
-                        selectedImage,
-                        context,
-                      );
-                    },
-                    buttonText: 'Add Service',
+                    onTap: _isSubmitting
+                        ? null
+                        : () {
+                            final double price =
+                                double.tryParse(priceController.text) ?? 0.0;
+                            final double discountPrice =
+                                double.tryParse(discountPriceController.text) ??
+                                    0.0;
+
+                            if (!_validateInputs()) return;
+
+                            createService(
+                              nameController.text,
+                              price,
+                              discountPrice,
+                              _serviceImageUrl,
+                              context,
+                            );
+                          },
+                    buttonText: _isSubmitting ? 'Submitting...' : 'Add Service',
                   ),
                 ],
               ),
