@@ -7,14 +7,14 @@ import 'package:http/http.dart' as http;
 class PickImage extends StatefulWidget {
   final String label;
   final String text;
-  final String imagePath;
+  final String? initialImageUrl;
   final void Function(String? imageUrl)? onImageSelected;
 
   const PickImage({
     super.key,
     required this.label,
     this.text = 'Upload Image from gallery',
-    this.imagePath = 'assets/images/image-gallery.png',
+    this.initialImageUrl,
     this.onImageSelected,
   });
 
@@ -25,6 +25,12 @@ class PickImage extends StatefulWidget {
 class _PickImageState extends State<PickImage> {
   File? _selectedImage;
   String? _imageUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _imageUrl = widget.initialImageUrl;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +47,7 @@ class _PickImageState extends State<PickImage> {
               fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: 3),
+          const SizedBox(height: 10),
           if (_selectedImage != null)
             Image.file(
               _selectedImage!,
@@ -56,13 +62,13 @@ class _PickImageState extends State<PickImage> {
               height: 85,
               fit: BoxFit.cover,
             ),
-          const SizedBox(height: 3),
+          const SizedBox(height: 10),
           InkWell(
             onTap: _pickImageFromGallery,
             child: Row(
               children: [
                 Image.asset(
-                  widget.imagePath,
+                  'assets/images/image-gallery.png',
                   width: 20,
                   height: 20,
                 ),
@@ -99,9 +105,9 @@ class _PickImageState extends State<PickImage> {
           _imageUrl = imageUrl;
           _selectedImage = null;
         });
-      }
-      if (widget.onImageSelected != null) {
-        widget.onImageSelected!(imageUrl);
+        if (widget.onImageSelected != null) {
+          widget.onImageSelected!(imageUrl);
+        }
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
