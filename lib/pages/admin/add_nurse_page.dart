@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:nurse_app/components/gender_selection_field_admin.dart';
 import 'package:nurse_app/consts.dart';
@@ -24,6 +23,7 @@ class _AddNursePageState extends State<AddNursePage> {
   final addressController = TextEditingController();
   final phoneNumberController = TextEditingController();
   final genderController = GenderSelectionController();
+  String? _profileImageUrl;
 
   @override
   void dispose() {
@@ -34,7 +34,7 @@ class _AddNursePageState extends State<AddNursePage> {
   }
 
   void createNurse(String name, String phoneNumber, String address,
-      BuildContext context) async {
+      String? imageUrl, BuildContext context) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString(KEY_ACCESS_TOKEN);
@@ -49,6 +49,7 @@ class _AddNursePageState extends State<AddNursePage> {
           'phone_number': phoneNumber,
           'address': address,
           'gender': genderController.getGender(),
+          'profile_picture': imageUrl ?? '',
         },
       );
 
@@ -112,7 +113,11 @@ class _AddNursePageState extends State<AddNursePage> {
                   const SizedBox(height: 20),
                   PickImage(
                     label: 'Nurse Picture',
-                    onImageSelected: (image) {},
+                    onImageSelected: (imageUrl) {
+                      setState(() {
+                        _profileImageUrl = imageUrl;
+                      });
+                    },
                   ),
                   const SizedBox(height: 20),
                   MyThirdButton(
@@ -121,6 +126,7 @@ class _AddNursePageState extends State<AddNursePage> {
                         nameController.text,
                         phoneNumberController.text,
                         addressController.text,
+                        _profileImageUrl,
                         context,
                       );
                     },
