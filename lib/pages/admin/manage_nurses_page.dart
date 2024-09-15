@@ -98,7 +98,8 @@ class _ManageNursesPageState extends State<ManageNursesPage> {
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 5),
                               child: NurseCard(
-                                imagePath: 'assets/images/dr.png',
+                                imagePath: nurse['profile_picture'] ??
+                                    'assets/images/default_profile.png',
                                 title: nurse['name'],
                                 onTap: () {
                                   Navigator.pushNamed(
