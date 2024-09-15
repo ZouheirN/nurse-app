@@ -33,12 +33,7 @@ class NurseCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  imagePath,
-                  width: 60,
-                  height: 60,
-                  fit: BoxFit.cover,
-                ),
+                child: _buildImage(imagePath),
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -63,5 +58,31 @@ class NurseCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildImage(String imagePath) {
+    if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
+      return Image.network(
+        imagePath,
+        width: 60,
+        height: 60,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset(
+            'assets/images/default_profile.png',
+            width: 60,
+            height: 60,
+            fit: BoxFit.cover,
+          );
+        },
+      );
+    } else {
+      return Image.asset(
+        imagePath,
+        width: 60,
+        height: 60,
+        fit: BoxFit.cover,
+      );
+    }
   }
 }
