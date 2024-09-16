@@ -18,7 +18,7 @@ class ScheduledOrderPage extends StatefulWidget {
 }
 
 class _ScheduledOrderPageState extends State<ScheduledOrderPage> {
-  List<String> nurses = [];
+  List<Map<String, String>> nurses = [];
   bool isLoading = true;
 
   @override
@@ -41,8 +41,12 @@ class _ScheduledOrderPageState extends State<ScheduledOrderPage> {
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
       setState(() {
-        nurses = List<String>.from(
-            data['nurses'].map((nurse) => nurse['name'].toString()));
+        nurses = List<Map<String, String>>.from(
+          data['nurses'].map((nurse) => {
+                'name': nurse['name'].toString(),
+                'profile_picture': nurse['profile_picture'].toString(),
+              }),
+        );
         isLoading = false;
       });
     } else {
@@ -72,10 +76,13 @@ class _ScheduledOrderPageState extends State<ScheduledOrderPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 40),
-                  LabeledDropdown(
-                    label: 'Select Nurse',
-                    services: nurses,
-                  ),
+                  if (isLoading)
+                    const CircularProgressIndicator()
+                  else
+                    LabeledDropdown(
+                      label: 'Select Nurse',
+                      services: nurses,
+                    ),
                   // const SizedBox(height: 10),
                   // const LabeledDropdown(
                   //   label: 'Select Service',
