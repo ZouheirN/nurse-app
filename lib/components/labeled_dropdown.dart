@@ -3,7 +3,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 
 class LabeledDropdown extends StatefulWidget {
   final String label;
-  final List<String> services;
+  final List<Map<String, dynamic>> services;
   final String? initialValue;
   final void Function(String?)? onChanged;
   final String? Function(String?)? validator;
@@ -18,7 +18,7 @@ class LabeledDropdown extends StatefulWidget {
   });
 
   @override
-  _LabeledDropdownState createState() => _LabeledDropdownState();
+  State<LabeledDropdown> createState() => _LabeledDropdownState();
 }
 
 class _LabeledDropdownState extends State<LabeledDropdown> {
@@ -36,6 +36,47 @@ class _LabeledDropdownState extends State<LabeledDropdown> {
     setState(() {
       _isFocused = hasFocus;
     });
+  }
+
+  Widget _buildImage(String? imagePath) {
+    if (imagePath == null || imagePath.isEmpty) {
+      return Image.asset(
+        'assets/images/default_profile.png',
+        width: 35,
+        height: 35,
+        fit: BoxFit.cover,
+      );
+    } else if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
+      return Image.network(
+        imagePath,
+        width: 35,
+        height: 35,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset(
+            'assets/images/default_profile.png',
+            width: 35,
+            height: 35,
+            fit: BoxFit.cover,
+          );
+        },
+      );
+    } else {
+      return Image.asset(
+        imagePath,
+        width: 35,
+        height: 35,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset(
+            'assets/images/default_profile.png',
+            width: 35,
+            height: 35,
+            fit: BoxFit.cover,
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -77,15 +118,19 @@ class _LabeledDropdownState extends State<LabeledDropdown> {
                 ),
                 items: widget.services
                     .map((item) => DropdownMenuItem<String>(
-                          value: item,
-                          child: Text(
-                            item,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: item == selectedValue
-                                  ? Colors.black
-                                  : Colors.white,
-                            ),
+                          value: item['name'].toString(),
+                          child: Row(
+                            children: [
+                              _buildImage(item['profile_picture']),
+                              const SizedBox(width: 10),
+                              Text(
+                                item['name'],
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
                           ),
                         ))
                     .toList(),
@@ -102,6 +147,14 @@ class _LabeledDropdownState extends State<LabeledDropdown> {
                   height: 40,
                   padding: EdgeInsets.only(left: 10, right: 10),
                 ),
+                selectedItemBuilder: (BuildContext context) {
+                  return widget.services.map((item) {
+                    return Text(
+                      item['name'],
+                      style: const TextStyle(fontSize: 16, color: Colors.black),
+                    );
+                  }).toList();
+                },
                 onChanged: (value) {
                   setState(() {
                     selectedValue = value;
