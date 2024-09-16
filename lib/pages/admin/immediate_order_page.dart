@@ -17,7 +17,7 @@ class ImmediateOrderPage extends StatefulWidget {
 }
 
 class _ImmediateOrderPageState extends State<ImmediateOrderPage> {
-  List<String> nurses = [];
+  List<Map<String, String>> nurses = [];
   bool isLoading = true;
 
   @override
@@ -40,8 +40,12 @@ class _ImmediateOrderPageState extends State<ImmediateOrderPage> {
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
       setState(() {
-        nurses = List<String>.from(
-            data['nurses'].map((nurse) => nurse['name'].toString()));
+        nurses = List<Map<String, String>>.from(
+          data['nurses'].map((nurse) => {
+                'name': nurse['name'].toString(),
+                'profile_picture': nurse['profile_picture'].toString(), 
+              }),
+        );
         isLoading = false;
       });
     } else {
@@ -71,10 +75,13 @@ class _ImmediateOrderPageState extends State<ImmediateOrderPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 40),
-                  LabeledDropdown(
-                    label: 'Select Nurse',
-                    services: nurses,
-                  ),
+                  if (isLoading)
+                    const CircularProgressIndicator()
+                  else
+                    LabeledDropdown(
+                      label: 'Select Nurse',
+                      services: nurses,
+                    ),
                   const SizedBox(height: 20),
                   const LabeledTextfield(
                     label: 'Time to arrive',
