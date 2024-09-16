@@ -98,7 +98,8 @@ class _ManageServicesPageState extends State<ManageServicesPage> {
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 5),
                               child: ServiceCardAdmin(
-                                imagePath: 'assets/images/square_logo.png',
+                                imagePath: service['service_pic'] ??
+                                    'assets/images/square_logo.png',
                                 title: service['name'],
                                 price: service['price'],
                                 salePrice: service['discount_price'],
