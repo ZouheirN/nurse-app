@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nurse_app/components/gender_selection_field.dart';
 import 'package:nurse_app/components/header.dart';
+import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/second_button.dart';
 import 'package:nurse_app/components/labeled_textfield.dart';
@@ -159,7 +160,7 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: isLoading
-                      ? const CircularProgressIndicator()
+                      ? const Loader()
                       : Wrap(
                           spacing: 10,
                           runSpacing: 10,
@@ -167,7 +168,8 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 5),
                               child: ServiceCard(
-                                imagePath: 'assets/images/square_logo.png',
+                                imagePath: service['service_pic'] ??
+                                    'assets/images/square_logo.png',
                                 title: service['name'],
                                 price: service['price'],
                                 salePrice: service['discount_price'],
