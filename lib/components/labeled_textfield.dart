@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 class LabeledTextfield extends StatefulWidget {
   final String label;
   final TextInputType keyboardType;
+  final TextEditingController? controller;
 
   const LabeledTextfield({
     super.key,
     required this.label,
     this.keyboardType = TextInputType.text,
+    this.controller,
   });
 
   @override
-  _LabeledTextfieldState createState() => _LabeledTextfieldState();
+  State<LabeledTextfield> createState() => _LabeledTextfieldState();
 }
 
 class _LabeledTextfieldState extends State<LabeledTextfield> {
@@ -50,6 +52,7 @@ class _LabeledTextfieldState extends State<LabeledTextfield> {
             child: Focus(
               onFocusChange: _onFocusChange,
               child: TextField(
+                controller: widget.controller,
                 keyboardType: widget.keyboardType,
                 decoration: InputDecoration(
                   enabledBorder: const OutlineInputBorder(
@@ -60,8 +63,9 @@ class _LabeledTextfieldState extends State<LabeledTextfield> {
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     borderSide: BorderSide(color: Color(0xFFE7E7E7)),
                   ),
-                  fillColor:
-                      _isFocused ? const Color.fromARGB(255, 245, 245, 245) : const Color(0xFFE7E7E7),
+                  fillColor: _isFocused
+                      ? const Color.fromARGB(255, 245, 245, 245)
+                      : const Color(0xFFE7E7E7),
                   filled: true,
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
