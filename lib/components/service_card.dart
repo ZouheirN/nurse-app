@@ -62,11 +62,7 @@ class _ServiceCardState extends State<ServiceCard> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(
-              widget.imagePath,
-              height: MediaQuery.of(context).size.width * 0.17,
-              width: MediaQuery.of(context).size.width * 0.24,
-            ),
+            _buildImage(widget.imagePath),
             const SizedBox(height: 8),
             Text(
               widget.title,
@@ -129,6 +125,32 @@ class _ServiceCardState extends State<ServiceCard> {
         ),
       ),
     );
+  }
+
+  Widget _buildImage(String imagePath) {
+    if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
+      return Image.network(
+        imagePath,
+        height: MediaQuery.of(context).size.width * 0.17,
+        width: MediaQuery.of(context).size.width * 0.24,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset(
+            'assets/images/square_logo.png',
+            height: MediaQuery.of(context).size.width * 0.17,
+            width: MediaQuery.of(context).size.width * 0.24,
+            fit: BoxFit.cover,
+          );
+        },
+      );
+    } else {
+      return Image.asset(
+        imagePath,
+        height: MediaQuery.of(context).size.width * 0.17,
+        width: MediaQuery.of(context).size.width * 0.24,
+        fit: BoxFit.cover,
+      );
+    }
   }
 }
 
