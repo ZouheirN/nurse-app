@@ -1,23 +1,30 @@
 import 'package:flutter/material.dart';
 
+class GenderSelectionController {
+  String? selectedGender;
+
+  void selectGender(String gender) {
+    selectedGender = gender.toLowerCase();
+  }
+
+  String? getGender() {
+    return selectedGender;
+  }
+}
+
 class GenderSelectionField extends StatefulWidget {
+  final GenderSelectionController controller;
+
   const GenderSelectionField({
     super.key,
+    required this.controller,
   });
 
   @override
-  _GenderSelectionFieldState createState() => _GenderSelectionFieldState();
+  State<GenderSelectionField> createState() => _GenderSelectionFieldState();
 }
 
 class _GenderSelectionFieldState extends State<GenderSelectionField> {
-  String? selectedGender;
-
-  void _selectGender(String gender) {
-    setState(() {
-      selectedGender = gender;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -46,18 +53,23 @@ class _GenderSelectionFieldState extends State<GenderSelectionField> {
     );
   }
 
+  String _capitalize(String gender) {
+    return gender[0].toUpperCase() + gender.substring(1).toLowerCase();
+  }
+
   Widget _buildGenderOption(String gender) {
-    bool isSelected = selectedGender == gender;
+    bool isSelected = widget.controller.selectedGender == gender.toLowerCase();
     return GestureDetector(
-      onTap: () => _selectGender(gender),
+      onTap: () {
+        setState(() {
+          widget.controller.selectGender(gender);
+        });
+      },
       child: Container(
-        // width: 120,
         width: MediaQuery.of(context).size.width * 0.35,
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected
-              ? const Color.fromARGB(255, 245, 245, 245)
-              : const Color(0xFFE7E7E7),
+          color: const Color(0xFFE7E7E7),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: isSelected ? Colors.green : Colors.transparent,
@@ -66,7 +78,7 @@ class _GenderSelectionFieldState extends State<GenderSelectionField> {
         ),
         child: Center(
           child: Text(
-            gender,
+            _capitalize(gender),
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
