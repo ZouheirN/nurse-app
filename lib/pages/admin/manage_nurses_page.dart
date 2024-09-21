@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/consts.dart';
 import 'package:http/http.dart' as http;
 import 'package:nurse_app/components/admin_card.dart';
@@ -26,6 +27,10 @@ class _ManageNursesPageState extends State<ManageNursesPage> {
   }
 
   Future<void> fetchNurses() async {
+    setState(() {
+      isLoading = true;
+    });
+    
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString(KEY_ACCESS_TOKEN);
 
@@ -55,68 +60,78 @@ class _ManageNursesPageState extends State<ManageNursesPage> {
     }
   }
 
+  Future<void> _handleRefresh() async {
+    await fetchNurses();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const AdminHeader(title: 'Manage Nurses'),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 20),
-                  AdminCard(
-                    imagePath: 'assets/images/image-gallery.png',
-                    text: 'Add Nurse',
-                    onTap: () {
-                      Navigator.pushNamed(context, '/addNurse');
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Nurses',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
+      body: SafeArea(
+        child: isLoading
+            ? const Loader()
+            : RefreshIndicator(
+                onRefresh: _handleRefresh,
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 20),
+                            AdminCard(
+                              imagePath: 'assets/images/image-gallery.png',
+                              text: 'Add Nurse',
+                              onTap: () {
+                                Navigator.pushNamed(context, '/addNurse');
+                              },
+                            ),
+                            const SizedBox(height: 20),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Nurses',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Column(
+                              children: nurses.map((nurse) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 5),
+                                  child: NurseCard(
+                                    imagePath: nurse['profile_picture'] ??
+                                        'assets/images/default_profile.png',
+                                    title: nurse['name'],
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        '/editNurse',
+                                        arguments: nurse['id'],
+                                      );
+                                    },
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                  const SizedBox(height: 10),
-                  isLoading
-                      ? const CircularProgressIndicator()
-                      : Column(
-                          children: nurses.map((nurse) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5),
-                              child: NurseCard(
-                                imagePath: nurse['profile_picture'] ??
-                                    'assets/images/default_profile.png',
-                                title: nurse['name'],
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    '/editNurse',
-                                    arguments: nurse['id'],
-                                  );
-                                },
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                ],
+                ),
               ),
-            ),
-          ],
-        ),
       ),
     );
   }
