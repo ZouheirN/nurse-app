@@ -65,7 +65,10 @@ class MyApp extends StatelessWidget {
           return EditServicePage(serviceId: args);
         },
         '/manageOrders' : (context) => const ManageOrdersPage(),
-        '/orderDetails' : (context) => const OrderDetailsPage(),
+        '/orderDetails' : (context) { 
+          final args = ModalRoute.of(context)?.settings.arguments as int;
+          return OrderDetailsPage(orderId: args);
+        },
         '/immediateOrder' : (context) => const ImmediateOrderPage(),
         '/scheduledOrder' : (context) => const ScheduledOrderPage(),
         '/orderProcess' : (context) => const OrderProcessPage(),
