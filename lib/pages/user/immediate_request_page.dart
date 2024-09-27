@@ -22,6 +22,23 @@ class ImmediateRequestPage extends StatefulWidget {
 }
 
 class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
+  final nameController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  final problemDescriptionController = TextEditingController();
+  final locationController = TextEditingController();
+  final genderController = GenderSelectionController();
+
+  List<int> selectedServiceIds = [];
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    locationController.dispose();
+    phoneNumberController.dispose();
+    problemDescriptionController.dispose();
+    super.dispose();
+  }
+
   List<dynamic> services = [];
   bool isLoading = true;
 
@@ -29,6 +46,48 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
   void initState() {
     super.initState();
     fetchServices();
+  }
+
+  void createRequest(String name, String phoneNumber, String location,
+      String problemDescription, BuildContext context) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(KEY_ACCESS_TOKEN);
+
+      final response = await http.post(
+        Uri.parse('$HOST/requests'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'name': name,
+          'phone_number': phoneNumber,
+          'location': location,
+          'problem_description': problemDescription,
+          'gender': genderController.getGender(),
+          'service_ids': selectedServiceIds,
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        Navigator.pushNamed(context, '/pendingPage');
+      } else {
+        final errorData = json.decode(response.body);
+        final errorMessage = errorData['message'];
+
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.error,
+          text: errorMessage,
+        );
+      }
+    } catch (e) {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        text: 'An error occurred, please try again later.',
+      );
+    }
   }
 
   Future<void> fetchServices() async {
@@ -126,24 +185,27 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
                 ),
               ),
               const SizedBox(height: 10),
-              const LabeledTextfield(
+              LabeledTextfield(
                 label: 'Full Name',
                 keyboardType: TextInputType.name,
+                controller: nameController,
               ),
               const SizedBox(height: 7),
-              const PhoneNumberField(),
+              PhoneNumberField(controller: phoneNumberController),
               const SizedBox(height: 7),
-              const LabeledTextfield(
+              LabeledTextfield(
                 label: 'Describe your problem',
                 keyboardType: TextInputType.text,
+                controller: problemDescriptionController,
               ),
               const SizedBox(height: 7),
-              const LabeledTextfield(
+              LabeledTextfield(
                 label: 'Address',
                 keyboardType: TextInputType.text,
+                controller: locationController,
               ),
               const SizedBox(height: 7),
-              const GenderSelectionField(),
+              GenderSelectionField(controller: genderController),
               const SizedBox(height: 7),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40),
@@ -168,11 +230,21 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 5),
                               child: ServiceCard(
+                                serviceId: service['id'],
                                 imagePath: service['service_pic'] ??
                                     'assets/images/square_logo.png',
                                 title: service['name'],
                                 price: service['price'],
                                 salePrice: service['discount_price'],
+                                onSelectionChanged: (isSelected) {
+                                  setState(() {
+                                    if (isSelected) {
+                                      selectedServiceIds.add(service['id']);
+                                    } else {
+                                      selectedServiceIds.remove(service['id']);
+                                    }
+                                  });
+                                },
                               ),
                             );
                           }).toList(),
@@ -182,7 +254,13 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
               const SizedBox(height: 20),
               MyThirdButton(
                 onTap: () {
-                  Navigator.pushNamed(context, '/pendingPage');
+                  createRequest(
+                    nameController.text,
+                    phoneNumberController.text,
+                    locationController.text,
+                    problemDescriptionController.text,
+                    context,
+                  );
                 },
                 buttonText: 'Submit',
               ),
@@ -193,18 +271,4 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
       ),
     );
   }
-}
-
-class Service {
-  final String imagePath;
-  final String title;
-  final int price;
-  final int? salePrice;
-
-  Service({
-    required this.imagePath,
-    required this.title,
-    required this.price,
-    this.salePrice,
-  });
 }

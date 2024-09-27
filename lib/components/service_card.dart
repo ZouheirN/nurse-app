@@ -5,6 +5,8 @@ class ServiceCard extends StatefulWidget {
   final String title;
   final String price;
   final String? salePrice;
+  final int serviceId;
+  final ValueChanged<bool> onSelectionChanged;
 
   const ServiceCard({
     super.key,
@@ -12,6 +14,8 @@ class ServiceCard extends StatefulWidget {
     required this.title,
     required this.price,
     this.salePrice,
+    required this.serviceId,
+    required this.onSelectionChanged,
   });
 
   @override
@@ -24,6 +28,7 @@ class _ServiceCardState extends State<ServiceCard> {
   void _toggleSelection() {
     setState(() {
       isSelected = !isSelected;
+      widget.onSelectionChanged(isSelected);
     });
   }
 
