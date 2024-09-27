@@ -117,7 +117,7 @@ class _PickImageState extends State<PickImage> {
   }
 
   Future<String?> _uploadImage(File image) async {
-    const String apiKey = 'KEY';
+    const String apiKey = 'KEY'; //imgbb.com api key
     final Uri uploadUrl =
         Uri.parse('https://api.imgbb.com/1/upload?key=$apiKey');
 
