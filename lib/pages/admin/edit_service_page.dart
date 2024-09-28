@@ -196,7 +196,7 @@ class _EditServicePageState extends State<EditServicePage> {
                   ),
                   const SizedBox(height: 20),
                   PickImage(
-                    label: 'Nurse Picture',
+                    label: 'Service Picture',
                     onImageSelected: (image) {},
                   ),
                   const SizedBox(height: 20),

@@ -140,3 +140,70 @@ class _HeaderState extends State<Header> {
     );
   }
 }
+
+// import 'package:flutter/material.dart';
+// import 'package:nurse_app/services/user.dart';
+//
+// class Header extends StatelessWidget {
+//   const Header({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return ValueListenableBuilder(
+//         valueListenable: UserBox.listenToUser(),
+//         builder: (context, value, child) {
+//           return Column(
+//             children: [
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   Row(
+//                     children: [
+//                       IconButton(
+//                         icon: const Icon(Icons.location_on),
+//                         onPressed: () {
+//                           Navigator.pushNamed(context, '/updateLocation');
+//                         },
+//                       ),
+//                       Text(
+//                         UserBox.getUser()?.location ?? 'No Location',
+//                         style: const TextStyle(
+//                           fontWeight: FontWeight.w700,
+//                           fontSize: 16,
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                   IconButton(
+//                     icon: const Icon(
+//                       Icons.notifications_none,
+//                       color: Color(0xFF7BB442),
+//                     ),
+//                     onPressed: () {
+//                       Navigator.pushNamed(context, '/notification');
+//                     },
+//                   ),
+//                 ],
+//               ),
+//               Row(
+//                 children: [
+//                   IconButton(
+//                     icon: const Icon(Icons.person),
+//                     onPressed: () {
+//                       Navigator.pushNamed(context, '/editProfile');
+//                     },
+//                   ),
+//                   Text(
+//                     'Welcome Back ${UserBox.getUser()?.name ?? ''}',
+//                     style: const TextStyle(
+//                       fontWeight: FontWeight.w500,
+//                       fontSize: 16,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ],
+//           );
+//         });
+//   }
+// }

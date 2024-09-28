@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:nurse_app/features/authentication/models/user_model.dart';
@@ -15,19 +16,19 @@ import 'package:nurse_app/pages/admin/manage_services_page.dart';
 import 'package:nurse_app/pages/admin/order_details_page.dart';
 import 'package:nurse_app/pages/admin/order_process_page.dart';
 import 'package:nurse_app/pages/admin/scheduled_order_page.dart';
+import 'package:nurse_app/pages/user/edit_profile_page.dart';
 import 'package:nurse_app/pages/user/immediate_request_details_page.dart';
+import 'package:nurse_app/pages/user/immediate_request_page.dart';
+import 'package:nurse_app/pages/user/login_page.dart';
+import 'package:nurse_app/pages/user/make_appointment_page.dart';
+import 'package:nurse_app/pages/user/navbar.dart';
 import 'package:nurse_app/pages/user/notification_page.dart';
 import 'package:nurse_app/pages/user/pending_page.dart';
 import 'package:nurse_app/pages/user/scheduled_request_details_page.dart';
-import 'package:nurse_app/pages/user/splash_screen.dart';
-import 'package:nurse_app/pages/user/login_page.dart';
 import 'package:nurse_app/pages/user/signup_page.dart';
-import 'package:nurse_app/pages/user/navbar.dart';
-import 'package:nurse_app/pages/user/immediate_request_page.dart';
-import 'package:nurse_app/pages/user/make_appointment_page.dart';
-import 'package:nurse_app/pages/user/verify_sms_page.dart';
+import 'package:nurse_app/pages/user/splash_screen.dart';
 import 'package:nurse_app/pages/user/update_location_page.dart';
-import 'package:nurse_app/pages/user/edit_profile_page.dart';
+import 'package:nurse_app/pages/user/verify_sms_page.dart';
 
 final logger = Logger();
 
@@ -61,32 +62,34 @@ class MyApp extends StatelessWidget {
           final args = ModalRoute.of(context)?.settings.arguments as String;
           return VerifySmsPage(phoneNumber: args);
         },
-        '/immediateRequestDetails' : (context) => const ImmediateRequestDetailsPage(),
-        '/scheduledRequestDetails' : (context) => const ScheduledRequestDetailsPage(),
-        '/editProfile' : (context) => const EditProfilePage(),
-        '/updateLocation' : (context) => const UpdateLocationPage(),
-        '/adminDashboard' : (context) => const AdminDashboardPage(),
-        '/manageNurses' : (context) => const ManageNursesPage(),
-        '/addNurse' : (context) => const AddNursePage(),
+        '/immediateRequestDetails': (context) =>
+            const ImmediateRequestDetailsPage(),
+        '/scheduledRequestDetails': (context) =>
+            const ScheduledRequestDetailsPage(),
+        '/editProfile': (context) => const EditProfilePage(),
+        '/updateLocation': (context) => const UpdateLocationPage(),
+        '/adminDashboard': (context) => const AdminDashboardPage(),
+        '/manageNurses': (context) => const ManageNursesPage(),
+        '/addNurse': (context) => const AddNursePage(),
         '/editNurse': (context) {
           final args = ModalRoute.of(context)?.settings.arguments as int;
           return EditNursePage(nurseId: args);
         },
-        '/manageServices' : (context) => const ManageServicesPage(),
-        '/addService' : (context) => const AddServicePage(),
-        '/editService' :  (context) {
+        '/manageServices': (context) => const ManageServicesPage(),
+        '/addService': (context) => const AddServicePage(),
+        '/editService': (context) {
           final args = ModalRoute.of(context)?.settings.arguments as int;
           return EditServicePage(serviceId: args);
         },
-        '/manageOrders' : (context) => const ManageOrdersPage(),
-        '/orderDetails' : (context) { 
+        '/manageOrders': (context) => const ManageOrdersPage(),
+        '/orderDetails': (context) {
           final args = ModalRoute.of(context)?.settings.arguments as int;
           return OrderDetailsPage(orderId: args);
         },
-        '/immediateOrder' : (context) => const ImmediateOrderPage(),
-        '/scheduledOrder' : (context) => const ScheduledOrderPage(),
-        '/orderProcess' : (context) => const OrderProcessPage(),
-        '/adminSettings' : (context) => const AdminSettingsPage(),
+        '/immediateOrder': (context) => const ImmediateOrderPage(),
+        '/scheduledOrder': (context) => const ScheduledOrderPage(),
+        '/orderProcess': (context) => const OrderProcessPage(),
+        '/adminSettings': (context) => const AdminSettingsPage(),
       },
     );
   }

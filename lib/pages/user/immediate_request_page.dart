@@ -11,6 +11,7 @@ import 'package:nurse_app/components/labeled_textfield.dart';
 import 'package:nurse_app/components/service_card.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/consts.dart';
+import 'package:nurse_app/main.dart';
 import 'package:quickalert/quickalert.dart';
 
 import '../../services/user_token.dart';
@@ -59,15 +60,17 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
         headers: {
           'Authorization': 'Bearer $token',
         },
-        body: jsonEncode({
+        body: {
           'name': name,
           'phone_number': phoneNumber,
           'location': location,
           'problem_description': problemDescription,
           'gender': genderController.getGender(),
           'service_ids': selectedServiceIds,
-        }),
+        },
       );
+
+      logger.i(response.body);
 
       if (response.statusCode == 201) {
         Navigator.pushNamed(context, '/pendingPage');
@@ -82,6 +85,7 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
         );
       }
     } catch (e) {
+      logger.e(e.toString());
       QuickAlert.show(
         context: context,
         type: QuickAlertType.error,

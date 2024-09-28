@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/button.dart';
+import 'package:nurse_app/components/sign_up_phone_number_field.dart';
 import 'package:nurse_app/components/textfield.dart';
+import 'package:nurse_app/main.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
 
 import '../../features/authentication/cubit/authentication_cubit.dart';
@@ -101,6 +103,9 @@ class _SignupPageState extends State<SignupPage> {
                   },
                 ),
                 const SizedBox(height: 14),
+                // SignUpPhoneNumberField(
+                //   controller: phoneNumberController,
+                // ),
                 MyTextField(
                   controller: phoneNumberController,
                   icon: const Icon(Icons.phone_outlined),
@@ -111,6 +116,11 @@ class _SignupPageState extends State<SignupPage> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your phone number';
                     }
+
+                    if (!value.contains('+')) {
+                      return 'Please include country code';
+                    }
+
                     return null;
                   },
                 ),

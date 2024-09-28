@@ -67,7 +67,7 @@ class SocialProfilesPage extends StatelessWidget {
               const Center(
                 child: SocialMediaButton(
                   accountName: 'www.alahmadnursingcare.com',
-                  url: 'www.alahmadnursingcare.com',
+                  url: 'https://www.alahmadnursingcare.com',
                 ),
               ),
               const SizedBox(height: 15),

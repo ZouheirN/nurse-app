@@ -5,17 +5,21 @@ part 'user_model.g.dart';
 @HiveType(typeId: 0)
 class UserModel {
   @HiveField(0)
-  final num? id;
+  num? id;
   @HiveField(1)
-  final String? name;
+  String? name;
   @HiveField(2)
-  final String? email;
+  String? email;
   @HiveField(3)
-  final String? phoneNumber;
+  String? phoneNumber;
   @HiveField(4)
-  final String? location;
+  String? location;
   @HiveField(5)
-  final num? roleId;
+  num? roleId;
+  @HiveField(6)
+  num? latitude;
+  @HiveField(7)
+  num? longitude;
 
   UserModel({
     this.id,
@@ -24,6 +28,8 @@ class UserModel {
     this.phoneNumber,
     this.location,
     this.roleId,
+    this.latitude,
+    this.longitude,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -34,6 +40,8 @@ class UserModel {
       phoneNumber: json['phone_number'],
       location: json['location'],
       roleId: json['role_id'],
+      latitude: json['latitude'],
+      longitude: json['longitude'],
     );
   }
 }

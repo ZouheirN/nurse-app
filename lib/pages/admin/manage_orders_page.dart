@@ -44,8 +44,6 @@ class _ManageOrdersPageState extends State<ManageOrdersPage> {
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
 
-      logger.d(data);
-
       setState(() {
         requests = data['requests'];
         isLoading = false;

@@ -44,7 +44,7 @@ class _VerifySmsPageState extends State<VerifySmsPage> {
                   } else if (state is AuthenticationOtpFailure) {
                     Dialogs.showErrorDialog(
                       context,
-                      'Sign Up Failed',
+                      'Verification Failed',
                       state.message,
                     );
                   }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:nurse_app/consts.dart';
 
 class PickImage extends StatefulWidget {
   final String label;
@@ -25,6 +26,7 @@ class PickImage extends StatefulWidget {
 class _PickImageState extends State<PickImage> {
   File? _selectedImage;
   String? _imageUrl;
+  String status = '';
 
   @override
   void initState() {
@@ -63,6 +65,8 @@ class _PickImageState extends State<PickImage> {
               fit: BoxFit.cover,
             ),
           const SizedBox(height: 10),
+          Text(status),
+          const SizedBox(height: 10),
           InkWell(
             onTap: _pickImageFromGallery,
             child: Row(
@@ -98,12 +102,14 @@ class _PickImageState extends State<PickImage> {
       setState(() {
         _selectedImage = File(pickedImage.path);
         _imageUrl = null;
+        status = 'Uploading image...';
       });
       final imageUrl = await _uploadImage(_selectedImage!);
       if (imageUrl != null) {
         setState(() {
           _imageUrl = imageUrl;
           _selectedImage = null;
+          status = 'Image uploaded successfully';
         });
         if (widget.onImageSelected != null) {
           widget.onImageSelected!(imageUrl);
@@ -117,9 +123,8 @@ class _PickImageState extends State<PickImage> {
   }
 
   Future<String?> _uploadImage(File image) async {
-    const String apiKey = 'KEY'; //imgbb.com api key
     final Uri uploadUrl =
-        Uri.parse('https://api.imgbb.com/1/upload?key=$apiKey');
+        Uri.parse('https://api.imgbb.com/1/upload?key=$IMGBB_API_KEY');
 
     try {
       final request = http.MultipartRequest('POST', uploadUrl)

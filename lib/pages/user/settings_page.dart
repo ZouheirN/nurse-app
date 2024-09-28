@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:nurse_app/components/logout_button.dart';
 import 'package:nurse_app/components/settings_button.dart';
 
+import '../../services/user.dart';
+import '../../services/user_token.dart';
+
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
@@ -47,13 +50,15 @@ class SettingsPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.center,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: LogoutButton(
                         icon: const Icon(Icons.logout),
                         buttonText: 'Logout',
                         onTap: () {
-                          Navigator.pushNamed(context, '/login');
+                          UserToken.deleteToken();
+                          UserBox.deleteUser();
+                          Navigator.pushReplacementNamed(context, '/login');
                         },
                       ),
                     ),

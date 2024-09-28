@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:nurse_app/components/third_button.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:nurse_app/components/labeled_edit_textfield.dart';
+import 'package:nurse_app/components/third_button.dart';
+import 'package:nurse_app/utilities/dialogs.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
+
+import '../../features/location/location_cubit.dart';
 
 class UpdateLocationPage extends StatefulWidget {
   const UpdateLocationPage({super.key});
@@ -14,6 +20,8 @@ class UpdateLocationPage extends StatefulWidget {
 class _UpdateLocationPageState extends State<UpdateLocationPage> {
   LatLng _initialPosition = const LatLng(0.0, 0.0);
   final MapController _mapController = MapController();
+
+  final _locationCubit = LocationCubit();
 
   @override
   void initState() {
@@ -33,7 +41,9 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
     setState(() {
       _initialPosition = latLng;
     });
-    // Logic to update the location in your backend
+
+    _locationCubit.updateLocation(latitude: latLng.latitude, longitude: latLng.longitude);
+
     print("Location Updated: $_initialPosition");
   }
 
@@ -90,7 +100,8 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
                 ),
                 children: [
                   TileLayer(
-                    urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                    urlTemplate:
+                        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                     // subdomains: ['a', 'b', 'c'],
                   ),
                   MarkerLayer(
@@ -116,11 +127,34 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
               keyboardType: TextInputType.text,
             ),
             const SizedBox(height: 20),
-            MyThirdButton(
-              onTap: () {
-                _updateLocation(_initialPosition);
+            BlocConsumer<LocationCubit, LocationState>(
+              bloc:  _locationCubit,
+              listener: (context, state) {
+                if (state is LocationUpdateSuccess) {
+                  QuickAlert.show(
+                    context: context,
+                    type: QuickAlertType.success,
+                    text: 'Location Updated Successfully',
+                    onConfirmBtnTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    },
+                  );
+                } else if (state is LocationUpdateFailure) {
+                  Dialogs.showErrorDialog(context, 'Error Updating Location', state.message);
+                }
               },
-              buttonText: 'Save',
+              builder: (context, state) {
+                final isLoading = state is LocationUpdateLoading;
+
+                return MyThirdButton(
+                  isLoading: isLoading,
+                  onTap: () {
+                    _updateLocation(_initialPosition);
+                  },
+                  buttonText: 'Save',
+                );
+              },
             ),
           ],
         ),

@@ -5,9 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:nurse_app/features/authentication/models/user_model.dart';
 import 'package:nurse_app/main.dart';
+import 'package:nurse_app/services/user.dart';
 import 'package:nurse_app/services/user_token.dart';
-import 'package:nurse_app/utilities/hashing.dart';
-
 import '../../../consts.dart';
 
 part 'authentication_state.dart';
@@ -23,9 +22,6 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     required String passwordConfirmation,
   }) async {
     emit(AuthenticationSignUpLoading());
-
-    password = encryptString(password);
-    passwordConfirmation = encryptString(passwordConfirmation);
 
     try {
       final response = await http.post(
@@ -43,6 +39,9 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         emit(AuthenticationSignUpSuccess(phoneNumber: phoneNumber));
+      } else if (response.statusCode == 422) {
+        emit(AuthenticationSignUpFailure(
+            message: jsonData['errors']['email'][0]));
       } else {
         emit(AuthenticationSignUpFailure(message: jsonData['error']));
       }
@@ -60,8 +59,6 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   }) async {
     emit(AuthenticationSignInLoading());
 
-    password = encryptString(password);
-
     try {
       final response = await http.post(
         Uri.parse('$HOST/login'),
@@ -77,6 +74,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
         UserToken.setToken(jsonData['token']);
 
         final userModel = UserModel.fromJson(jsonData['user']);
+        UserBox.saveUser(userModel);
 
         emit(AuthenticationSignInSuccess(userModel: userModel));
       } else {
@@ -109,9 +107,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
       final jsonData = json.decode(response.body);
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        final token = jsonData['token'];
-
-        UserToken.setToken(token);
+        UserToken.setToken(jsonData['token']);
 
         emit(AuthenticationOtpSuccess());
       } else {

@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:nurse_app/components/admin_card.dart';
 import 'package:nurse_app/components/nurse_card.dart';
 import 'package:nurse_app/components/admin_header.dart';
+import 'package:nurse_app/main.dart';
 import 'package:quickalert/quickalert.dart';
 
 import '../../services/user_token.dart';
@@ -43,6 +44,9 @@ class _ManageNursesPageState extends State<ManageNursesPage> {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
+
+      logger.i(data);
+
       setState(() {
         nurses = data['nurses'];
         isLoading = false;

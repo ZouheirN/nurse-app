@@ -5,6 +5,7 @@ import 'package:nurse_app/components/textfield.dart';
 import 'package:nurse_app/services/user.dart';
 
 import '../../features/authentication/cubit/authentication_cubit.dart';
+import '../../main.dart';
 import '../../utilities/dialogs.dart';
 
 class LoginPage extends StatelessWidget {
@@ -102,10 +103,9 @@ class LoginPage extends StatelessWidget {
                   bloc: _authenticationCubit,
                   listener: (context, state) {
                     if (state is AuthenticationSignInSuccess) {
-                      UserBox.saveUser(state.userModel);
-
                       if (state.userModel.roleId == 1) {
-                        Navigator.pushReplacementNamed(context, '/adminDashboard');
+                        Navigator.pushReplacementNamed(
+                            context, '/adminDashboard');
                       } else if (state.userModel.roleId == 2) {
                         Navigator.pushReplacementNamed(context, '/home');
                       }
@@ -156,6 +156,7 @@ class LoginPage extends StatelessWidget {
                     ),
                   ],
                 ),
+                const SizedBox(height: 10),
               ],
             ),
           ),
