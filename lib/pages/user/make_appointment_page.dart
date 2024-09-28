@@ -12,7 +12,8 @@ import 'package:nurse_app/components/service_card.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/consts.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../services/user_token.dart';
 
 class MakeAppointmentPage extends StatefulWidget {
   const MakeAppointmentPage({super.key});
@@ -51,8 +52,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
   void createRequest(String name, String phoneNumber, String location,
       String problemDescription, BuildContext context) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString(KEY_ACCESS_TOKEN);
+      final token = await UserToken.getToken();
 
       final response = await http.post(
         Uri.parse('$HOST/requests'),
@@ -91,8 +91,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
   }
 
   Future<void> fetchServices() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(KEY_ACCESS_TOKEN);
+    final token = await UserToken.getToken();
 
     final response = await http.get(
       Uri.parse('$HOST/services'),

@@ -1,152 +1,107 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:nurse_app/consts.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nurse_app/components/loader.dart';
+import 'package:nurse_app/features/authentication/cubit/authentication_cubit.dart';
+import 'package:pinput/pinput.dart';
+
+import '../../utilities/dialogs.dart';
 
 class VerifySmsPage extends StatefulWidget {
-  const VerifySmsPage({super.key});
+  final String phoneNumber;
+
+  const VerifySmsPage({super.key, required this.phoneNumber});
 
   @override
   State<VerifySmsPage> createState() => _VerifySmsPageState();
 }
 
 class _VerifySmsPageState extends State<VerifySmsPage> {
-  final List<TextEditingController> controllers =
-      List.generate(6, (index) => TextEditingController());
-
-  bool isCodeComplete() {
-    return controllers.every((controller) => controller.text.isNotEmpty);
-  }
-
-  void verifySms(String confirmationCode, BuildContext context) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final phoneNumber = prefs.getString(KEY_USER_NUMBER);
-
-      if (phoneNumber != null) {
-        final response = await http.post(
-          Uri.parse('$HOST/verify-sms'),
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({
-            'phoneNumber': phoneNumber,
-            'confirmation_code': confirmationCode,
-          }),
-        );
-
-        if (response.statusCode == 200) {
-          final jsonData = json.decode(response.body);
-          final token = jsonData['token'];
-
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setString(KEY_ACCESS_TOKEN, token);
-
-          Navigator.pushNamed(context, '/home');
-        } else {
-          _showErrorDialog(context, 'Verification Failed',
-              'The confirmation code you entered is incorrect.');
-        }
-      } else {
-        _showErrorDialog(
-            context, 'Error', 'No number found. Please try again later.');
-      }
-    } catch (e) {
-      print(e.toString());
-      _showErrorDialog(
-          context, 'Error', 'An error occurred. Please try again later.');
-    }
-  }
-
-  void _showErrorDialog(BuildContext context, String title, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  final _authenticationCubit = AuthenticationCubit();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Enter the code you receive via SMS',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Enter the code you received',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(6, (index) {
-                return SizedBox(
-                  width: 40,
-                  child: TextField(
-                    controller: controllers[index],
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    maxLength: 1,
-                    decoration: InputDecoration(
-                      counterText: '',
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: controllers[index].text.isNotEmpty
-                              ? const Color(0xFF7BB442)
-                              : Colors.grey,
+              const SizedBox(height: 20),
+              BlocConsumer<AuthenticationCubit, AuthenticationState>(
+                bloc: _authenticationCubit,
+                listener: (context, state) {
+                  if (state is AuthenticationOtpSuccess) {
+                    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                  } else if (state is AuthenticationOtpFailure) {
+                    Dialogs.showErrorDialog(
+                      context,
+                      'Sign Up Failed',
+                      state.message,
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  final isLoading = state is AuthenticationOtpLoading;
+
+                  return Column(
+                    children: [
+                      Pinput(
+                        onCompleted: (pin) {
+                          if (isLoading) return;
+
+                          _authenticationCubit.verifyOtp(
+                            phoneNumber: widget.phoneNumber,
+                            pin: pin,
+                          );
+                        },
+                        length: 6,
+                        keyboardType: TextInputType.number,
+                        enabled: !isLoading,
+                        defaultPinTheme: PinTheme(
+                          width: 50,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        focusedPinTheme: PinTheme(
+                          width: 50,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: const Color(0xFF7BB442),
+                              width: 2,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.green,
-                          width: 2,
+                      if (isLoading)
+                        const Column(
+                          children: [
+                            SizedBox(height: 20),
+                            Loader(),
+                          ],
                         ),
-                      ),
-                    ),
-                    onChanged: (value) {
-                      setState(() {});
-                      if (value.length == 1 && index < 5) {
-                        FocusScope.of(context).nextFocus();
-                      }
-                    },
-                  ),
-                );
-              }),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF7BB442),
-                foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                    ],
+                  );
+                },
               ),
-              onPressed: isCodeComplete()
-                  ? () {
-                      String code = controllers.map((c) => c.text).join();
-                      verifySms(code, context);
-                    }
-                  : null,
-              child: const Text('Verify'),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

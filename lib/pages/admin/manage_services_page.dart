@@ -6,8 +6,9 @@ import 'package:http/http.dart' as http;
 import 'package:nurse_app/components/admin_card.dart';
 import 'package:nurse_app/components/admin_header.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nurse_app/components/service_card_admin.dart';
+
+import '../../services/user_token.dart';
 
 class ManageServicesPage extends StatefulWidget {
   const ManageServicesPage({super.key});
@@ -31,8 +32,7 @@ class _ManageServicesPageState extends State<ManageServicesPage> {
       isLoading = true;
     });
 
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(KEY_ACCESS_TOKEN);
+    final token = await UserToken.getToken();
 
     final response = await http.get(
       Uri.parse('$HOST/services'),

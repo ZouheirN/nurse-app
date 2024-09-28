@@ -8,8 +8,8 @@ import 'package:nurse_app/components/phone_field_admin.dart';
 import 'package:nurse_app/components/labeled_textfield_admin.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/components/pick_image.dart';
+import 'package:nurse_app/services/user_token.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AddNursePage extends StatefulWidget {
   const AddNursePage({super.key});
@@ -36,8 +36,7 @@ class _AddNursePageState extends State<AddNursePage> {
   void createNurse(String name, String phoneNumber, String address,
       String? imageUrl, BuildContext context) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString(KEY_ACCESS_TOKEN);
+      final token = await UserToken.getToken();
 
       final response = await http.post(
         Uri.parse('$HOST/admin/nurses'),

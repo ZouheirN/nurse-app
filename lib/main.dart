@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:logger/logger.dart';
+import 'package:nurse_app/features/authentication/models/user_model.dart';
 import 'package:nurse_app/pages/admin/add_nurse_page.dart';
 import 'package:nurse_app/pages/admin/add_service_page.dart';
 import 'package:nurse_app/pages/admin/admin_dashboard_page.dart';
@@ -26,7 +29,15 @@ import 'package:nurse_app/pages/user/verify_sms_page.dart';
 import 'package:nurse_app/pages/user/update_location_page.dart';
 import 'package:nurse_app/pages/user/edit_profile_page.dart';
 
-void main() {
+final logger = Logger();
+
+Future<void> main() async {
+  await Hive.initFlutter();
+
+  Hive.registerAdapter(UserModelAdapter());
+
+  await Hive.openBox('userBox');
+
   runApp(const MyApp());
 }
 
@@ -46,7 +57,10 @@ class MyApp extends StatelessWidget {
         '/makeAppointment': (context) => const MakeAppointmentPage(),
         '/pendingPage': (context) => const PendingPage(),
         '/notification': (context) => const NotificationPage(),
-        '/verifySms': (context) => const VerifySmsPage(),
+        '/verifySms': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments as String;
+          return VerifySmsPage(phoneNumber: args);
+        },
         '/immediateRequestDetails' : (context) => const ImmediateRequestDetailsPage(),
         '/scheduledRequestDetails' : (context) => const ScheduledRequestDetailsPage(),
         '/editProfile' : (context) => const EditProfilePage(),

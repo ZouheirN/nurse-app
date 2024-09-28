@@ -7,7 +7,8 @@ import 'package:nurse_app/components/labeled_textfield.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/components/labeled_dropdown.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../services/user_token.dart';
 
 class ImmediateOrderPage extends StatefulWidget {
   const ImmediateOrderPage({super.key});
@@ -27,8 +28,7 @@ class _ImmediateOrderPageState extends State<ImmediateOrderPage> {
   }
 
   Future<void> fetchNurses() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(KEY_ACCESS_TOKEN);
+    final token = await UserToken.getToken();
 
     final response = await http.get(
       Uri.parse('$HOST/nurses'),

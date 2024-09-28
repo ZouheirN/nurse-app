@@ -5,8 +5,10 @@ import 'package:nurse_app/consts.dart';
 import 'package:http/http.dart' as http;
 import 'package:nurse_app/components/admin_header.dart';
 import 'package:nurse_app/components/order_card.dart';
+import 'package:nurse_app/main.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../services/user_token.dart';
 
 class ManageOrdersPage extends StatefulWidget {
   const ManageOrdersPage({super.key});
@@ -30,8 +32,7 @@ class _ManageOrdersPageState extends State<ManageOrdersPage> {
       isLoading = true;
     });
 
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(KEY_ACCESS_TOKEN);
+    final token = await UserToken.getToken();
 
     final response = await http.get(
       Uri.parse('$HOST/admin/requests'),
@@ -42,8 +43,11 @@ class _ManageOrdersPageState extends State<ManageOrdersPage> {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
+
+      logger.d(data);
+
       setState(() {
-        requests = data['user'];
+        requests = data['requests'];
         isLoading = false;
       });
     } else {
@@ -75,47 +79,42 @@ class _ManageOrdersPageState extends State<ManageOrdersPage> {
                 onRefresh: _handleRefresh,
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const SizedBox(height: 20),
-                            OrderCard(
-                              title: '#1 From Client Name',
-                              description: 'Check out the details',
-                              time: '12:00',
-                              onTap: () {
-                                Navigator.pushNamed(context, '/orderDetails');
-                              },
-                            ),
-                            const SizedBox(height: 10),
-                            Column(
-                              children: requests.map((request) {
-                                return Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 5),
-                                  child: OrderCard(
-                                    title: request['name'],
-                                    description: 'Check out the details',
-                                    time: request['created_at'],
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                        context,
-                                        '/orderDetails',
-                                        arguments: request['id'],
-                                      );
-                                    },
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ],
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 20),
+                        // OrderCard(
+                        //   title: '#1 From Client Name',
+                        //   description: 'Check out the details',
+                        //   time: '12:00',
+                        //   onTap: () {
+                        //     Navigator.pushNamed(context, '/orderDetails', arguments: 1);
+                        //   },
+                        // ),
+                        // const SizedBox(height: 10),
+                        Column(
+                          children: requests.map((request) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 5),
+                              child: OrderCard(
+                                title: request['name'],
+                                description: 'Check out the details',
+                                time: request['created_at'],
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    '/orderDetails',
+                                    arguments: request['id'],
+                                  );
+                                },
+                              ),
+                            );
+                          }).toList(),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

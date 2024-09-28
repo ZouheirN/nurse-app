@@ -5,10 +5,11 @@ import 'package:http/http.dart' as http;
 import 'package:quickalert/quickalert.dart';
 import 'package:nurse_app/components/admin_header.dart';
 import 'package:nurse_app/components/third_button.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nurse_app/components/labeled_textfield.dart';
 import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/labeled_mini_textfield_order.dart';
+
+import '../../services/user_token.dart';
 
 class OrderDetailsPage extends StatefulWidget {
   final int orderId;
@@ -53,8 +54,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       isLoading = true;
     });
 
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(KEY_ACCESS_TOKEN);
+    final token = await UserToken.getToken();
 
     final response = await http.get(
       Uri.parse('$HOST/requests'),
@@ -92,8 +92,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
   }
 
   Future<void> updateProfile() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(KEY_ACCESS_TOKEN);
+    final token = await UserToken.getToken();
 
     final response = await http.put(
       Uri.parse('$HOST/requests/${widget.orderId}'),

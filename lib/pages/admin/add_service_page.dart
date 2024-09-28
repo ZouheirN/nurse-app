@@ -7,8 +7,9 @@ import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/components/labeled_textfield_admin.dart';
 import 'package:nurse_app/components/labeled_mini_textfield_admin.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nurse_app/consts.dart';
+
+import '../../services/user_token.dart';
 
 class AddServicePage extends StatefulWidget {
   const AddServicePage({super.key});
@@ -53,8 +54,7 @@ class _AddServicePageState extends State<AddServicePage> {
     });
 
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString(KEY_ACCESS_TOKEN);
+      final token = await UserToken.getToken();
 
       final Map<String, dynamic> requestBody = {
         'name': serviceName,

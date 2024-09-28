@@ -6,9 +6,10 @@ import 'package:http/http.dart' as http;
 import 'package:quickalert/quickalert.dart';
 import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/components/third_button.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nurse_app/components/labeled_edit_textfield.dart';
 import 'package:nurse_app/components/edit_phone_number_field.dart';
+
+import '../../services/user_token.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -51,8 +52,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       isLoading = true;
     });
 
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(KEY_ACCESS_TOKEN);
+    final token = await UserToken.getToken();
 
     final response = await http.get(
       Uri.parse('$HOST/me'),
@@ -83,8 +83,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> updateProfile() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(KEY_ACCESS_TOKEN);
+    final token = await UserToken.getToken();
 
     final response = await http.put(
       Uri.parse('$HOST/users/$userId'),

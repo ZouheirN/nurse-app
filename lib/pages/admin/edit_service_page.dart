@@ -6,9 +6,10 @@ import 'package:nurse_app/components/pick_image.dart';
 import 'package:nurse_app/components/admin_header.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nurse_app/components/labeled_textfield_admin.dart';
 import 'package:nurse_app/components/labeled_mini_textfield_admin.dart';
+
+import '../../services/user_token.dart';
 
 class EditServicePage extends StatefulWidget {
   final int serviceId;
@@ -48,8 +49,7 @@ class _EditServicePageState extends State<EditServicePage> {
   }
 
   Future<void> fetchServiceData() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(KEY_ACCESS_TOKEN);
+    final token = await UserToken.getToken();
 
     final response = await http.get(
       Uri.parse('$HOST/services'),
@@ -94,8 +94,7 @@ class _EditServicePageState extends State<EditServicePage> {
   }
 
   Future<void> updateService() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(KEY_ACCESS_TOKEN);
+    final token = await UserToken.getToken();
 
     final double updatedPrice = double.tryParse(priceController.text) ?? 0.0;
     final String discountPriceText = discountPriceController.text;

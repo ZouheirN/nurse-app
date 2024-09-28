@@ -47,12 +47,15 @@ class SettingsPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    LogoutButton(
-                      icon: const Icon(Icons.logout),
-                      buttonText: 'Logout',
-                      onTap: () {
-                        Navigator.pushNamed(context, '/login');
-                      },
+                    Align(
+                      alignment: Alignment.center,
+                      child: LogoutButton(
+                        icon: const Icon(Icons.logout),
+                        buttonText: 'Logout',
+                        onTap: () {
+                          Navigator.pushNamed(context, '/login');
+                        },
+                      ),
                     ),
                   ],
                 ),

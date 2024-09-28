@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:nurse_app/consts.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/button.dart';
 import 'package:nurse_app/components/textfield.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:nurse_app/utilities/dialogs.dart';
+
+import '../../features/authentication/cubit/authentication_cubit.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -19,6 +20,10 @@ class _SignupPageState extends State<SignupPage> {
   final passwordController = TextEditingController();
   final passwordConfirmationController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+
+  final _authenticationCubit = AuthenticationCubit();
+
   @override
   void dispose() {
     nameController.dispose();
@@ -29,54 +34,16 @@ class _SignupPageState extends State<SignupPage> {
     super.dispose();
   }
 
-  void signup(String name, String phoneNumber, String email, String password,
-      String passwordConfirmation, BuildContext context) async {
-    try {
-      final response = await http.post(
-        Uri.parse('$HOST/register'),
-        body: {
-          'name': name,
-          'phone_number': phoneNumber,
-          'email': email,
-          'password': password,
-          'password_confirmation': passwordConfirmation,
-        },
+  void signup(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      _authenticationCubit.signUp(
+        phoneNumber: phoneNumberController.text.trim(),
+        name: nameController.text.trim(),
+        email: emailController.text.trim(),
+        password: passwordController.text,
+        passwordConfirmation: passwordConfirmationController.text,
       );
-
-      if (response.statusCode == 201) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(KEY_USER_NUMBER, phoneNumber);
-
-        Navigator.pushReplacementNamed(context, '/verifySms');
-      } else {
-        _showErrorDialog(context, 'Sign Up Failed',
-            'Failed to sign up. Please check your information and try again.');
-      }
-    } catch (e) {
-      print(e.toString());
-      _showErrorDialog(context, 'Error',
-          'An error occurred. Please check your connection and try again later.');
     }
-  }
-
-  void _showErrorDialog(BuildContext context, String title, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -85,119 +52,171 @@ class _SignupPageState extends State<SignupPage> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 50),
-              const Center(
-                child: Image(
-                  image: AssetImage('assets/images/logo.png'),
-                  height: 150,
-                  width: 300,
-                ),
-              ),
-              const SizedBox(height: 10),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 27),
-                child: Text(
-                  'Register',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 40,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 50),
+                const Center(
+                  child: Image(
+                    image: AssetImage('assets/images/logo.png'),
+                    height: 150,
+                    width: 300,
                   ),
                 ),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 27),
-                child: Text(
-                  'Please register to login',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 15),
-              MyTextField(
-                controller: nameController,
-                icon: const Icon(Icons.person_outlined),
-                hintText: 'Username',
-                inputType: TextInputType.name,
-                obscureText: false,
-              ),
-              const SizedBox(height: 14),
-              MyTextField(
-                controller: phoneNumberController,
-                icon: const Icon(Icons.phone_outlined),
-                hintText: 'Phone Number',
-                inputType: TextInputType.phone,
-                obscureText: false,
-              ),
-              const SizedBox(height: 14),
-              MyTextField(
-                controller: emailController,
-                icon: const Icon(Icons.mail_outline),
-                hintText: 'Email',
-                inputType: TextInputType.emailAddress,
-                obscureText: false,
-              ),
-              const SizedBox(height: 14),
-              MyTextField(
-                controller: passwordController,
-                icon: const Icon(Icons.lock_outline),
-                hintText: 'Password',
-                inputType: TextInputType.text,
-                obscureText: true,
-              ),
-              const SizedBox(height: 14),
-              MyTextField(
-                controller: passwordConfirmationController,
-                icon: const Icon(Icons.lock_outline),
-                hintText: 'Confirm Password',
-                inputType: TextInputType.text,
-                obscureText: true,
-              ),
-              const SizedBox(height: 12),
-              MyButton(
-                onTap: () {
-                  signup(
-                      nameController.text,
-                      phoneNumberController.text,
-                      emailController.text,
-                      passwordController.text,
-                      passwordConfirmationController.text,
-                      context);
-                },
-                buttonText: 'Sign Up',
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Already have account?',
+                const SizedBox(height: 10),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 27),
+                  child: Text(
+                    'Register',
                     style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 40,
                     ),
                   ),
-                  const SizedBox(width: 4),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/login');
-                    },
-                    child: const Text(
-                      'Sign in',
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 27),
+                  child: Text(
+                    'Please register to login',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                MyTextField(
+                  controller: nameController,
+                  icon: const Icon(Icons.person_outlined),
+                  hintText: 'Username',
+                  inputType: TextInputType.name,
+                  obscureText: false,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your username';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 14),
+                MyTextField(
+                  controller: phoneNumberController,
+                  icon: const Icon(Icons.phone_outlined),
+                  hintText: 'Phone Number',
+                  inputType: TextInputType.phone,
+                  obscureText: false,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your phone number';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 14),
+                MyTextField(
+                  controller: emailController,
+                  icon: const Icon(Icons.mail_outline),
+                  hintText: 'Email',
+                  inputType: TextInputType.emailAddress,
+                  obscureText: false,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 14),
+                MyTextField(
+                  controller: passwordController,
+                  icon: const Icon(Icons.lock_outline),
+                  hintText: 'Password',
+                  inputType: TextInputType.text,
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 14),
+                MyTextField(
+                  controller: passwordConfirmationController,
+                  icon: const Icon(Icons.lock_outline),
+                  hintText: 'Confirm Password',
+                  inputType: TextInputType.text,
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please confirm your password';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
+                BlocConsumer<AuthenticationCubit, AuthenticationState>(
+                  bloc: _authenticationCubit,
+                  listener: (context, state) {
+                    if (state is AuthenticationSignUpSuccess) {
+                      final phoneNumber = state.phoneNumber;
+                      Navigator.pushNamed(
+                        context,
+                        '/verifySms',
+                        arguments: phoneNumber,
+                      );
+                    } else if (state is AuthenticationSignUpFailure) {
+                      Dialogs.showErrorDialog(
+                        context,
+                        'Sign Up Failed',
+                        state.message,
+                      );
+                    }
+                  },
+                  builder: (context, state) {
+                    final isLoading = state is AuthenticationSignUpLoading;
+
+                    return MyButton(
+                      isLoading: isLoading,
+                      onTap: () {
+                        signup(context);
+                      },
+                      buttonText: 'Sign Up',
+                    );
+                  },
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Already have account?',
                       style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF7BB442),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    const SizedBox(width: 4),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushReplacementNamed(context, '/login');
+                      },
+                      child: const Text(
+                        'Login',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF7BB442),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
           ),
         ),
       ),

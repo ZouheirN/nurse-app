@@ -14,19 +14,26 @@ dependencies:
   dropdown_button2: ^2.3.9
   url_launcher: ^6.3.0
   http: ^1.2.2
-  shared_preferences: ^2.3.2
   image_picker: ^1.1.2
   flutter_map: ^7.0.2
   latlong2: ^0.9.1
   geolocator: ^13.0.1
   geocoding: ^3.0.0
   quickalert: ^1.1.0
+  flutter_bloc: ^8.1.6
+  logger: ^2.4.0
+  flutter_secure_storage: ^9.2.2
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  pinput: ^5.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^4.0.0
+  build_runner: ^2.4.12
+  hive_generator: ^2.0.1
 
 flutter:
   uses-material-design: true

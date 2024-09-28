@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:nurse_app/consts.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:nurse_app/consts.dart';
+import 'package:nurse_app/services/user_token.dart';
 
 class Header extends StatefulWidget {
   const Header({super.key});
@@ -24,8 +24,7 @@ class _HeaderState extends State<Header> {
 
   Future<void> fetchUserData() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString(KEY_ACCESS_TOKEN);
+      final token = await UserToken.getToken();
 
       if (token != null) {
         final response = await http.get(

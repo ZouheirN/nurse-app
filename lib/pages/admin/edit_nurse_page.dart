@@ -6,9 +6,10 @@ import 'package:nurse_app/components/pick_image.dart';
 import 'package:nurse_app/components/admin_header.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:nurse_app/components/phone_field_admin.dart';
 import 'package:nurse_app/components/labeled_textfield_admin.dart';
+
+import '../../services/user_token.dart';
 
 class EditNursePage extends StatefulWidget {
   final int nurseId;
@@ -48,8 +49,7 @@ class _EditNursePageState extends State<EditNursePage> {
   }
 
   Future<void> fetchNurseData() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(KEY_ACCESS_TOKEN);
+    final token = await UserToken.getToken();
 
     final response = await http.get(
       Uri.parse('$HOST/nurses'),
@@ -94,8 +94,7 @@ class _EditNursePageState extends State<EditNursePage> {
   }
 
   Future<void> updateNurse() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(KEY_ACCESS_TOKEN);
+    final token = await UserToken.getToken();
 
     final response = await http.put(
       Uri.parse('$HOST/admin/nurses/${widget.nurseId}'),

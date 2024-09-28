@@ -8,7 +8,8 @@ import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/components/labeled_dropdown.dart';
 import 'package:nurse_app/components/uneditable_labeled_date.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../services/user_token.dart';
 
 class ScheduledOrderPage extends StatefulWidget {
   const ScheduledOrderPage({super.key});
@@ -28,8 +29,7 @@ class _ScheduledOrderPageState extends State<ScheduledOrderPage> {
   }
 
   Future<void> fetchNurses() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(KEY_ACCESS_TOKEN);
+    final token = await UserToken.getToken();
 
     final response = await http.get(
       Uri.parse('$HOST/nurses'),

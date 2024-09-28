@@ -1,12 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/button.dart';
 import 'package:nurse_app/components/textfield.dart';
-import 'package:http/http.dart' as http;
-import 'package:quickalert/quickalert.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:nurse_app/consts.dart';
+import 'package:nurse_app/services/user.dart';
+
+import '../../features/authentication/cubit/authentication_cubit.dart';
+import '../../utilities/dialogs.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -14,43 +13,15 @@ class LoginPage extends StatelessWidget {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void login(String email, password, BuildContext context) async {
-    try {
-      final response = await http.post(
-        Uri.parse('$HOST/login'),
-        body: {
-          'email': email,
-          'password': password,
-        },
-      );
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
-        final token = jsonData['token'];
+  final _formKey = GlobalKey<FormState>();
 
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(KEY_ACCESS_TOKEN, token);
+  final _authenticationCubit = AuthenticationCubit();
 
-        final roleId = jsonData['user']['role_id'];
-        if (roleId == 1) {
-          Navigator.pushNamed(context, '/adminDashboard');
-        } else if (roleId == 2) {
-          Navigator.pushNamed(context, '/home');
-        }
-      } else {
-        final errorData = json.decode(response.body);
-        final errorMessage = errorData['message'];
-
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          text: errorMessage,
-        );
-      }
-    } catch (e) {
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: 'An error occurred, please try again later.',
+  void login(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      _authenticationCubit.signIn(
+        email: emailController.text.trim(),
+        password: passwordController.text,
       );
     }
   }
@@ -61,90 +32,132 @@ class LoginPage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 50),
-              const Center(
-                child: Image(
-                  image: AssetImage('assets/images/logo.png'),
-                  height: 150,
-                  width: 300,
-                ),
-              ),
-              const SizedBox(height: 40),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 27),
-                child: Text(
-                  'Login',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 40,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 50),
+                const Center(
+                  child: Image(
+                    image: AssetImage('assets/images/logo.png'),
+                    height: 150,
+                    width: 300,
                   ),
                 ),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 27),
-                child: Text(
-                  'Please Login',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 15),
-              MyTextField(
-                controller: emailController,
-                icon: const Icon(Icons.mail_outline),
-                hintText: 'Email',
-                inputType: TextInputType.emailAddress,
-                obscureText: false,
-              ),
-              const SizedBox(height: 10),
-              MyTextField(
-                controller: passwordController,
-                icon: const Icon(Icons.lock_outline),
-                hintText: 'Password',
-                inputType: TextInputType.text,
-                obscureText: true,
-              ),
-              const SizedBox(height: 12),
-              MyButton(
-                onTap: () {
-                  login(emailController.text.toString(),
-                      passwordController.text.toString(), context);
-                },
-                buttonText: 'Login',
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Don\'t have an account?',
+                const SizedBox(height: 40),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 27),
+                  child: Text(
+                    'Login',
                     style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 40,
                     ),
                   ),
-                  const SizedBox(width: 4),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/signup');
-                    },
-                    child: const Text(
-                      'Signup',
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 27),
+                  child: Text(
+                    'Please Login',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                MyTextField(
+                  controller: emailController,
+                  icon: const Icon(Icons.mail_outline),
+                  hintText: 'Email',
+                  inputType: TextInputType.emailAddress,
+                  obscureText: false,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    if (!value.contains('@')) {
+                      return 'Invalid email';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10),
+                MyTextField(
+                  controller: passwordController,
+                  icon: const Icon(Icons.lock_outline),
+                  hintText: 'Password',
+                  inputType: TextInputType.text,
+                  obscureText: true,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
+                BlocConsumer<AuthenticationCubit, AuthenticationState>(
+                  bloc: _authenticationCubit,
+                  listener: (context, state) {
+                    if (state is AuthenticationSignInSuccess) {
+                      UserBox.saveUser(state.userModel);
+
+                      if (state.userModel.roleId == 1) {
+                        Navigator.pushReplacementNamed(context, '/adminDashboard');
+                      } else if (state.userModel.roleId == 2) {
+                        Navigator.pushReplacementNamed(context, '/home');
+                      }
+                    } else if (state is AuthenticationSignInFailure) {
+                      Dialogs.showErrorDialog(
+                        context,
+                        'Error Logging In',
+                        state.message,
+                      );
+                    }
+                  },
+                  builder: (context, state) {
+                    final isLoading = state is AuthenticationSignInLoading;
+
+                    return MyButton(
+                      isLoading: isLoading,
+                      onTap: () {
+                        login(context);
+                      },
+                      buttonText: 'Login',
+                    );
+                  },
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Don\'t have an account?',
                       style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF7BB442),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    const SizedBox(width: 4),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushReplacementNamed(context, '/signup');
+                      },
+                      child: const Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF7BB442),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
