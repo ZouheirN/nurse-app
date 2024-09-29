@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nurse_app/consts.dart';
+import 'package:nurse_app/services/user.dart';
 import 'package:nurse_app/services/user_token.dart';
 
 class Header extends StatefulWidget {
@@ -86,58 +87,60 @@ class _HeaderState extends State<Header> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.location_on),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/updateLocation');
-                  },
-                ),
-                Text(
-                  location,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
+    return ValueListenableBuilder(
+        valueListenable: UserBox.listenToUser(),
+        builder: (context, value, child) {
+          return Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.location_on),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/updateLocation');
+                    },
                   ),
-                ),
-              ],
-            ),
-            IconButton(
-              icon: const Icon(
-                Icons.notifications_none,
-                color: Color(0xFF7BB442),
+                  Expanded(
+                    child: Text(
+                      location,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.notifications_none,
+                      color: Color(0xFF7BB442),
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/notification');
+                    },
+                  ),
+                ],
               ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/notification');
-              },
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            IconButton(
-              icon: const Icon(Icons.person),
-              onPressed: () {
-                Navigator.pushNamed(context, '/editProfile');
-              },
-            ),
-            Text(
-              'Welcome Back $name',
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.person),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/editProfile');
+                    },
+                  ),
+                  Text(
+                    'Welcome Back ${UserBox.getUser()?.name ?? ''}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-      ],
-    );
+            ],
+          );
+        });
   }
 }
 

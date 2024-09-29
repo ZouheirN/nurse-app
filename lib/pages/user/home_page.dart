@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:nurse_app/components/header.dart';
 import 'package:nurse_app/components/second_button.dart';
@@ -16,17 +17,49 @@ class HomePage extends StatelessWidget {
             children: [
               const Header(),
               Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: CarouselSlider(
+                  options: CarouselOptions(
+                    height: 200.0,
+                    enableInfiniteScroll: true,
+                    autoPlay: true,
+                    enlargeCenterPage: true,
+                    pauseAutoPlayOnTouch: true,
+                    autoPlayInterval: const Duration(seconds: 5),
+                  ),
+                  items: [
                     Container(
-                      height: 200,
-                      width: 300,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         image: const DecorationImage(
                           image: AssetImage('assets/images/image1.png'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.black.withOpacity(0.5),
+                        ),
+                        padding: const EdgeInsets.all(16),
+                        child: const Center(
+                          child: Text(
+                            'Request your Nurse Now',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 36,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        image: const DecorationImage(
+                          image: AssetImage('assets/images/image2.png'),
                           fit: BoxFit.cover,
                         ),
                       ),
