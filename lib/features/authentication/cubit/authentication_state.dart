@@ -45,3 +45,14 @@ final class AuthenticationOtpFailure extends AuthenticationState {
 
   AuthenticationOtpFailure({required this.message});
 }
+
+// Forgot password
+final class AuthenticationForgotPasswordOtpLoading extends AuthenticationState {}
+
+final class AuthenticationForgotPasswordOtpSuccess extends AuthenticationState {}
+
+final class AuthenticationForgotPasswordOtpFailure extends AuthenticationState {
+  final String message;
+
+  AuthenticationForgotPasswordOtpFailure({required this.message});
+}

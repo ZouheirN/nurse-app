@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/button.dart';
 import 'package:nurse_app/components/textfield.dart';
-import 'package:nurse_app/services/user.dart';
 
 import '../../features/authentication/cubit/authentication_cubit.dart';
-import '../../main.dart';
 import '../../utilities/dialogs.dart';
 
 class LoginPage extends StatelessWidget {
@@ -97,6 +95,25 @@ class LoginPage extends StatelessWidget {
                     }
                     return null;
                   },
+                ),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 26),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () {
+                        Dialogs.showForgotPasswordDialog(context);
+                      },
+                      child: const Text(
+                        'Forgot Password?',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF7BB442),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 12),
                 BlocConsumer<AuthenticationCubit, AuthenticationState>(

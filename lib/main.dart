@@ -17,6 +17,7 @@ import 'package:nurse_app/pages/admin/order_details_page.dart';
 import 'package:nurse_app/pages/admin/order_process_page.dart';
 import 'package:nurse_app/pages/admin/scheduled_order_page.dart';
 import 'package:nurse_app/pages/user/edit_profile_page.dart';
+import 'package:nurse_app/pages/user/forgot_password_page.dart';
 import 'package:nurse_app/pages/user/immediate_request_details_page.dart';
 import 'package:nurse_app/pages/user/immediate_request_page.dart';
 import 'package:nurse_app/pages/user/login_page.dart';
@@ -61,6 +62,10 @@ class MyApp extends StatelessWidget {
         '/verifySms': (context) {
           final args = ModalRoute.of(context)?.settings.arguments as String;
           return VerifySmsPage(phoneNumber: args);
+        },
+        '/forgotPassword': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments as String;
+          return ForgotPasswordPage(phoneNumber: args);
         },
         '/immediateRequestDetails': (context) =>
             const ImmediateRequestDetailsPage(),

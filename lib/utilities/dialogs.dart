@@ -3,7 +3,8 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class Dialogs {
-  static void showErrorDialog(BuildContext context, String title, String message) {
+  static void showErrorDialog(
+      BuildContext context, String title, String message) {
     QuickAlert.show(
       context: context,
       type: QuickAlertType.error,
@@ -28,5 +29,47 @@ class Dialogs {
     //     );
     //   },
     // );
+  }
+
+  static void showForgotPasswordDialog(BuildContext context) {
+    final phoneNumberController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.info,
+      widget: Form(
+        key: formKey,
+        child: TextFormField(
+          controller: phoneNumberController,
+          keyboardType: TextInputType.phone,
+          decoration: const InputDecoration(
+            hintText: 'Phone Number',
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter your phone number';
+            }
+
+            if (!value.contains('+')) {
+              return 'Please include country code';
+            }
+
+            return null;
+          },
+        ),
+      ),
+      onConfirmBtnTap: () {
+        if (formKey.currentState!.validate()) {
+          Navigator.pushReplacementNamed(
+            context,
+            '/forgotPassword',
+            arguments: phoneNumberController.text,
+          );
+        }
+      },
+      text: 'Enter your phone number to reset your password',
+      title: 'Forgot Password',
+    );
   }
 }

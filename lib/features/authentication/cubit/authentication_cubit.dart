@@ -7,6 +7,7 @@ import 'package:nurse_app/features/authentication/models/user_model.dart';
 import 'package:nurse_app/main.dart';
 import 'package:nurse_app/services/user.dart';
 import 'package:nurse_app/services/user_token.dart';
+
 import '../../../consts.dart';
 
 part 'authentication_state.dart';
@@ -109,6 +110,72 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
       if (response.statusCode >= 200 && response.statusCode < 300) {
         UserToken.setToken(jsonData['token']);
 
+        emit(AuthenticationOtpSuccess());
+      } else {
+        emit(AuthenticationOtpFailure(message: jsonData['message']));
+      }
+    } catch (e) {
+      logger.e(e.toString());
+      emit(AuthenticationOtpFailure(
+          message:
+              'An error occurred. Please check your connection and try again later.'));
+    }
+  }
+
+  Future<void> sendForgotPasswordOtp({required String phoneNumber}) async {
+    emit(AuthenticationForgotPasswordOtpLoading());
+
+    try {
+      final response = await http.post(
+        Uri.parse('$HOST/send-password-reset-otp'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'phone_number': phoneNumber,
+        }),
+      );
+
+      final jsonData = json.decode(response.body);
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        emit(AuthenticationForgotPasswordOtpSuccess());
+      } else if (response.statusCode == 422) {
+        emit(AuthenticationForgotPasswordOtpFailure(
+            message: jsonData['errors']['phone_number'][0]));
+      } else {
+        emit(AuthenticationForgotPasswordOtpFailure(
+            message: jsonData['message']));
+      }
+    } catch (e) {
+      logger.e(e.toString());
+      emit(AuthenticationForgotPasswordOtpFailure(
+          message:
+              'An error occurred. Please check your connection and try again later.'));
+    }
+  }
+
+  void verifyForgotPasswordOtp({
+    required String phoneNumber,
+    required String pin,
+    required String password,
+    required String confirmPassword,
+  }) async {
+    emit(AuthenticationOtpLoading());
+
+    try {
+      final response = await http.post(
+        Uri.parse('$HOST/reset-password'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'phone_number': phoneNumber,
+          'token': pin,
+          'password': password,
+          'password_confirmation': confirmPassword,
+        }),
+      );
+
+      final jsonData = json.decode(response.body);
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
         emit(AuthenticationOtpSuccess());
       } else {
         emit(AuthenticationOtpFailure(message: jsonData['message']));
