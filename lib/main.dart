@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
+import 'package:nurse_app/consts.dart';
 import 'package:nurse_app/features/authentication/models/user_model.dart';
 import 'package:nurse_app/pages/admin/add_nurse_page.dart';
 import 'package:nurse_app/pages/admin/add_service_page.dart';
@@ -30,6 +30,7 @@ import 'package:nurse_app/pages/user/signup_page.dart';
 import 'package:nurse_app/pages/user/splash_screen.dart';
 import 'package:nurse_app/pages/user/update_location_page.dart';
 import 'package:nurse_app/pages/user/verify_sms_page.dart';
+import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 final logger = Logger();
 
@@ -39,6 +40,19 @@ Future<void> main() async {
   Hive.registerAdapter(UserModelAdapter());
 
   await Hive.openBox('userBox');
+
+  PusherChannelsFlutter pusher = PusherChannelsFlutter.getInstance();
+  try {
+    await pusher.init(
+      apiKey: PUSHER_API_KEY,
+      cluster: PUSHER_API_CLUSTER,
+    );
+    // await pusher.subscribe(channelName: 'presence-chatbox');
+    // await pusher.connect();
+  } catch (e) {
+    logger.e(e);
+  }
+
 
   runApp(const MyApp());
 }
