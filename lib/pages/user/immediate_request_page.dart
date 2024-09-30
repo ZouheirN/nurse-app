@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nurse_app/components/gender_selection_field.dart';
 import 'package:nurse_app/components/header.dart';
+import 'package:nurse_app/components/labeled_textfield.dart';
 import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/second_button.dart';
-import 'package:nurse_app/components/labeled_textfield.dart';
 import 'package:nurse_app/components/service_card.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/consts.dart';
@@ -61,12 +61,15 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
           'Authorization': 'Bearer $token',
         },
         body: {
-          'name': name,
+          'full_name': name,
           'phone_number': phoneNumber,
           'location': location,
           'problem_description': problemDescription,
-          'gender': genderController.getGender(),
-          'service_ids': selectedServiceIds,
+          'nurse_gender': genderController.getGender(),
+          'service_ids': [
+            ...selectedServiceIds,
+          ],
+          'time_type': 'full-time',
         },
       );
 
@@ -127,6 +130,7 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

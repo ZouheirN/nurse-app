@@ -9,13 +9,12 @@ class NotificationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Header(),
-              const SizedBox(height: 15),
               Center(
                 child: NotificationCard(
                   title: 'Your request was accepted',

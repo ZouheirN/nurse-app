@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
@@ -31,13 +33,13 @@ class LocationCubit extends Cubit<LocationState> {
         },
       );
 
-      logger.i(response.body);
+      final jsonData = json.decode(response.body);
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         emit(LocationUpdateSuccess());
       } else {
         emit(LocationUpdateFailure(
-            message:
+            message: jsonData['message'] ??
                 'An error occurred. Please check your connection and try again later.'));
       }
     } catch (e) {

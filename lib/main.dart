@@ -30,7 +30,8 @@ import 'package:nurse_app/pages/user/signup_page.dart';
 import 'package:nurse_app/pages/user/splash_screen.dart';
 import 'package:nurse_app/pages/user/update_location_page.dart';
 import 'package:nurse_app/pages/user/verify_sms_page.dart';
-import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
+import 'package:nurse_app/services/user.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 final logger = Logger();
 
@@ -41,18 +42,13 @@ Future<void> main() async {
 
   await Hive.openBox('userBox');
 
-  PusherChannelsFlutter pusher = PusherChannelsFlutter.getInstance();
-  try {
-    await pusher.init(
-      apiKey: PUSHER_API_KEY,
-      cluster: PUSHER_API_CLUSTER,
-    );
-    // await pusher.subscribe(channelName: 'presence-chatbox');
-    // await pusher.connect();
-  } catch (e) {
-    logger.e(e);
-  }
+  OneSignal.initialize(ONE_SIGNAL_APP_ID);
+  OneSignal.Notifications.requestPermission(true);
 
+  if (UserBox.isUserLoggedIn()) {
+    final user = UserBox.getUser();
+    loginUser(user!.id!, user.roleId!);
+  }
 
   runApp(const MyApp());
 }

@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nurse_app/components/admin_card.dart';
 import 'package:nurse_app/components/logout_button.dart';
-import 'package:http/http.dart' as http;
-import 'package:nurse_app/main.dart';
 import 'package:nurse_app/services/user.dart';
-import 'package:nurse_app/services/user_token.dart';
-import '../../consts.dart';
 
 class AdminDashboardPage extends StatelessWidget {
   const AdminDashboardPage({super.key});
@@ -71,8 +67,7 @@ class AdminDashboardPage extends StatelessWidget {
                   icon: const Icon(Icons.logout),
                   buttonText: 'Logout',
                   onTap: () {
-                    UserToken.deleteToken();
-                    UserBox.deleteUser();
+                    logoutUser();
                     Navigator.pushReplacementNamed(context, '/login');
                   },
                 ),

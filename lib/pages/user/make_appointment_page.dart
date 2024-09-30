@@ -126,6 +126,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

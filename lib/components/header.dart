@@ -49,7 +49,7 @@ class _HeaderState extends State<Header> {
             fetchLocationFromCoordinates(latitude, longitude);
           } else {
             setState(() {
-              location = 'Location not available';
+              location = 'Location not available\nTap to update your location';
             });
           }
         }
@@ -95,18 +95,27 @@ class _HeaderState extends State<Header> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    icon: const Icon(Icons.location_on),
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/updateLocation');
-                    },
-                  ),
                   Expanded(
-                    child: Text(
-                      location,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/updateLocation');
+                      },
+                      child: Row(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(Icons.location_on),
+                          ),
+                          Expanded(
+                            child: Text(
+                              location,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

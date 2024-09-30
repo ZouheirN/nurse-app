@@ -77,6 +77,8 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
         final userModel = UserModel.fromJson(jsonData['user']);
         UserBox.saveUser(userModel);
 
+        loginUser(userModel.id!, userModel.roleId!);
+
         emit(AuthenticationSignInSuccess(userModel: userModel));
       } else {
         emit(AuthenticationSignInFailure(message: jsonData['message']));
@@ -98,7 +100,9 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     try {
       final response = await http.post(
         Uri.parse('$HOST/verify-sms'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: jsonEncode({
           'phone_number': phoneNumber,
           'verification_code': pin,
@@ -107,8 +111,15 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
       final jsonData = json.decode(response.body);
 
+      logger.i(jsonData);
+
       if (response.statusCode >= 200 && response.statusCode < 300) {
         UserToken.setToken(jsonData['token']);
+
+        final userModel = UserModel.fromJson(jsonData['user']);
+        UserBox.saveUser(userModel);
+
+        loginUser(userModel.id!, userModel.roleId!);
 
         emit(AuthenticationOtpSuccess());
       } else {

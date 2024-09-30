@@ -56,8 +56,7 @@ class SettingsPage extends StatelessWidget {
                         icon: const Icon(Icons.logout),
                         buttonText: 'Logout',
                         onTap: () {
-                          UserToken.deleteToken();
-                          UserBox.deleteUser();
+                          logoutUser();
                           Navigator.pushReplacementNamed(context, '/login');
                         },
                       ),

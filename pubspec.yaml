@@ -29,6 +29,8 @@ dependencies:
   pinput: ^5.0.0
   carousel_slider: ^5.0.0
   pusher_channels_flutter: ^2.2.1
+  cached_network_image: ^3.4.1
+  onesignal_flutter: ^5.2.5
 
 dev_dependencies:
   flutter_test:
