@@ -4,9 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:nurse_app/services/user_token.dart';
-
-import '../../consts.dart';
-import '../../main.dart';
+import 'package:nurse_app/consts.dart';
+import 'package:nurse_app/main.dart';
 
 part 'location_state.dart';
 

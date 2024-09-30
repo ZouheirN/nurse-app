@@ -31,7 +31,9 @@ class HistoryPage extends StatelessWidget {
                   title: 'Critical Care: 20\$',
                   description: 'Check out the details',
                   time: '12:00',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/immediateRequestDetails');
+                  },
                 ),
               ),
               const SizedBox(height: 10),
@@ -40,7 +42,9 @@ class HistoryPage extends StatelessWidget {
                   title: 'Home Visit: 100\$',
                   description: 'Check out the details',
                   time: '12:00',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/immediateRequestDetails');
+                  },
                 ),
               ),
               const SizedBox(height: 10),
@@ -49,7 +53,9 @@ class HistoryPage extends StatelessWidget {
                   title: 'Rehabilitation Support: 30\$',
                   description: 'Check out the details',
                   time: '12:00',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/immediateRequestDetails');
+                  },
                 ),
               ),
               const SizedBox(height: 30),

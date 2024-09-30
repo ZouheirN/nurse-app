@@ -149,7 +149,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                     keyboardType: TextInputType.name,
                   ),
                   const SizedBox(height: 10),
-                  const PhoneNumberField(),
+                  PhoneNumberField(),
                   const LabeledTextfield(
                     label: 'Describe your problem',
                     keyboardType: TextInputType.text,

@@ -31,6 +31,7 @@ dependencies:
   pusher_channels_flutter: ^2.2.1
   cached_network_image: ^3.4.1
   onesignal_flutter: ^5.2.5
+  dio: ^5.7.0
 
 dev_dependencies:
   flutter_test:

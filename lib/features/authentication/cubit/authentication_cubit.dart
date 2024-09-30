@@ -71,6 +71,9 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
       final jsonData = json.decode(response.body);
 
+      logger.i(jsonData);
+      logger.i(response.statusCode);
+
       if (response.statusCode >= 200 && response.statusCode < 300) {
         UserToken.setToken(jsonData['token']);
 

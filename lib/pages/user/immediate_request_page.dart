@@ -1,7 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/gender_selection_field.dart';
 import 'package:nurse_app/components/header.dart';
 import 'package:nurse_app/components/labeled_textfield.dart';
@@ -10,11 +8,10 @@ import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/second_button.dart';
 import 'package:nurse_app/components/service_card.dart';
 import 'package:nurse_app/components/third_button.dart';
-import 'package:nurse_app/consts.dart';
-import 'package:nurse_app/main.dart';
+import 'package:nurse_app/components/time_type_selection_field.dart';
+import 'package:nurse_app/features/request/cubit/request_cubit.dart';
+import 'package:nurse_app/features/services/cubit/services_cubit.dart';
 import 'package:quickalert/quickalert.dart';
-
-import '../../services/user_token.dart';
 
 class ImmediateRequestPage extends StatefulWidget {
   const ImmediateRequestPage({super.key});
@@ -25,105 +22,35 @@ class ImmediateRequestPage extends StatefulWidget {
 
 class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
   final nameController = TextEditingController();
-  final phoneNumberController = TextEditingController();
+  String completeNumber = '';
   final problemDescriptionController = TextEditingController();
   final locationController = TextEditingController();
   final genderController = GenderSelectionController();
+  final timeTypeController = TimeTypeSelectionController();
 
   List<int> selectedServiceIds = [];
+
+  final _requestCubit = RequestCubit();
+  final _servicesCubit = ServicesCubit();
+
+  void setCompleteNumber(String number) {
+    setState(() {
+      completeNumber = number;
+    });
+  }
 
   @override
   void dispose() {
     nameController.dispose();
     locationController.dispose();
-    phoneNumberController.dispose();
     problemDescriptionController.dispose();
     super.dispose();
   }
 
-  List<dynamic> services = [];
-  bool isLoading = true;
-
   @override
   void initState() {
+    _servicesCubit.fetchServices();
     super.initState();
-    fetchServices();
-  }
-
-  void createRequest(String name, String phoneNumber, String location,
-      String problemDescription, BuildContext context) async {
-    try {
-      final token = await UserToken.getToken();
-
-      final response = await http.post(
-        Uri.parse('$HOST/requests'),
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
-        body: {
-          'full_name': name,
-          'phone_number': phoneNumber,
-          'location': location,
-          'problem_description': problemDescription,
-          'nurse_gender': genderController.getGender(),
-          'service_ids': [
-            ...selectedServiceIds,
-          ],
-          'time_type': 'full-time',
-        },
-      );
-
-      logger.i(response.body);
-
-      if (response.statusCode == 201) {
-        Navigator.pushNamed(context, '/pendingPage');
-      } else {
-        final errorData = json.decode(response.body);
-        final errorMessage = errorData['message'];
-
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          text: errorMessage,
-        );
-      }
-    } catch (e) {
-      logger.e(e.toString());
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: 'An error occurred, please try again later.',
-      );
-    }
-  }
-
-  Future<void> fetchServices() async {
-    final token = await UserToken.getToken();
-
-    final response = await http.get(
-      Uri.parse('$HOST/services'),
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      setState(() {
-        services = data['services'];
-        isLoading = false;
-      });
-    } else {
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: 'Failed to fetch services.',
-      );
-
-      setState(() {
-        isLoading = false;
-      });
-    }
   }
 
   @override
@@ -198,7 +125,9 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
                 controller: nameController,
               ),
               const SizedBox(height: 7),
-              PhoneNumberField(controller: phoneNumberController),
+              PhoneNumberField(
+                setCompleteNumber: setCompleteNumber,
+              ),
               const SizedBox(height: 7),
               LabeledTextfield(
                 label: 'Describe your problem',
@@ -214,6 +143,8 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
               const SizedBox(height: 7),
               GenderSelectionField(controller: genderController),
               const SizedBox(height: 7),
+              TimeTypeSelectionField(controller: timeTypeController),
+              const SizedBox(height: 7),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 child: Text(
@@ -224,13 +155,19 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 7),
               Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: isLoading
-                      ? const Loader()
-                      : Wrap(
+                  child: BlocBuilder<ServicesCubit, ServicesState>(
+                    bloc: _servicesCubit,
+                    builder: (context, state) {
+                      if (state is ServicesFetchLoading) {
+                        return const Loader();
+                      } else if (state is ServicesFetchSuccess) {
+                        final services = state.services;
+
+                        return Wrap(
                           spacing: 10,
                           runSpacing: 10,
                           children: services.map((service) {
@@ -255,21 +192,50 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
                               ),
                             );
                           }).toList(),
-                        ),
+                        );
+                      } else {
+                        return const Text('Failed to fetch services.');
+                      }
+                    },
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
-              MyThirdButton(
-                onTap: () {
-                  createRequest(
-                    nameController.text,
-                    phoneNumberController.text,
-                    locationController.text,
-                    problemDescriptionController.text,
-                    context,
+              BlocConsumer<RequestCubit, RequestState>(
+                bloc: _requestCubit,
+                listener: (context, state) {
+                  if (state is RequestImmediateSuccess) {
+                    Navigator.pushNamed(context, '/pendingPage');
+                  } else if (state is RequestImmediateFailure) {
+                    QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.error,
+                      text: state.message,
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  final isLoading = state is RequestImmediateLoading;
+
+                  return MyThirdButton(
+                    isLoading: isLoading,
+                    onTap: () {
+                      // todo validate
+
+                      _requestCubit.createRequestImmediate(
+                        name: nameController.text.trim(),
+                        phoneNumber: completeNumber,
+                        location: locationController.text.trim(),
+                        problemDescription:
+                            problemDescriptionController.text.trim(),
+                        nurseGender: genderController.getGender()!,
+                        selectedServices: selectedServiceIds,
+                        timeType: timeTypeController.getTimeType()!,
+                      );
+                    },
+                    buttonText: 'Submit',
                   );
                 },
-                buttonText: 'Submit',
               ),
               const SizedBox(height: 50),
             ],

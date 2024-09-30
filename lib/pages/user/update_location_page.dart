@@ -7,8 +7,7 @@ import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-
-import '../../features/location/location_cubit.dart';
+import 'package:nurse_app/features/location/cubit/location_cubit.dart';
 
 class UpdateLocationPage extends StatefulWidget {
   const UpdateLocationPage({super.key});

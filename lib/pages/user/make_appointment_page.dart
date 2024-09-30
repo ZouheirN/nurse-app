@@ -1,18 +1,23 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:nurse_app/components/gender_selection_field.dart';
 import 'package:nurse_app/components/header.dart';
 import 'package:nurse_app/components/labeled_date.dart';
+import 'package:nurse_app/components/labeled_textfield.dart';
 import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/second_button.dart';
-import 'package:nurse_app/components/labeled_textfield.dart';
 import 'package:nurse_app/components/service_card.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/consts.dart';
 import 'package:quickalert/quickalert.dart';
 
+import '../../components/loader.dart';
+import '../../components/time_type_selection_field.dart';
+import '../../features/request/cubit/request_cubit.dart';
+import '../../features/services/cubit/services_cubit.dart';
 import '../../services/user_token.dart';
 
 class MakeAppointmentPage extends StatefulWidget {
@@ -24,29 +29,38 @@ class MakeAppointmentPage extends StatefulWidget {
 
 class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
   final nameController = TextEditingController();
-  final phoneNumberController = TextEditingController();
+  String completeNumber = '';
   final problemDescriptionController = TextEditingController();
   final locationController = TextEditingController();
   final genderController = GenderSelectionController();
+  final timeTypeController = TimeTypeSelectionController();
+
+  List<dynamic> services = [];
+  bool isLoading = true;
 
   List<int> selectedServiceIds = [];
+
+  final _requestCubit = RequestCubit();
+  final _servicesCubit = ServicesCubit();
+
+  void setCompleteNumber(String number) {
+    setState(() {
+      completeNumber = number;
+    });
+  }
 
   @override
   void dispose() {
     nameController.dispose();
     locationController.dispose();
-    phoneNumberController.dispose();
     problemDescriptionController.dispose();
     super.dispose();
   }
 
-  List<dynamic> services = [];
-  bool isLoading = true;
-
   @override
   void initState() {
+    _servicesCubit.fetchServices();
     super.initState();
-    fetchServices();
   }
 
   void createRequest(String name, String phoneNumber, String location,
@@ -60,7 +74,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode({
-          'name': name,
+          'full_name': name,
           'phone_number': phoneNumber,
           'location': location,
           'problem_description': problemDescription,
@@ -87,38 +101,6 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
         type: QuickAlertType.error,
         text: 'An error occurred, please try again later.',
       );
-    }
-  }
-
-  Future<void> fetchServices() async {
-    final token = await UserToken.getToken();
-
-    final response = await http.get(
-      Uri.parse('$HOST/services'),
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      setState(() {
-        services = data['services'];
-        isLoading = false;
-      });
-    } else {
-      final errorData = json.decode(response.body);
-      final errorMessage = errorData['message'];
-
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: errorMessage,
-      );
-
-      setState(() {
-        isLoading = false;
-      });
     }
   }
 
@@ -194,7 +176,9 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                 controller: nameController,
               ),
               const SizedBox(height: 7),
-              PhoneNumberField(controller: phoneNumberController),
+              PhoneNumberField(
+                setCompleteNumber: setCompleteNumber,
+              ),
               const SizedBox(height: 7),
               LabeledTextfield(
                 label: 'Describe your problem',
@@ -209,6 +193,8 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
               ),
               const SizedBox(height: 7),
               GenderSelectionField(controller: genderController),
+              const SizedBox(height: 7),
+              TimeTypeSelectionField(controller: timeTypeController),
               const SizedBox(height: 10),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40),
@@ -224,9 +210,15 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: isLoading
-                      ? const CircularProgressIndicator()
-                      : Wrap(
+                  child: BlocBuilder<ServicesCubit, ServicesState>(
+                    bloc: _servicesCubit,
+                    builder: (context, state) {
+                      if (state is ServicesFetchLoading) {
+                        return const Loader();
+                      } else if (state is ServicesFetchSuccess) {
+                        final services = state.services;
+
+                        return Wrap(
                           spacing: 10,
                           runSpacing: 10,
                           children: services.map((service) {
@@ -234,7 +226,8 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                               padding: const EdgeInsets.symmetric(vertical: 5),
                               child: ServiceCard(
                                 serviceId: service['id'],
-                                imagePath: 'assets/images/square_logo.png',
+                                imagePath: service['service_pic'] ??
+                                    'assets/images/square_logo.png',
                                 title: service['name'],
                                 price: service['price'],
                                 salePrice: service['discount_price'],
@@ -250,34 +243,37 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                               ),
                             );
                           }).toList(),
-                        ),
+                        );
+                      } else {
+                        return const Text('Failed to fetch services.');
+                      }
+                    },
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE7E7E7),
-                    border: Border.all(
-                      color: const Color(0xFFE7E7E7),
-                      width: 2,
-                    ),
+                child: Card(
+                  shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Column(
-                    children: [
-                      LabeledDateField(
-                        label: 'Start Date',
-                        currentDate: DateTime.now(),
-                      ),
-                      const SizedBox(height: 7),
-                      LabeledDateField(
-                        label: 'End Date',
-                        currentDate: DateTime.now(),
-                      ),
-                    ],
+                  color: const Color(0xFFE7E7E7),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Column(
+                      children: [
+                        LabeledDateField(
+                          label: 'Start Date',
+                          currentDate: DateTime.now(),
+                        ),
+                        const SizedBox(height: 7),
+                        LabeledDateField(
+                          label: 'End Date',
+                          currentDate: DateTime.now(),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -286,7 +282,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                 onTap: () {
                   createRequest(
                     nameController.text,
-                    phoneNumberController.text,
+                    completeNumber,
                     locationController.text,
                     problemDescriptionController.text,
                     context,

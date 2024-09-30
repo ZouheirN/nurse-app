@@ -96,25 +96,6 @@ class LoginPage extends StatelessWidget {
                     return null;
                   },
                 ),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 26),
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      onTap: () {
-                        Dialogs.showForgotPasswordDialog(context);
-                      },
-                      child: const Text(
-                        'Forgot Password?',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF7BB442),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 12),
                 BlocConsumer<AuthenticationCubit, AuthenticationState>(
                   bloc: _authenticationCubit,
@@ -127,11 +108,21 @@ class LoginPage extends StatelessWidget {
                         Navigator.pushReplacementNamed(context, '/home');
                       }
                     } else if (state is AuthenticationSignInFailure) {
-                      Dialogs.showErrorDialog(
-                        context,
-                        'Error Logging In',
-                        state.message,
-                      );
+                      if (state.message ==
+                          "Your phone number is not verified.") {
+                        // todo fix
+                        Dialogs.showErrorDialog(
+                          context,
+                          'Error Logging In',
+                          state.message,
+                        );
+                      } else {
+                        Dialogs.showErrorDialog(
+                          context,
+                          'Error Logging In',
+                          state.message,
+                        );
+                      }
                     }
                   },
                   builder: (context, state) {
@@ -172,6 +163,25 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 26),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: GestureDetector(
+                      onTap: () {
+                        Dialogs.showForgotPasswordDialog(context);
+                      },
+                      child: const Text(
+                        'Forgot Password?',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF7BB442),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 10),
               ],

@@ -184,7 +184,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               controller: nameController,
                             ),
                             const SizedBox(height: 7),
-                            EditPhoneNumberField(controller: phoneController),
+                            LabeledEditTextfield(
+                              label: 'Phone Number',
+                              keyboardType: TextInputType.phone,
+                              controller: phoneController,
+                            ),
+                            // EditPhoneNumberField(controller: phoneController),
+                            const SizedBox(height: 7),
                             LabeledEditTextfield(
                               label: 'Email',
                               keyboardType: TextInputType.emailAddress,

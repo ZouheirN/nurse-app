@@ -27,7 +27,7 @@ class OrderProcessPage extends StatelessWidget {
                     keyboardType: TextInputType.name,
                   ),
                   const SizedBox(height: 10),
-                  const PhoneNumberField(),
+                  PhoneNumberField(),
                   const LabeledTextfield(
                     label: 'Describe your problem',
                     keyboardType: TextInputType.text,
