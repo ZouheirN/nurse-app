@@ -70,8 +70,11 @@ class MyApp extends StatelessWidget {
         '/pendingPage': (context) => const PendingPage(),
         '/notification': (context) => const NotificationPage(),
         '/verifySms': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as String;
-          return VerifySmsPage(phoneNumber: args);
+          final args = ModalRoute.of(context)?.settings.arguments as Map;
+          return VerifySmsPage(
+            phoneNumber: args['phoneNumber'],
+            resend: args['resend'],
+          );
         },
         '/forgotPassword': (context) {
           final args = ModalRoute.of(context)?.settings.arguments as String;

@@ -110,12 +110,7 @@ class LoginPage extends StatelessWidget {
                     } else if (state is AuthenticationSignInFailure) {
                       if (state.message ==
                           "Your phone number is not verified.") {
-                        // todo fix
-                        Dialogs.showErrorDialog(
-                          context,
-                          'Error Logging In',
-                          state.message,
-                        );
+                        Dialogs.showVerifySmsDialog(context);
                       } else {
                         Dialogs.showErrorDialog(
                           context,

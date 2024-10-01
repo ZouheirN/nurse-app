@@ -8,8 +8,10 @@ import '../../utilities/dialogs.dart';
 
 class VerifySmsPage extends StatefulWidget {
   final String phoneNumber;
+  final bool resend;
 
-  const VerifySmsPage({super.key, required this.phoneNumber});
+  const VerifySmsPage(
+      {super.key, required this.phoneNumber, required this.resend});
 
   @override
   State<VerifySmsPage> createState() => _VerifySmsPageState();
@@ -17,6 +19,25 @@ class VerifySmsPage extends StatefulWidget {
 
 class _VerifySmsPageState extends State<VerifySmsPage> {
   final _authenticationCubit = AuthenticationCubit();
+
+  @override
+  void initState() {
+    if (widget.resend) {
+      _authenticationCubit.resendOtp(widget.phoneNumber).then(
+        (value) {
+          if (value == false) {
+            if (!mounted) return;
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Failed to resend OTP'),
+              ),
+            );
+          }
+        },
+      );
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +61,8 @@ class _VerifySmsPageState extends State<VerifySmsPage> {
                 bloc: _authenticationCubit,
                 listener: (context, state) {
                   if (state is AuthenticationOtpSuccess) {
-                    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/home', (route) => false);
                   } else if (state is AuthenticationOtpFailure) {
                     Dialogs.showErrorDialog(
                       context,

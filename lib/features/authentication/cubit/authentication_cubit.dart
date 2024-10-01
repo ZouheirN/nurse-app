@@ -1,7 +1,5 @@
-import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 import 'package:nurse_app/features/authentication/models/user_model.dart';
 import 'package:nurse_app/main.dart';
@@ -11,6 +9,8 @@ import 'package:nurse_app/services/user_token.dart';
 import '../../../consts.dart';
 
 part 'authentication_state.dart';
+
+final dio = Dio();
 
 class AuthenticationCubit extends Cubit<AuthenticationState> {
   AuthenticationCubit() : super(AuthenticationInitial());
@@ -25,9 +25,9 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     emit(AuthenticationSignUpLoading());
 
     try {
-      final response = await http.post(
-        Uri.parse('$HOST/register'),
-        body: {
+      await dio.post(
+        '$HOST/register',
+        data: {
           'name': name,
           'phone_number': phoneNumber,
           'email': email,
@@ -36,15 +36,13 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
         },
       );
 
-      final jsonData = json.decode(response.body);
-
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        emit(AuthenticationSignUpSuccess(phoneNumber: phoneNumber));
-      } else if (response.statusCode == 422) {
+      emit(AuthenticationSignUpSuccess(phoneNumber: phoneNumber));
+    } on DioException catch (e) {
+      if (e.response!.statusCode == 422) {
         emit(AuthenticationSignUpFailure(
-            message: jsonData['errors']['email'][0]));
+            message: e.response!.data['errors']['email'][0]));
       } else {
-        emit(AuthenticationSignUpFailure(message: jsonData['error']));
+        emit(AuthenticationSignUpFailure(message: e.response!.data['message']));
       }
     } catch (e) {
       logger.e(e.toString());
@@ -61,31 +59,26 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     emit(AuthenticationSignInLoading());
 
     try {
-      final response = await http.post(
-        Uri.parse('$HOST/login'),
-        body: {
+      final response = await dio.post(
+        '$HOST/login',
+        data: {
           'email': email,
           'password': password,
         },
       );
 
-      final jsonData = json.decode(response.body);
+      logger.i(response.data);
 
-      logger.i(jsonData);
-      logger.i(response.statusCode);
+      UserToken.setToken(response.data['token']);
 
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        UserToken.setToken(jsonData['token']);
+      final userModel = UserModel.fromJson(response.data['user']);
+      UserBox.saveUser(userModel);
 
-        final userModel = UserModel.fromJson(jsonData['user']);
-        UserBox.saveUser(userModel);
+      loginUser(userModel.id!, userModel.roleId!);
 
-        loginUser(userModel.id!, userModel.roleId!);
-
-        emit(AuthenticationSignInSuccess(userModel: userModel));
-      } else {
-        emit(AuthenticationSignInFailure(message: jsonData['message']));
-      }
+      emit(AuthenticationSignInSuccess(userModel: userModel));
+    } on DioException catch (e) {
+      emit(AuthenticationSignInFailure(message: e.response!.data['message']));
     } catch (e) {
       logger.e(e.toString());
       emit(AuthenticationSignInFailure(
@@ -101,33 +94,24 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     emit(AuthenticationOtpLoading());
 
     try {
-      final response = await http.post(
-        Uri.parse('$HOST/verify-sms'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
+      final response = await dio.post(
+        '$HOST/verify-sms',
+        data: {
           'phone_number': phoneNumber,
           'verification_code': pin,
-        }),
+        },
       );
 
-      final jsonData = json.decode(response.body);
+      UserToken.setToken(response.data['token']);
 
-      logger.i(jsonData);
+      final userModel = UserModel.fromJson(response.data['user']);
+      UserBox.saveUser(userModel);
 
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        UserToken.setToken(jsonData['token']);
+      loginUser(userModel.id!, userModel.roleId!);
 
-        final userModel = UserModel.fromJson(jsonData['user']);
-        UserBox.saveUser(userModel);
-
-        loginUser(userModel.id!, userModel.roleId!);
-
-        emit(AuthenticationOtpSuccess());
-      } else {
-        emit(AuthenticationOtpFailure(message: jsonData['message']));
-      }
+      emit(AuthenticationOtpSuccess());
+    } on DioException catch (e) {
+      emit(AuthenticationOtpFailure(message: e.response!.data['message']));
     } catch (e) {
       logger.e(e.toString());
       emit(AuthenticationOtpFailure(
@@ -140,24 +124,21 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     emit(AuthenticationForgotPasswordOtpLoading());
 
     try {
-      final response = await http.post(
-        Uri.parse('$HOST/send-password-reset-otp'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
+      await dio.post(
+        '$HOST/send-password-reset-otp',
+        data: {
           'phone_number': phoneNumber,
-        }),
+        },
       );
 
-      final jsonData = json.decode(response.body);
-
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        emit(AuthenticationForgotPasswordOtpSuccess());
-      } else if (response.statusCode == 422) {
+      emit(AuthenticationForgotPasswordOtpSuccess());
+    } on DioException catch (e) {
+      if (e.response!.statusCode == 422) {
         emit(AuthenticationForgotPasswordOtpFailure(
-            message: jsonData['errors']['phone_number'][0]));
+            message: e.response!.data['errors']['phone_number'][0]));
       } else {
         emit(AuthenticationForgotPasswordOtpFailure(
-            message: jsonData['message']));
+            message: e.response!.data['message']));
       }
     } catch (e) {
       logger.e(e.toString());
@@ -176,29 +157,43 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     emit(AuthenticationOtpLoading());
 
     try {
-      final response = await http.post(
-        Uri.parse('$HOST/reset-password'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
+      await dio.post(
+        '$HOST/reset-password',
+        data: {
           'phone_number': phoneNumber,
           'token': pin,
           'password': password,
           'password_confirmation': confirmPassword,
-        }),
+        },
       );
 
-      final jsonData = json.decode(response.body);
-
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        emit(AuthenticationOtpSuccess());
-      } else {
-        emit(AuthenticationOtpFailure(message: jsonData['message']));
-      }
+      emit(AuthenticationOtpSuccess());
+    } on DioException catch (e) {
+      emit(AuthenticationOtpFailure(message: e.response!.data['message']));
     } catch (e) {
       logger.e(e.toString());
       emit(AuthenticationOtpFailure(
           message:
               'An error occurred. Please check your connection and try again later.'));
     }
+  }
+
+  Future<bool> resendOtp(String phoneNumber) async {
+    try {
+      await dio.post(
+        '$HOST/resend-verification-code',
+        data: {
+          'phone_number': phoneNumber,
+        },
+      );
+
+      return true;
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+    } catch (e) {
+      logger.e(e.toString());
+    }
+
+    return false;
   }
 }

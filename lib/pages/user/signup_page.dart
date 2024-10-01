@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/button.dart';
-import 'package:nurse_app/components/sign_up_phone_number_field.dart';
 import 'package:nurse_app/components/textfield.dart';
-import 'package:nurse_app/main.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
 
 import '../../features/authentication/cubit/authentication_cubit.dart';
@@ -163,6 +161,11 @@ class _SignupPageState extends State<SignupPage> {
                     if (value == null || value.isEmpty) {
                       return 'Please confirm your password';
                     }
+
+                    if (value != passwordController.text) {
+                      return 'Passwords do not match';
+                    }
+
                     return null;
                   },
                 ),
@@ -175,7 +178,10 @@ class _SignupPageState extends State<SignupPage> {
                       Navigator.pushNamed(
                         context,
                         '/verifySms',
-                        arguments: phoneNumber,
+                        arguments: {
+                          'phoneNumber': phoneNumber,
+                          'resend': false,
+                        },
                       );
                     } else if (state is AuthenticationSignUpFailure) {
                       Dialogs.showErrorDialog(
