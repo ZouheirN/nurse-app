@@ -3,7 +3,7 @@ class RequestsHistoryModel {
   num? userId;
   String? fullName;
   String? phoneNumber;
-  dynamic nurseId;
+  num? nurseId;
   String? status;
   DateTime? scheduledTime;
   DateTime? endingTime;

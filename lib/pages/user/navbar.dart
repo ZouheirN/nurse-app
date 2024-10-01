@@ -13,11 +13,11 @@ class Navbar extends StatefulWidget {
 
 class _NavbarState extends State<Navbar> {
   int myIndex = 0;
-  List<Widget> widgetList = const [
-    HomePage(),
-    HistoryPage(),
+  List<Widget> widgetList = [
+    const HomePage(),
+    const HistoryPage(),
     SocialProfilesPage(),
-    SettingsPage(),
+    const SettingsPage(),
   ];
 
   @override

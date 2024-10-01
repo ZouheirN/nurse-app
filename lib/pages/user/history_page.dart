@@ -77,7 +77,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                 Navigator.pushNamed(
                                   context,
                                   '/requestDetails',
-                                  arguments: request,
+                                  arguments: request.id,
                                 );
                               },
                             ),

@@ -19,14 +19,13 @@ import 'package:nurse_app/pages/admin/order_process_page.dart';
 import 'package:nurse_app/pages/admin/scheduled_order_page.dart';
 import 'package:nurse_app/pages/user/edit_profile_page.dart';
 import 'package:nurse_app/pages/user/forgot_password_page.dart';
-import 'package:nurse_app/pages/user/request_details_page.dart';
 import 'package:nurse_app/pages/user/immediate_request_page.dart';
 import 'package:nurse_app/pages/user/login_page.dart';
 import 'package:nurse_app/pages/user/make_appointment_page.dart';
 import 'package:nurse_app/pages/user/navbar.dart';
 import 'package:nurse_app/pages/user/notification_page.dart';
 import 'package:nurse_app/pages/user/pending_page.dart';
-import 'package:nurse_app/pages/user/scheduled_request_details_page.dart';
+import 'package:nurse_app/pages/user/request_details_page.dart';
 import 'package:nurse_app/pages/user/signup_page.dart';
 import 'package:nurse_app/pages/user/splash_screen.dart';
 import 'package:nurse_app/pages/user/update_location_page.dart';
@@ -82,9 +81,8 @@ class MyApp extends StatelessWidget {
           return ForgotPasswordPage(phoneNumber: args);
         },
         '/requestDetails': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments
-              as RequestsHistoryModel;
-          return RequestDetailsPage(request: args);
+          final args = ModalRoute.of(context)?.settings.arguments as num;
+          return RequestDetailsPage(requestId: args);
         },
         '/editProfile': (context) => const EditProfilePage(),
         '/updateLocation': (context) => const UpdateLocationPage(),

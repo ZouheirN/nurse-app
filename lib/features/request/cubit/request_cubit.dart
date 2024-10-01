@@ -101,7 +101,7 @@ class RequestCubit extends Cubit<RequestState> {
   }
 
   Future<void> getOrder({
-    required int orderId,
+    required num orderId,
   }) async {
     emit(RequestDetailsLoading());
 
