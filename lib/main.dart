@@ -3,6 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:nurse_app/consts.dart';
 import 'package:nurse_app/features/authentication/models/user_model.dart';
+import 'package:nurse_app/features/request/models/requests_history_model.dart';
 import 'package:nurse_app/pages/admin/add_nurse_page.dart';
 import 'package:nurse_app/pages/admin/add_service_page.dart';
 import 'package:nurse_app/pages/admin/admin_dashboard_page.dart';
@@ -18,7 +19,7 @@ import 'package:nurse_app/pages/admin/order_process_page.dart';
 import 'package:nurse_app/pages/admin/scheduled_order_page.dart';
 import 'package:nurse_app/pages/user/edit_profile_page.dart';
 import 'package:nurse_app/pages/user/forgot_password_page.dart';
-import 'package:nurse_app/pages/user/immediate_request_details_page.dart';
+import 'package:nurse_app/pages/user/request_details_page.dart';
 import 'package:nurse_app/pages/user/immediate_request_page.dart';
 import 'package:nurse_app/pages/user/login_page.dart';
 import 'package:nurse_app/pages/user/make_appointment_page.dart';
@@ -80,10 +81,11 @@ class MyApp extends StatelessWidget {
           final args = ModalRoute.of(context)?.settings.arguments as String;
           return ForgotPasswordPage(phoneNumber: args);
         },
-        '/immediateRequestDetails': (context) =>
-            const ImmediateRequestDetailsPage(),
-        '/scheduledRequestDetails': (context) =>
-            const ScheduledRequestDetailsPage(),
+        '/requestDetails': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments
+              as RequestsHistoryModel;
+          return RequestDetailsPage(request: args);
+        },
         '/editProfile': (context) => const EditProfilePage(),
         '/updateLocation': (context) => const UpdateLocationPage(),
         '/adminDashboard': (context) => const AdminDashboardPage(),

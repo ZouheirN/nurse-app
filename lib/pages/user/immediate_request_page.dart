@@ -204,9 +204,9 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
               BlocConsumer<RequestCubit, RequestState>(
                 bloc: _requestCubit,
                 listener: (context, state) {
-                  if (state is RequestImmediateSuccess) {
+                  if (state is RequestCreateSuccess) {
                     Navigator.pushNamed(context, '/pendingPage');
-                  } else if (state is RequestImmediateFailure) {
+                  } else if (state is RequestCreateFailure) {
                     QuickAlert.show(
                       context: context,
                       type: QuickAlertType.error,
@@ -215,14 +215,14 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
                   }
                 },
                 builder: (context, state) {
-                  final isLoading = state is RequestImmediateLoading;
+                  final isLoading = state is RequestCreateLoading;
 
                   return MyThirdButton(
                     isLoading: isLoading,
                     onTap: () {
                       // todo validate
 
-                      _requestCubit.createRequestImmediate(
+                      _requestCubit.createRequest(
                         name: nameController.text.trim(),
                         phoneNumber: completeNumber,
                         location: locationController.text.trim(),

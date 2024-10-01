@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
 import 'package:nurse_app/components/gender_selection_field.dart';
 import 'package:nurse_app/components/header.dart';
 import 'package:nurse_app/components/labeled_date.dart';
@@ -11,14 +8,12 @@ import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/second_button.dart';
 import 'package:nurse_app/components/service_card.dart';
 import 'package:nurse_app/components/third_button.dart';
-import 'package:nurse_app/consts.dart';
 import 'package:quickalert/quickalert.dart';
 
 import '../../components/loader.dart';
 import '../../components/time_type_selection_field.dart';
 import '../../features/request/cubit/request_cubit.dart';
 import '../../features/services/cubit/services_cubit.dart';
-import '../../services/user_token.dart';
 
 class MakeAppointmentPage extends StatefulWidget {
   const MakeAppointmentPage({super.key});
@@ -34,6 +29,8 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
   final locationController = TextEditingController();
   final genderController = GenderSelectionController();
   final timeTypeController = TimeTypeSelectionController();
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
 
   List<dynamic> services = [];
   bool isLoading = true;
@@ -61,47 +58,6 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
   void initState() {
     _servicesCubit.fetchServices();
     super.initState();
-  }
-
-  void createRequest(String name, String phoneNumber, String location,
-      String problemDescription, BuildContext context) async {
-    try {
-      final token = await UserToken.getToken();
-
-      final response = await http.post(
-        Uri.parse('$HOST/requests'),
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode({
-          'full_name': name,
-          'phone_number': phoneNumber,
-          'location': location,
-          'problem_description': problemDescription,
-          'gender': genderController.getGender(),
-          'service_ids': selectedServiceIds,
-        }),
-      );
-
-      if (response.statusCode == 201) {
-        Navigator.pushNamed(context, '/pendingPage');
-      } else {
-        final errorData = json.decode(response.body);
-        final errorMessage = errorData['message'];
-
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          text: errorMessage,
-        );
-      }
-    } catch (e) {
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: 'An error occurred, please try again later.',
-      );
-    }
   }
 
   @override
@@ -265,12 +221,24 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                       children: [
                         LabeledDateField(
                           label: 'Start Date',
-                          currentDate: DateTime.now(),
+                          currentDate: startDate,
+                          currentTime: TimeOfDay.now(),
+                          onPicked: (date) {
+                            setState(() {
+                              startDate = date;
+                            });
+                          },
                         ),
                         const SizedBox(height: 7),
                         LabeledDateField(
                           label: 'End Date',
-                          currentDate: DateTime.now(),
+                          currentDate: endDate,
+                          currentTime: TimeOfDay.now(),
+                          onPicked: (date) {
+                            setState(() {
+                              endDate = date;
+                            });
+                          },
                         ),
                       ],
                     ),
@@ -278,17 +246,43 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              MyThirdButton(
-                onTap: () {
-                  createRequest(
-                    nameController.text,
-                    completeNumber,
-                    locationController.text,
-                    problemDescriptionController.text,
-                    context,
+              BlocConsumer<RequestCubit, RequestState>(
+                bloc: _requestCubit,
+                listener: (context, state) {
+                  if (state is RequestCreateSuccess) {
+                    Navigator.pushNamed(context, '/pendingPage');
+                  } else if (state is RequestCreateFailure) {
+                    QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.error,
+                      text: state.message,
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  final isLoading = state is RequestCreateLoading;
+
+                  return MyThirdButton(
+                    isLoading: isLoading,
+                    onTap: () {
+                      // todo validate
+
+                      _requestCubit.createRequest(
+                        name: nameController.text.trim(),
+                        phoneNumber: completeNumber,
+                        location: locationController.text.trim(),
+                        problemDescription:
+                            problemDescriptionController.text.trim(),
+                        nurseGender: genderController.getGender()!,
+                        selectedServices: selectedServiceIds,
+                        timeType: timeTypeController.getTimeType()!,
+                        startDate: startDate,
+                        endDate: endDate,
+                      );
+                    },
+                    buttonText: 'Submit',
                   );
                 },
-                buttonText: 'Submit',
               ),
               const SizedBox(height: 50),
             ],

@@ -1,14 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:nurse_app/components/loader.dart';
-import 'package:nurse_app/consts.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/admin_header.dart';
-import 'package:nurse_app/components/order_card.dart';
-import 'package:nurse_app/main.dart';
-import 'package:quickalert/quickalert.dart';
+import 'package:nurse_app/features/request/cubit/request_cubit.dart';
 
-import '../../services/user_token.dart';
+import '../../components/loader.dart';
 
 class ManageOrdersPage extends StatefulWidget {
   const ManageOrdersPage({super.key});
@@ -18,51 +13,16 @@ class ManageOrdersPage extends StatefulWidget {
 }
 
 class _ManageOrdersPageState extends State<ManageOrdersPage> {
-  List<dynamic> requests = [];
-  bool isLoading = true;
+  final _requestCubit = RequestCubit();
 
   @override
-  void initState() {
+  initState() {
     super.initState();
-    fetchOrders();
-  }
-
-  Future<void> fetchOrders() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    final token = await UserToken.getToken();
-
-    final response = await http.get(
-      Uri.parse('$HOST/admin/requests'),
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-
-      setState(() {
-        requests = data['requests'];
-        isLoading = false;
-      });
-    } else {
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: 'Failed to fetch orders.',
-      );
-
-      setState(() {
-        isLoading = false;
-      });
-    }
+    _requestCubit.getRequestsHistory();
   }
 
   Future<void> _handleRefresh() async {
-    await fetchOrders();
+    await _requestCubit.getRequestsHistory();
   }
 
   @override
@@ -71,15 +31,21 @@ class _ManageOrdersPageState extends State<ManageOrdersPage> {
       backgroundColor: Colors.white,
       appBar: const AdminHeader(title: 'Orders'),
       body: SafeArea(
-        child: isLoading
-            ? const Loader()
-            : RefreshIndicator(
-                onRefresh: _handleRefresh,
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+        child: RefreshIndicator(
+          onRefresh: _handleRefresh,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Center(
+              child: BlocBuilder<RequestCubit, RequestState>(
+                bloc: _requestCubit,
+                builder: (context, state) {
+                  if (state is RequestsHistoryLoading) {
+                    return const Loader();
+                  }
+                  if (state is RequestsHistorySuccess) {
+                    final requests = state.requests;
+
+                    return Column(
                       children: [
                         const SizedBox(height: 20),
                         // OrderCard(
@@ -91,31 +57,36 @@ class _ManageOrdersPageState extends State<ManageOrdersPage> {
                         //   },
                         // ),
                         // const SizedBox(height: 10),
-                        Column(
-                          children: requests.map((request) {
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 5),
-                              child: OrderCard(
-                                title: request['name'],
-                                description: 'Check out the details',
-                                time: request['created_at'],
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    '/orderDetails',
-                                    arguments: request['id'],
-                                  );
-                                },
-                              ),
-                            );
-                          }).toList(),
-                        ),
+                        // Column(
+                        //   children: requests.map((request) {
+                        //     return Padding(
+                        //       padding:
+                        //           const EdgeInsets.symmetric(vertical: 5),
+                        //       child: OrderCard(
+                        //         title: request['name'],
+                        //         description: 'Check out the details',
+                        //         time: request['created_at'],
+                        //         onTap: () {
+                        //           Navigator.pushNamed(
+                        //             context,
+                        //             '/orderDetails',
+                        //             arguments: request['id'],
+                        //           );
+                        //         },
+                        //       ),
+                        //     );
+                        //   }).toList(),
+                        // ),
                       ],
-                    ),
-                  ),
-                ),
+                    );
+                  }
+
+                  return const Text('Failed to load orders');
+                },
               ),
+            ),
+          ),
+        ),
       ),
     );
   }

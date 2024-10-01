@@ -32,7 +32,7 @@ class NotificationPage extends StatelessWidget {
                   description: 'Check out the details',
                   time: '12:00',
                   onTap: () {
-                    Navigator.pushNamed(context, '/immediateRequestDetails');
+                    Navigator.pushNamed(context, '/requestDetails');
                   },
                 ),
               ),

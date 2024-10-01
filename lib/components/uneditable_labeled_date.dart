@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nurse_app/utilities/helper_functions.dart';
 
 class UneditableLabeledDate extends StatefulWidget {
   final String label;
@@ -56,15 +57,17 @@ class _UneditableLabeledDateState extends State<UneditableLabeledDate> {
                 child: TextField(
                   decoration: InputDecoration(
                     hintText: _selectedDate == null
-                        ? 'dd/mm/yyyy'
-                        : "${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}",
+                        ? 'mm/dd/yyyy'
+                        : formateDateTimeForRequestDetails(_selectedDate!),
                     enabledBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(3)),
-                      borderSide: BorderSide(color: Color(0xFF7BB442), width: 2),
+                      borderSide:
+                          BorderSide(color: Color(0xFF7BB442), width: 2),
                     ),
                     focusedBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(3)),
-                      borderSide: BorderSide(color: Color(0xFF7BB442), width: 2),
+                      borderSide:
+                          BorderSide(color: Color(0xFF7BB442), width: 2),
                     ),
                     fillColor: _isFocused
                         ? const Color.fromARGB(255, 245, 245, 245)

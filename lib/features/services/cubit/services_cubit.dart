@@ -28,12 +28,9 @@ class ServicesCubit extends Cubit<ServicesState> {
         ),
       );
 
-      if (response.statusCode! >= 200 && response.statusCode! < 300) {
-        emit(ServicesFetchSuccess(services: response.data['services']));
-      } else {
-        logger.e('${response.data}');
-        emit(ServicesFetchFailure(message: 'Failed to fetch services.'));
-      }
+      emit(ServicesFetchSuccess(services: response.data['services']));
+    } on DioException catch (e) {
+      emit(ServicesFetchFailure(message: 'Failed to fetch services.'));
     } catch (e) {
       logger.e(e);
       emit(ServicesFetchFailure(message: 'Failed to fetch services.'));
