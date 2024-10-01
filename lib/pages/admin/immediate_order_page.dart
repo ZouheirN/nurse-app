@@ -1,17 +1,21 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:nurse_app/consts.dart';
 import 'package:http/http.dart' as http;
 import 'package:nurse_app/components/admin_header.dart';
+import 'package:nurse_app/components/labeled_dropdown.dart';
 import 'package:nurse_app/components/labeled_textfield.dart';
 import 'package:nurse_app/components/third_button.dart';
-import 'package:nurse_app/components/labeled_dropdown.dart';
+import 'package:nurse_app/consts.dart';
+import 'package:nurse_app/features/request/models/requests_history_model.dart';
 import 'package:quickalert/quickalert.dart';
 
 import '../../services/user_token.dart';
 
 class ImmediateOrderPage extends StatefulWidget {
-  const ImmediateOrderPage({super.key});
+  final RequestsHistoryModel order;
+
+  const ImmediateOrderPage({super.key, required this.order});
 
   @override
   State<ImmediateOrderPage> createState() => _ImmediateOrderPageState();
@@ -43,7 +47,7 @@ class _ImmediateOrderPageState extends State<ImmediateOrderPage> {
         nurses = List<Map<String, String>>.from(
           data['nurses'].map((nurse) => {
                 'name': nurse['name'].toString(),
-                'profile_picture': nurse['profile_picture'].toString(), 
+                'profile_picture': nurse['profile_picture'].toString(),
               }),
         );
         isLoading = false;
@@ -63,9 +67,11 @@ class _ImmediateOrderPageState extends State<ImmediateOrderPage> {
 
   @override
   Widget build(BuildContext context) {
+    final services = widget.order.services;
+
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const AdminHeader(title: 'Order #1'),
+      appBar: AdminHeader(title: 'Order #${widget.order.id}'),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -78,11 +84,29 @@ class _ImmediateOrderPageState extends State<ImmediateOrderPage> {
                   if (isLoading)
                     const CircularProgressIndicator()
                   else
-                    LabeledDropdown(
-                      label: 'Select Nurse',
-                      services: nurses,
-                    ),
-                  const SizedBox(height: 20),
+                    for (final service in services!)
+                      Column(
+                        children: [
+                          LabeledDropdown(
+                            label: 'Select Nurse',
+                            services: nurses,
+                          ),
+                          const SizedBox(height: 10),
+                          LabeledDropdown(
+                            label: 'Select Service',
+                            services: services.map(
+                              (e) {
+                                return service.toJson();
+                              },
+                            ).toList(),
+                          ),
+                          const Divider(
+                            indent: 20,
+                            endIndent: 20,
+                          ),
+                        ],
+                      ),
+                  // const SizedBox(height: 20),
                   const LabeledTextfield(
                     label: 'Time to arrive',
                     keyboardType: TextInputType.text,

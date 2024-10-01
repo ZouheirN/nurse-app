@@ -5,7 +5,6 @@ import 'package:nurse_app/consts.dart';
 import 'package:nurse_app/features/request/models/requests_history_model.dart';
 import 'package:nurse_app/main.dart';
 import 'package:nurse_app/services/user_token.dart';
-import 'package:nurse_app/utilities/helper_functions.dart';
 
 part 'request_state.dart';
 
@@ -69,14 +68,16 @@ class RequestCubit extends Cubit<RequestState> {
     }
   }
 
-  Future<void> getRequestsHistory() async {
+  Future<void> getRequestsHistory({bool isAdmin = false}) async {
     emit(RequestsHistoryLoading());
 
     try {
       final token = await UserToken.getToken();
 
+      final url = isAdmin ? '$HOST/admin/requests' : '$HOST/requests';
+
       final response = await dio.get(
-        '$HOST/requests',
+        url,
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -96,6 +97,35 @@ class RequestCubit extends Cubit<RequestState> {
     } catch (e) {
       logger.e(e);
       emit(RequestsHistoryFailure(message: 'Failed to create request.'));
+    }
+  }
+
+  Future<void> getOrder({
+    required int orderId,
+  }) async {
+    emit(RequestDetailsLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      final response = await dio.get(
+        '$HOST/requests/$orderId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      final request = RequestsHistoryModel.fromJson(response.data);
+
+      emit(RequestDetailsSuccess(request: request));
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(RequestDetailsFailure(message: e.response!.data['error']));
+    } catch (e) {
+      logger.e(e);
+      emit(RequestDetailsFailure(message: 'Failed to create request.'));
     }
   }
 }

@@ -28,3 +28,17 @@ final class RequestsHistoryFailure extends RequestState {
 
   RequestsHistoryFailure({required this.message});
 }
+
+final class RequestDetailsLoading extends RequestState {}
+
+final class RequestDetailsSuccess extends RequestState {
+  final RequestsHistoryModel request;
+
+  RequestDetailsSuccess({required this.request});
+}
+
+final class RequestDetailsFailure extends RequestState {
+  final String message;
+
+  RequestDetailsFailure({required this.message});
+}

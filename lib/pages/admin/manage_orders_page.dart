@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/admin_header.dart';
+import 'package:nurse_app/components/order_card.dart';
 import 'package:nurse_app/features/request/cubit/request_cubit.dart';
+import 'package:nurse_app/main.dart';
+import 'package:nurse_app/utilities/helper_functions.dart';
 
 import '../../components/loader.dart';
 
@@ -18,11 +21,11 @@ class _ManageOrdersPageState extends State<ManageOrdersPage> {
   @override
   initState() {
     super.initState();
-    _requestCubit.getRequestsHistory();
+    _requestCubit.getRequestsHistory(isAdmin: true);
   }
 
   Future<void> _handleRefresh() async {
-    await _requestCubit.getRequestsHistory();
+    await _requestCubit.getRequestsHistory(isAdmin: true);
   }
 
   @override
@@ -36,53 +39,46 @@ class _ManageOrdersPageState extends State<ManageOrdersPage> {
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: Center(
-              child: BlocBuilder<RequestCubit, RequestState>(
-                bloc: _requestCubit,
-                builder: (context, state) {
-                  if (state is RequestsHistoryLoading) {
-                    return const Loader();
-                  }
-                  if (state is RequestsHistorySuccess) {
-                    final requests = state.requests;
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  BlocBuilder<RequestCubit, RequestState>(
+                    bloc: _requestCubit,
+                    builder: (context, state) {
+                      if (state is RequestsHistoryLoading) {
+                        return const Loader();
+                      }
+                      if (state is RequestsHistorySuccess) {
+                        final requests = state.requests.reversed.toList();
 
-                    return Column(
-                      children: [
-                        const SizedBox(height: 20),
-                        // OrderCard(
-                        //   title: '#1 From Client Name',
-                        //   description: 'Check out the details',
-                        //   time: '12:00',
-                        //   onTap: () {
-                        //     Navigator.pushNamed(context, '/orderDetails', arguments: 1);
-                        //   },
-                        // ),
-                        // const SizedBox(height: 10),
-                        // Column(
-                        //   children: requests.map((request) {
-                        //     return Padding(
-                        //       padding:
-                        //           const EdgeInsets.symmetric(vertical: 5),
-                        //       child: OrderCard(
-                        //         title: request['name'],
-                        //         description: 'Check out the details',
-                        //         time: request['created_at'],
-                        //         onTap: () {
-                        //           Navigator.pushNamed(
-                        //             context,
-                        //             '/orderDetails',
-                        //             arguments: request['id'],
-                        //           );
-                        //         },
-                        //       ),
-                        //     );
-                        //   }).toList(),
-                        // ),
-                      ],
-                    );
-                  }
+                        if (requests.isNotEmpty) {
+                          return Column(
+                            children: [
+                              for (final request in requests)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  child: OrderCard(
+                                    title: '#${request.id} From ${request.fullName}',
+                                    time: formatDateTimeForCard(request.createdAt!),
+                                    description: 'Check out the details',
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        '/orderDetails',
+                                        arguments: request.id,
+                                      );
+                                    },
+                                  ),
+                                ),
+                            ],
+                          );
+                        }
+                      }
 
-                  return const Text('Failed to load orders');
-                },
+                      return const Text('Failed to load orders');
+                    },
+                  ),
+                ],
               ),
             ),
           ),

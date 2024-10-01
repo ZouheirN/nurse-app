@@ -4,7 +4,6 @@ import 'package:nurse_app/components/header.dart';
 import 'package:nurse_app/components/history_card.dart';
 import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/features/request/cubit/request_cubit.dart';
-import 'package:nurse_app/main.dart';
 import 'package:nurse_app/utilities/helper_functions.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -71,9 +70,9 @@ class _HistoryPageState extends State<HistoryPage> {
                             child: HistoryCard(
                               services: request.services!,
                               price: price,
-                              description: request.problemDescription ?? '',
-                              time: formatDateTimeForHistoryCard(
-                                  request.scheduledTime!),
+                              description: 'Check out the details',
+                              time:
+                                  formatDateTimeForCard(request.scheduledTime!),
                               onTap: () {
                                 Navigator.pushNamed(
                                   context,

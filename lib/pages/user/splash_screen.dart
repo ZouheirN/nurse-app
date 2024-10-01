@@ -16,8 +16,14 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 2), () {
       final isLoggedIn = UserBox.isUserLoggedIn();
 
+      final user = UserBox.getUser();
+
       if (isLoggedIn) {
-        Navigator.pushReplacementNamed(context, '/home');
+        if (user!.roleId == 1) {
+          Navigator.pushReplacementNamed(context, '/adminDashboard');
+        } else {
+          Navigator.pushReplacementNamed(context, '/home');
+        }
       } else {
         Navigator.pushReplacementNamed(context, '/login');
       }

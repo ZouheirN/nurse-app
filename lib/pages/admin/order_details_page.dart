@@ -1,15 +1,13 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:nurse_app/consts.dart';
-import 'package:http/http.dart' as http;
-import 'package:quickalert/quickalert.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/admin_header.dart';
-import 'package:nurse_app/components/third_button.dart';
-import 'package:nurse_app/components/labeled_textfield.dart';
-import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/labeled_mini_textfield_order.dart';
+import 'package:nurse_app/components/labeled_textfield.dart';
+import 'package:nurse_app/components/loader.dart';
+import 'package:nurse_app/components/third_button.dart';
+import 'package:nurse_app/features/request/cubit/request_cubit.dart';
 
-import '../../services/user_token.dart';
+import '../../utilities/helper_functions.dart';
 
 class OrderDetailsPage extends StatefulWidget {
   final int orderId;
@@ -21,177 +19,145 @@ class OrderDetailsPage extends StatefulWidget {
 }
 
 class _OrderDetailsPageState extends State<OrderDetailsPage> {
-  String name = '';
-  String phoneNumber = '';
-  String email = '';
-  String location = '';
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _problemDescriptionController =
+      TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
 
-  bool isLoading = true;
-  bool hasError = false;
-
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController locationController = TextEditingController();
+  final _requestCubit = RequestCubit();
 
   @override
   void initState() {
     super.initState();
-    fetchOrderData();
+    _requestCubit.getOrder(orderId: widget.orderId);
   }
 
   @override
   void dispose() {
-    nameController.dispose();
-    phoneController.dispose();
-    emailController.dispose();
-    locationController.dispose();
+    _nameController.dispose();
+    _phoneController.dispose();
+    _problemDescriptionController.dispose();
+    _locationController.dispose();
     super.dispose();
-  }
-
-  Future<void> fetchOrderData() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    final token = await UserToken.getToken();
-
-    final response = await http.get(
-      Uri.parse('$HOST/requests'),
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    );
-    if (response.statusCode == 200) {
-      final jsonData = json.decode(response.body);
-      final orders = jsonData['orders'];
-
-      final foundOrder = orders.firstWhere(
-        (nurse) => nurse['id'] == widget.orderId,
-        orElse: () => null,
-      );
-
-      if (foundOrder != null) {
-        setState(() {
-          name = jsonData['name'] ?? '';
-          phoneNumber = jsonData['phone_number'] ?? '';
-          email = jsonData['email'] ?? '';
-          location = jsonData['location'] ?? '';
-
-          nameController.text = name;
-          phoneController.text = phoneNumber;
-          emailController.text = email;
-          locationController.text = location;
-
-          isLoading = false;
-        });
-      } else {
-        print('Failed to load user data');
-      }
-    }
-  }
-
-  Future<void> updateProfile() async {
-    final token = await UserToken.getToken();
-
-    final response = await http.put(
-      Uri.parse('$HOST/requests/${widget.orderId}'),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-      body: json.encode({
-        'name': nameController.text,
-        'phone_number': phoneController.text,
-        'email': emailController.text,
-        'location': locationController.text,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.success,
-        text: 'Profile updated successfully.',
-        onConfirmBtnTap: () {
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
-        },
-      );
-    } else {
-      final errorData = json.decode(response.body);
-      final errorMessage = errorData['message'];
-
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: errorMessage,
-      );
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const AdminHeader(title: 'Order #1'),
+      appBar: AdminHeader(title: 'Order #${widget.orderId}'),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Center(
-              child: Column(
+        child: BlocConsumer<RequestCubit, RequestState>(
+          bloc: _requestCubit,
+          listener: (context, state) {
+            if (state is RequestDetailsSuccess) {
+              final request = state.request;
+
+              _nameController.text = request.fullName ?? '';
+              _phoneController.text = request.phoneNumber ?? '';
+              _problemDescriptionController.text =
+                  request.problemDescription ?? '';
+              _locationController.text = request.location ?? '';
+            }
+          },
+          builder: (context, state) {
+            if (state is RequestDetailsLoading) {
+              return const Loader();
+            }
+
+            if (state is RequestDetailsSuccess) {
+              final request = state.request;
+
+              return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 40),
-                  const LabeledTextfield(
-                    label: 'Full Name',
-                    keyboardType: TextInputType.name,
-                  ),
-                  const SizedBox(height: 10),
-                  PhoneNumberField(),
-                  const LabeledTextfield(
-                    label: 'Describe your problem',
-                    keyboardType: TextInputType.text,
-                  ),
-                  const SizedBox(height: 10),
-                  const LabeledTextfield(
-                    label: 'Address',
-                    keyboardType: TextInputType.text,
-                  ),
-                  const SizedBox(height: 10),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 35),
-                    child: Row(
+                  Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Flexible(
-                          flex: 9,
-                          child: LabeledMiniTextfieldOrder(
-                            label: 'Service',
-                            keyboardType: TextInputType.number,
+                        const SizedBox(height: 40),
+                        LabeledTextfield(
+                          enabled: false,
+                          controller: _nameController,
+                          label: 'Full Name',
+                          keyboardType: TextInputType.name,
+                        ),
+                        const SizedBox(height: 10),
+                        LabeledTextfield(
+                          enabled: false,
+                          controller: _phoneController,
+                          label: 'Phone Number',
+                        ),
+                        const SizedBox(height: 10),
+                        LabeledTextfield(
+                          enabled: false,
+                          controller: _problemDescriptionController,
+                          label: 'Describe your problem',
+                          keyboardType: TextInputType.text,
+                        ),
+                        const SizedBox(height: 10),
+                        LabeledTextfield(
+                          enabled: false,
+                          controller: _locationController,
+                          label: 'Address',
+                          keyboardType: TextInputType.text,
+                        ),
+                        const SizedBox(height: 10),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 35),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Services",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
                         ),
-                        Flexible(
-                          flex: 3,
-                          child: LabeledMiniTextfieldOrder(
-                            label: '',
-                            keyboardType: TextInputType.number,
+                        const SizedBox(height: 10),
+                        for (int i = 0; i < request.services!.length; i++)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 35),
+                            child: Row(
+                              children: [
+                                Flexible(
+                                  flex: 9,
+                                  child: LabeledMiniTextfieldOrder(
+                                    label: '',
+                                    hintText: request.services![i].name,
+                                  ),
+                                ),
+                                Flexible(
+                                  flex: 3,
+                                  child: LabeledMiniTextfieldOrder(
+                                    textAlign: TextAlign.center,
+                                    label: '',
+                                    hintText:
+                                        '\$${request.services![i].discountPrice == null ? formatPrice(num.parse(request.services![i].price!)) : formatPrice(num.parse(request.services![i].discountPrice!))}',
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
+                        MyThirdButton(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/immediateOrder',
+                                arguments: request);
+                          },
+                          buttonText: 'Accept',
+                        )
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  MyThirdButton(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/immediateOrder');
-                    },
-                    buttonText: 'Accept',
-                  )
                 ],
-              ),
-            ),
-          ],
+              );
+            }
+
+            return const Text('Failed to load order details');
+          },
         ),
       ),
     );

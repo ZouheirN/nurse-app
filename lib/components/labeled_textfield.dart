@@ -4,12 +4,14 @@ class LabeledTextfield extends StatefulWidget {
   final String label;
   final TextInputType keyboardType;
   final TextEditingController? controller;
+  final bool enabled;
 
   const LabeledTextfield({
     super.key,
     required this.label,
     this.keyboardType = TextInputType.text,
     this.controller,
+    this.enabled = true,
   });
 
   @override
@@ -52,9 +54,14 @@ class _LabeledTextfieldState extends State<LabeledTextfield> {
             child: Focus(
               onFocusChange: _onFocusChange,
               child: TextField(
+                enabled: widget.enabled,
                 controller: widget.controller,
                 keyboardType: widget.keyboardType,
                 decoration: InputDecoration(
+                  disabledBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide(color: Color(0xFFE7E7E7)),
+                  ),
                   enabledBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     borderSide: BorderSide(color: Color(0xFFE7E7E7)),
