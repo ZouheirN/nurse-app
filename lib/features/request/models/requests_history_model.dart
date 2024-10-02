@@ -14,7 +14,7 @@ class RequestsHistoryModel {
   String? timeType;
   DateTime? createdAt;
   DateTime? updatedAt;
-  dynamic nurse;
+  Nurse? nurse;
   List<Service>? services;
 
   RequestsHistoryModel({
@@ -53,7 +53,7 @@ class RequestsHistoryModel {
     timeType: json["time_type"],
     createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
     updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
-    nurse: json["nurse"],
+    nurse: json['nurse'] == null ? null : Nurse.fromJson(json["nurse"]),
     services: json["services"] == null ? [] : List<Service>.from(json["services"]!.map((x) => Service.fromJson(x))),
   );
 
@@ -73,8 +73,40 @@ class RequestsHistoryModel {
     "time_type": timeType,
     "created_at": createdAt?.toIso8601String(),
     "updated_at": updatedAt?.toIso8601String(),
-    "nurse": nurse,
+    "nurse": nurse?.toJson(),
     "services": services == null ? [] : List<dynamic>.from(services!.map((x) => x.toJson())),
+  };
+}
+
+class Nurse {
+  num? id;
+  String? name;
+  String? phoneNumber;
+  String? profilePicture;
+  String? gender;
+
+  Nurse({
+    this.id,
+    this.name,
+    this.phoneNumber,
+    this.profilePicture,
+    this.gender,
+  });
+
+  factory Nurse.fromJson(Map<String, dynamic> json) => Nurse(
+    id: json["id"],
+    name: json["name"],
+    phoneNumber: json["phone_number"],
+    profilePicture: json["profile_picture"],
+    gender: json["gender"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name": name,
+    "phone_number": phoneNumber,
+    "profile_picture": profilePicture,
+    "gender": gender,
   };
 }
 

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:nurse_app/components/service_card.dart';
 import 'package:nurse_app/features/request/models/requests_history_model.dart';
+import 'package:nurse_app/utilities/helper_functions.dart';
 
 class HistoryCard extends StatelessWidget {
   final List<Service> services;
-  final num price;
   final String description;
   final String time;
   final VoidCallback onTap;
@@ -14,7 +15,6 @@ class HistoryCard extends StatelessWidget {
     required this.description,
     required this.time,
     required this.onTap,
-    required this.price,
   });
 
   @override
@@ -70,15 +70,52 @@ class HistoryCard extends StatelessWidget {
                             ],
                           ),
                         ),
-                        Text(
-                          "\$${price.toString()}",
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            for (final service in services)
+                              Row(
+                                children: [
+                                  Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          '\$${formatPrice(service.price!)}',
+                                          style: TextStyle(
+                                            color: service.discountPrice != null
+                                                ? Colors.grey
+                                                : Colors.black,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ),
+                                      if (service.discountPrice != null)
+                                        Positioned.fill(
+                                          child: CustomPaint(
+                                            painter: DiagonalLinePainter(),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                  if (service.discountPrice != null) ...[
+                                    const SizedBox(width: 5),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        '\$${formatPrice(service.discountPrice!)}',
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                          ],
                         ),
                       ],
                     ),

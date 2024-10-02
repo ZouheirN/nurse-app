@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:nurse_app/features/nurse/cubit/nurse_cubit.dart';
 
 class StarRating extends StatefulWidget {
-  final int starCount;
-  final double rating;
-  final Color color;
-  final double size;
-  final Function(double) onRatingChanged;
+  final num nurseId;
+  final double initialRating;
 
   const StarRating({
     super.key,
-    this.starCount = 5,
-    this.rating = 0.0,
-    this.color = Colors.amber,
-    this.size = 24,
-    required this.onRatingChanged,
+    this.initialRating = 0.0,
+    required this.nurseId,
   });
 
   @override
@@ -23,34 +20,35 @@ class StarRating extends StatefulWidget {
 class _StarRatingState extends State<StarRating> {
   late double _currentRating;
 
+  final _nurseCubit = NurseCubit();
+
   @override
   void initState() {
     super.initState();
-    _currentRating = widget.rating;
+    _currentRating = widget.initialRating;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 40),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: List.generate(widget.starCount, (index) {
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                _currentRating = index + 1.0;
-                widget.onRatingChanged(_currentRating);
-              });
-            },
-            child: Icon(
-              index < _currentRating ? Icons.star : Icons.star_border,
-              color: widget.color,
-              size: widget.size,
-            ),
-          );
-        }),
-      ),
+    return BlocBuilder<NurseCubit, NurseState>(
+      bloc: _nurseCubit,
+      builder: (context, state) {
+        return RatingBar(
+          initialRating: _currentRating,
+          minRating: 1,
+          maxRating: 5,
+          allowHalfRating: true,
+          onRatingUpdate: (rating) {
+            _nurseCubit.setRating(widget.nurseId, rating);
+          },
+          ratingWidget: RatingWidget(
+            full: const Icon(Icons.star, color: Colors.amber),
+            half: const Icon(Icons.star_half, color: Colors.amber),
+            empty: const Icon(Icons.star_border, color: Colors.amber),
+          ),
+          glow: false,
+        );
+      },
     );
   }
 }

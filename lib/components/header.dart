@@ -88,55 +88,57 @@ class _HeaderState extends State<Header> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-        valueListenable: UserBox.listenToUser(),
-        builder: (context, value, child) {
-          return Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/updateLocation');
-                      },
-                      child: Row(
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(Icons.location_on),
-                          ),
-                          Expanded(
-                            child: Text(
-                              location,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 16,
-                              ),
+      valueListenable: UserBox.listenToUser(),
+      builder: (context, value, child) {
+        return Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/updateLocation');
+                    },
+                    child: Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.location_on),
+                        ),
+                        Expanded(
+                          child: Text(
+                            location,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.notifications_none,
-                      color: Color(0xFF7BB442),
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/notification');
-                    },
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.notifications_none,
+                    color: Color(0xFF7BB442),
                   ),
-                ],
-              ),
-              Row(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/notification');
+                  },
+                ),
+              ],
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/editProfile');
+              },
+              child: Row(
                 children: [
-                  IconButton(
-                    icon: const Icon(Icons.person),
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/editProfile');
-                    },
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(Icons.person),
                   ),
                   Text(
                     'Welcome Back ${UserBox.getUser()?.name ?? ''}',
@@ -147,9 +149,11 @@ class _HeaderState extends State<Header> {
                   ),
                 ],
               ),
-            ],
-          );
-        });
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 

@@ -122,7 +122,7 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
             ),
             const SizedBox(height: 20),
             const LabeledEditTextfield(
-              label: 'Enter Your Location',
+              label: 'Enter Your Location Details',
               keyboardType: TextInputType.text,
             ),
             const SizedBox(height: 20),

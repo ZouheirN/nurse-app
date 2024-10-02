@@ -137,7 +137,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
               ),
               const SizedBox(height: 7),
               LabeledTextfield(
-                label: 'Describe your problem',
+                label: 'Describe Your Problem',
                 keyboardType: TextInputType.text,
                 controller: problemDescriptionController,
               ),

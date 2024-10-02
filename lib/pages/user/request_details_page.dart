@@ -10,6 +10,8 @@ import 'package:nurse_app/features/request/models/requests_history_model.dart';
 import 'package:nurse_app/main.dart';
 import 'package:nurse_app/utilities/helper_functions.dart';
 
+import '../../components/service_card.dart';
+
 class RequestDetailsPage extends StatelessWidget {
   final num requestId;
 
@@ -56,6 +58,8 @@ class RequestDetailsPage extends StatelessWidget {
           if (state is RequestDetailsSuccess) {
             final request = state.request;
 
+            logger.d(request.toJson());
+
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -79,13 +83,23 @@ class RequestDetailsPage extends StatelessWidget {
                       children: [
                         TextData(
                           label: 'Time to arrive: ',
-                          data: '${request.timeNeededToArrive.toString()} min',
+                          data: Text(
+                            '${request.timeNeededToArrive} minutes',
+                            style: const TextStyle(
+                              fontSize: 22,
+                              color: Color(0xFF000000),
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 10),
                       ],
                     ),
                   if (request.nurse != null && request.nurseId != null)
-                    StarRating(onRatingChanged: (rating) {}),
+                    StarRating(
+                      nurseId: request.nurseId!,
+                      initialRating: 0,
+                    ),
                   const SizedBox(height: 10),
                   _buildRequestDate(request),
                   const SizedBox(height: 30),
@@ -131,7 +145,14 @@ class RequestDetailsPage extends StatelessWidget {
               const SizedBox(height: 20),
               TextData(
                 label: 'Nurse name: ',
-                data: nurse.name.toString(),
+                data: Text(
+                  nurse.name ?? '',
+                  style: const TextStyle(
+                    fontSize: 22,
+                    color: Color(0xFF000000),
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ),
               const SizedBox(height: 10),
             ],
@@ -160,12 +181,57 @@ class RequestDetailsPage extends StatelessWidget {
             children: [
               TextData(
                 label: 'Service: ',
-                data: service.name ?? '',
+                data: Text(
+                  service.name ?? '',
+                  style: const TextStyle(
+                    fontSize: 22,
+                    color: Color(0xFF000000),
+                    fontWeight: FontWeight.w400,
+                  ),
+                  overflow: TextOverflow.visible,
+                ),
               ),
               const SizedBox(height: 10),
               TextData(
                 label: 'Service Price: ',
-                data: "\$${service.discountPrice ?? service.price}",
+                data: Row(
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Text(
+                          '\$${formatPrice(service.price!)}',
+                          style: TextStyle(
+                            color: service.discountPrice != null
+                                ? Colors.grey
+                                : Colors.black,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        if (service.discountPrice != null)
+                          Positioned.fill(
+                            child: CustomPaint(
+                              painter: DiagonalLinePainter(),
+                            ),
+                          ),
+                      ],
+                    ),
+                    if (service.discountPrice != null) ...[
+                      const SizedBox(width: 5),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          '\$${formatPrice(service.discountPrice!)}',
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ),
               const SizedBox(height: 10),
             ],

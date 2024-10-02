@@ -192,22 +192,22 @@ class RequestCubit extends Cubit<RequestState> {
     try {
       final token = await UserToken.getToken();
 
-      final data = order.toJson();
-      data['status'] = status;
-
-      logger.i(data);
-
-      await dio.put(
+      final response = await dio.put(
         '$HOST/admin/requests/${order.id}',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
           },
         ),
-        data: data,
+        data: {
+          'status': status,
+        },
       );
 
-      emit(RequestSetStatusSuccess());
+      final updatedOrder = response.data['request'];
+
+      emit(RequestSetStatusSuccess(
+          request: RequestsHistoryModel.fromJson(updatedOrder)));
     } on DioException catch (e) {
       logger.e(e.response!.data);
       emit(RequestSetStatusFailure(message: 'Failed to submit request.'));
@@ -215,6 +215,16 @@ class RequestCubit extends Cubit<RequestState> {
       logger.e(e);
       emit(RequestSetStatusFailure(message: 'Failed to submit request.'));
     }
+  }
+
+  Future<void> emitRequestSetStatusSuccess({
+    required RequestsHistoryModel order,
+    required String status,
+  }) async {
+    final updatedOrder =
+        RequestsHistoryModel.fromJson(order.toJson()..['status'] = status);
+
+    emit(RequestSetStatusSuccess(request: updatedOrder));
   }
 
   Future<void> deleteOrder({

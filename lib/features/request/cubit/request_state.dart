@@ -55,7 +55,11 @@ final class RequestSubmitFailure extends RequestState {
 
 final class RequestSetStatusLoading extends RequestState {}
 
-final class RequestSetStatusSuccess extends RequestState {}
+final class RequestSetStatusSuccess extends RequestState {
+  final RequestsHistoryModel request;
+
+  RequestSetStatusSuccess({required this.request});
+}
 
 final class RequestSetStatusFailure extends RequestState {
   final String message;

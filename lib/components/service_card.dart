@@ -1,6 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
+import '../utilities/helper_functions.dart';
+
 class ServiceCard extends StatefulWidget {
   final String imagePath;
   final String title;
@@ -43,16 +45,6 @@ class _ServiceCardState extends State<ServiceCard> {
       isSelected = !isSelected;
       widget.onSelectionChanged(isSelected);
     });
-  }
-
-  String formatPrice(String price) {
-    double priceValue = double.parse(price);
-
-    if (priceValue == priceValue.roundToDouble()) {
-      return priceValue.toInt().toString();
-    } else {
-      return priceValue.toStringAsFixed(2);
-    }
   }
 
   @override
@@ -105,7 +97,7 @@ class _ServiceCardState extends State<ServiceCard> {
                       FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          '${formatPrice(widget.price)}\$',
+                          '\$${formatPrice(widget.price)}',
                           style: TextStyle(
                             color: widget.salePrice != null
                                 ? Colors.grey
@@ -130,7 +122,7 @@ class _ServiceCardState extends State<ServiceCard> {
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
-                        '${formatPrice(widget.salePrice!)}\$',
+                        '\$${formatPrice(widget.salePrice!)}',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w700,

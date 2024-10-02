@@ -32,3 +32,17 @@ final class NurseDetailsFetchFailure extends NurseState {
 
   NurseDetailsFetchFailure({required this.message});
 }
+
+final class NurseRatingSetLoading extends NurseState {}
+
+final class NurseRatingSetSuccess extends NurseState {
+  final int rating;
+
+  NurseRatingSetSuccess({required this.rating});
+}
+
+final class NurseRatingSetFailure extends NurseState {
+  final String message;
+
+  NurseRatingSetFailure({required this.message});
+}

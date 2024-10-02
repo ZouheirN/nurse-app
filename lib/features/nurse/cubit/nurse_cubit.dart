@@ -78,4 +78,37 @@ class NurseCubit extends Cubit<NurseState> {
       emit(NurseDetailsFetchFailure(message: e.toString()));
     }
   }
+
+  Future<void> setRating(
+    num nurseId,
+    double rating,
+  ) async {
+    emit(NurseRatingSetLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      final response = await dio.post(
+        '$HOST/nurses/$nurseId/rate',
+        options: Options(headers: {
+          'Authorization': 'Bearer $token',
+        }),
+        data: {
+          'rating': rating,
+        },
+      );
+
+      logger.i(response.data);
+
+      emit(NurseRatingSetSuccess(rating: response.data['rating']['rating']));
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(NurseRatingSetFailure(message: 'Failed to set rating'));
+    } catch (e) {
+      logger.e(e);
+      emit(NurseRatingSetFailure(
+          message:
+              'Failed to set rating, please check your internet connection'));
+    }
+  }
 }
