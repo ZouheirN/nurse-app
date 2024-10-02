@@ -95,14 +95,14 @@ class _AddNursePageState extends State<AddNursePage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 40),
-                  LabeledTextfieldAdmin(
+                  LabeledTextFieldAdmin(
                     label: 'Nurse Name',
                     keyboardType: TextInputType.name,
                     controller: nameController,
                   ),
                   const SizedBox(height: 10),
                   PhoneFieldAdmin(controller: phoneNumberController),
-                  LabeledTextfieldAdmin(
+                  LabeledTextFieldAdmin(
                     label: 'Nurse Address',
                     keyboardType: TextInputType.text,
                     controller: addressController,

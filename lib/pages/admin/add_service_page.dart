@@ -125,7 +125,7 @@ class _AddServicePageState extends State<AddServicePage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 40),
-                  LabeledTextfieldAdmin(
+                  LabeledTextFieldAdmin(
                     label: 'Service Name',
                     keyboardType: TextInputType.name,
                     controller: nameController,

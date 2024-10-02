@@ -4,9 +4,10 @@ import 'package:nurse_app/components/admin_header.dart';
 import 'package:nurse_app/components/labeled_mini_textfield_order.dart';
 import 'package:nurse_app/components/labeled_textfield.dart';
 import 'package:nurse_app/components/loader.dart';
+import 'package:nurse_app/components/status_button.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/features/request/cubit/request_cubit.dart';
-import 'package:nurse_app/main.dart';
+import 'package:nurse_app/utilities/dialogs.dart';
 
 import '../../utilities/helper_functions.dart';
 
@@ -29,6 +30,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
   final TextEditingController _timeTypeController = TextEditingController();
 
   final _requestCubit = RequestCubit();
+  final _requestCubitButton = RequestCubit();
 
   @override
   void initState() {
@@ -170,56 +172,129 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                               ],
                             ),
                           ),
-                        if (request.status == 'pending')
-                          MyThirdButton(
-                            onTap: () {
-                              Navigator.pushNamed(context, '/submitOrder',
-                                  arguments: request);
-                            },
-                            buttonText: 'Accept',
-                          )
-                        else if (request.status == 'approved')
-                          MyThirdButton(
-                            color: const Color(0xFF8D8D8D),
-                            onTap: () {},
-                            buttonText: 'Approved',
-                          )
-                        else if (request.status == 'completed')
-                          Column(
-                            children: [
-                              MyThirdButton(
-                                color: const Color(0xFF8D8D8D),
-                                onTap: () {},
-                                buttonText: 'Completed',
-                              ),
-                              const SizedBox(height: 10),
-                              MyThirdButton(
-                                color: Colors.red,
+                        BlocConsumer(
+                          bloc: _requestCubitButton,
+                          listener: (context, state) {
+                            if (state is RequestSetStatusFailure) {
+                              Dialogs.showErrorDialog(
+                                  context, 'Error', state.message);
+                            } else if (state is RequestDeleteFailure) {
+                              Dialogs.showErrorDialog(context,
+                                  'Error Deleting Request', state.message);
+                            } else if (state is RequestDeleteSuccess) {
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, '/adminDashboard', (route) => false);
+                              Dialogs.showSuccessDialog(
+                                context,
+                                'Request Deleted',
+                                'Request has been deleted successfully.',
+                              );
+                            }
+                          },
+                          builder: (context, state) {
+                            final isLoading =
+                                state is RequestSetStatusLoading ||
+                                    state is RequestDeleteLoading;
+
+                            if (request.status == 'pending') {
+                              return MyThirdButton(
                                 onTap: () {
-                                  // todo
+                                  Navigator.pushNamed(context, '/submitOrder',
+                                      arguments: request);
                                 },
-                                buttonText: 'Delete',
-                              ),
-                            ],
-                          )
-                        else if (request.status == 'canceled')
-                          Column(
-                            children: [
-                              MyThirdButton(
-                                color: Colors.red,
-                                onTap: () {},
-                                buttonText: 'Canceled',
-                              ),
-                              const SizedBox(height: 10),
-                              MyThirdButton(
-                                color: Colors.red,
-                                onTap: () {
-                                  // todo
-                                },
-                                buttonText: 'Delete',
-                              ),
-                            ],
-                          ),
+                                buttonText: 'Accept',
+                              );
+                            } else if (request.status == 'approved') {
+                              return Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 40),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      const StatusButton(
+                                        buttonText: 'Pending',
+                                        color: Color(0xFF8E8E8E),
+                                      ),
+                                      StatusButton(
+                                        isLoading: isLoading,
+                                        onTap: () async {
+                                          await _requestCubitButton.setStatus(
+                                            order: request,
+                                            status: 'completed',
+                                          );
+
+                                          _requestCubit.getOrder(
+                                              orderId: widget.orderId);
+                                        },
+                                        buttonText: 'Complete',
+                                        color: const Color(0xFF7BB442),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            } else if (request.status == 'completed') {
+                              return Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 40),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      StatusButton(
+                                        isLoading: isLoading,
+                                        onTap: () {
+                                          _requestCubitButton.deleteOrder(
+                                            order: request,
+                                          );
+                                        },
+                                        buttonText: 'Delete',
+                                        color: const Color(0xFFFF0000),
+                                      ),
+                                      const StatusButton(
+                                        buttonText: 'Completed',
+                                        color: Color(0xFF8E8E8E),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            } else if (request.status == 'cancelled') {
+                              return Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 40),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      StatusButton(
+                                        isLoading: isLoading,
+                                        onTap: () {
+                                          _requestCubitButton.deleteOrder(
+                                            order: request,
+                                          );
+                                        },
+                                        buttonText: 'Delete',
+                                        color: const Color(0xFFFF0000),
+                                      ),
+                                      const StatusButton(
+                                        buttonText: 'Cancelled',
+                                        color: Color(0xFF8E8E8E),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+
+                            return const SizedBox.shrink();
+                          },
+                        ),
+                        const SizedBox(height: 20),
                       ],
                     ),
                   ),

@@ -121,7 +121,7 @@ class RequestCubit extends Cubit<RequestState> {
 
       emit(RequestDetailsSuccess(request: request));
     } on DioException catch (e) {
-      logger.e(e.response!.data);
+      logger.e(e.response!.statusCode);
       emit(RequestDetailsFailure(message: e.response!.data['error']));
     } catch (e) {
       logger.e(e);
@@ -133,7 +133,7 @@ class RequestCubit extends Cubit<RequestState> {
     required num id,
     required String status,
     required DateTime scheduledTime,
-    required int? minutesToArrive,
+    required int? timeNeededToArrive,
     required DateTime? endingTime,
     required String location,
     required num nurseId,
@@ -158,7 +158,7 @@ class RequestCubit extends Cubit<RequestState> {
       };
 
       if (endingTime == null) {
-        data['minutes_to_arrive'] = minutesToArrive;
+        data['time_needed_to_arrive'] = timeNeededToArrive;
       } else {
         data['scheduled_time'] = scheduledTime.toIso8601String();
         data['ending_time'] = endingTime.toIso8601String();
@@ -166,11 +166,9 @@ class RequestCubit extends Cubit<RequestState> {
 
       await dio.put(
         '$HOST/admin/requests/$id',
-        options: Options(
-            headers: {
-              'Authorization': 'Bearer $token',
-            }
-        ),
+        options: Options(headers: {
+          'Authorization': 'Bearer $token',
+        }),
         data: data,
       );
 
@@ -181,6 +179,67 @@ class RequestCubit extends Cubit<RequestState> {
     } catch (e) {
       logger.e(e);
       emit(RequestSubmitFailure(message: 'Failed to submit request.'));
+    }
+  }
+
+  Future<void> setStatus({
+    required RequestsHistoryModel order,
+    required String status,
+  }) async {
+    emit(RequestSetStatusLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      final data = order.toJson();
+      data['status'] = status;
+
+      logger.i(data);
+
+      await dio.put(
+        '$HOST/admin/requests/${order.id}',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+        data: data,
+      );
+
+      emit(RequestSetStatusSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(RequestSetStatusFailure(message: 'Failed to submit request.'));
+    } catch (e) {
+      logger.e(e);
+      emit(RequestSetStatusFailure(message: 'Failed to submit request.'));
+    }
+  }
+
+  Future<void> deleteOrder({
+    required RequestsHistoryModel order,
+  }) async {
+    emit(RequestDeleteLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      await dio.delete(
+        '$HOST/admin/requests/${order.id}',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      emit(RequestDeleteSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(RequestDeleteFailure(message: 'Failed to delete request.'));
+    } catch (e) {
+      logger.e(e);
+      emit(RequestDeleteFailure(message: 'Failed to delete request.'));
     }
   }
 }

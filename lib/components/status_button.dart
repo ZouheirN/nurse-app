@@ -4,12 +4,14 @@ class StatusButton extends StatefulWidget {
   final Function()? onTap;
   final String buttonText;
   final Color color;
+  final bool isLoading;
 
   const StatusButton({
     super.key,
-    required this.onTap,
+    this.onTap,
     required this.buttonText,
     required this.color,
+    this.isLoading = false,
   });
 
   @override
@@ -19,25 +21,28 @@ class StatusButton extends StatefulWidget {
 class _StatusButtonState extends State<StatusButton> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 120,
-      height: 40,
-      child: TextButton(
-        onPressed: widget.onTap,
-        style: TextButton.styleFrom(
-          backgroundColor: widget.color,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
+    return GestureDetector(
+      onTap: widget.isLoading ? null : widget.onTap,
+      child: Container(
+        width: 120,
+        height: 40,
+        decoration: BoxDecoration(
+          color: widget.color,
+          borderRadius: BorderRadius.circular(10),
         ),
-        child: Text(
-          widget.buttonText,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
+        child: Center(
+          child: widget.isLoading
+              ? const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                )
+              : Text(
+                  widget.buttonText,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
         ),
       ),
     );

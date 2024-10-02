@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class LabeledTextfieldAdmin extends StatefulWidget {
+class LabeledTextFieldAdmin extends StatefulWidget {
   final String label;
   final TextInputType keyboardType;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
 
-  const LabeledTextfieldAdmin({
+  const LabeledTextFieldAdmin({
     super.key,
     required this.label,
     this.keyboardType = TextInputType.text,
@@ -14,10 +14,10 @@ class LabeledTextfieldAdmin extends StatefulWidget {
   });
 
   @override
-  State<LabeledTextfieldAdmin> createState() => _LabeledTextfieldAdminState();
+  State<LabeledTextFieldAdmin> createState() => _LabeledTextFieldAdminState();
 }
 
-class _LabeledTextfieldAdminState extends State<LabeledTextfieldAdmin> {
+class _LabeledTextFieldAdminState extends State<LabeledTextFieldAdmin> {
   late bool _isFocused;
 
   @override
@@ -35,7 +35,7 @@ class _LabeledTextfieldAdminState extends State<LabeledTextfieldAdmin> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 70,
+      // height: 70,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: Column(
@@ -49,30 +49,36 @@ class _LabeledTextfieldAdminState extends State<LabeledTextfieldAdmin> {
             ),
           ),
           const SizedBox(height: 3),
-          Expanded(
-            child: Focus(
-              onFocusChange: _onFocusChange,
-              child: TextFormField(
-                controller: widget.controller,
-                keyboardType: widget.keyboardType,
-                decoration: InputDecoration(
-                  enabledBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Color(0xFF7BB442)),
-                  ),
-                  focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Color(0xFF7BB442)),
-                  ),
-                  fillColor: _isFocused
-                      ? const Color(0xFFE8FFD1)
-                      : const Color(0xFFE8FFD1),
-                  filled: true,
-                  contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          Focus(
+            onFocusChange: _onFocusChange,
+            child: TextFormField(
+              controller: widget.controller,
+              keyboardType: widget.keyboardType,
+              decoration: InputDecoration(
+                enabledBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide: BorderSide(color: Color(0xFF7BB442)),
                 ),
-                validator: widget.validator,
+                errorBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide: BorderSide(color: Colors.red),
+                ),
+                focusedErrorBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide: BorderSide(color: Colors.red),
+                ),
+                focusedBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide: BorderSide(color: Color(0xFF7BB442)),
+                ),
+                fillColor: _isFocused
+                    ? const Color(0xFFE8FFD1)
+                    : const Color(0xFFE8FFD1),
+                filled: true,
+                contentPadding:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               ),
+              validator: widget.validator,
             ),
           ),
         ],

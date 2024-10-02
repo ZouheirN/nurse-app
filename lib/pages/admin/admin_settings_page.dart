@@ -24,10 +24,21 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
   final _aboutUsCubit = AboutUsCubit();
   final _aboutUsCubitButton = AboutUsCubit();
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     _aboutUsCubit.fetchAboutUs();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    websiteTextController.dispose();
+    instagramTextController.dispose();
+    facebookTextController.dispose();
+    whatsappTextController.dispose();
+    super.dispose();
   }
 
   @override
@@ -58,71 +69,111 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
                   }
 
                   if (state is AboutUsFetchSuccess) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 40),
-                        LabeledTextfieldAdmin(
-                          label: 'Website Link',
-                          controller: websiteTextController,
-                          keyboardType: TextInputType.url,
-                        ),
-                        const SizedBox(height: 10),
-                        LabeledTextfieldAdmin(
-                          label: 'Instagram Link',
-                          controller: instagramTextController,
-                          keyboardType: TextInputType.url,
-                        ),
-                        const SizedBox(height: 10),
-                        LabeledTextfieldAdmin(
-                          label: 'Facebook Link',
-                          controller: facebookTextController,
-                          keyboardType: TextInputType.url,
-                        ),
-                        const SizedBox(height: 10),
-                        LabeledTextfieldAdmin(
-                          label: 'WhatsApp Link',
-                          controller: whatsappTextController,
-                          keyboardType: TextInputType.url,
-                        ),
-                        const SizedBox(height: 20),
-                        BlocConsumer<AboutUsCubit, AboutUsState>(
-                          bloc: _aboutUsCubitButton,
-                          listener: (context, state) {
-                            if (state is AboutUsUpdateSuccess) {
-                              final aboutUs = state.aboutUs;
+                    return Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 40),
+                          LabeledTextFieldAdmin(
+                            label: 'Website Link',
+                            controller: websiteTextController,
+                            keyboardType: TextInputType.url,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Website link cannot be empty';
+                              }
 
-                              websiteTextController.text = aboutUs['online_shop_url'];
-                              instagramTextController.text = aboutUs['instagram_url'];
-                              facebookTextController.text = aboutUs['facebook_url'];
-                              whatsappTextController.text = aboutUs['whatsapp_number'];
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          LabeledTextFieldAdmin(
+                            label: 'Instagram Link',
+                            controller: instagramTextController,
+                            keyboardType: TextInputType.url,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Instagram link cannot be empty';
+                              }
 
-                              Dialogs.showSuccessDialog(context, 'Success',
-                                  'About us updated successfully.');
-                            } else if (state is AboutUsUpdateFailure) {
-                              Dialogs.showErrorDialog(
-                                  context, 'Error', state.message);
-                            }
-                          },
-                          builder: (context, state) {
-                            final isLoading = state is AboutUsUpdateLoading;
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          LabeledTextFieldAdmin(
+                            label: 'Facebook Link',
+                            controller: facebookTextController,
+                            keyboardType: TextInputType.url,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Facebook link cannot be empty';
+                              }
 
-                            return MyThirdButton(
-                              isLoading: isLoading,
-                              onTap: () {
-                                _aboutUsCubitButton.updateAboutUs(
-                                  website: websiteTextController.text.trim(),
-                                  instagram:
-                                      instagramTextController.text.trim(),
-                                  facebook: facebookTextController.text.trim(),
-                                  whatsapp: whatsappTextController.text.trim(),
-                                );
-                              },
-                              buttonText: 'Update',
-                            );
-                          },
-                        ),
-                      ],
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          LabeledTextFieldAdmin(
+                            label: 'WhatsApp Link',
+                            controller: whatsappTextController,
+                            keyboardType: TextInputType.url,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'WhatsApp link cannot be empty';
+                              }
+
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          BlocConsumer<AboutUsCubit, AboutUsState>(
+                            bloc: _aboutUsCubitButton,
+                            listener: (context, state) {
+                              if (state is AboutUsUpdateSuccess) {
+                                final aboutUs = state.aboutUs;
+
+                                websiteTextController.text =
+                                    aboutUs['online_shop_url'];
+                                instagramTextController.text =
+                                    aboutUs['instagram_url'];
+                                facebookTextController.text =
+                                    aboutUs['facebook_url'];
+                                whatsappTextController.text =
+                                    aboutUs['whatsapp_number'];
+
+                                Dialogs.showSuccessDialog(context, 'Success',
+                                    'About us updated successfully.');
+                              } else if (state is AboutUsUpdateFailure) {
+                                Dialogs.showErrorDialog(
+                                    context, 'Error', state.message);
+                              }
+                            },
+                            builder: (context, state) {
+                              final isLoading = state is AboutUsUpdateLoading;
+
+                              return MyThirdButton(
+                                isLoading: isLoading,
+                                onTap: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    _aboutUsCubitButton.updateAboutUs(
+                                      website:
+                                          websiteTextController.text.trim(),
+                                      instagram:
+                                          instagramTextController.text.trim(),
+                                      facebook:
+                                          facebookTextController.text.trim(),
+                                      whatsapp:
+                                          whatsappTextController.text.trim(),
+                                    );
+                                  }
+                                },
+                                buttonText: 'Update',
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     );
                   }
 

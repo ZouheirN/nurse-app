@@ -154,10 +154,28 @@ class _SubmitOrderPageState extends State<SubmitOrderPage> {
                   ),
                   const SizedBox(height: 20),
                   if (widget.order.endingTime == null)
-                    LabeledTextfield(
-                      label: 'Time to arrive (in minutes)',
-                      keyboardType: TextInputType.number,
-                      controller: _timeToArriveController,
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: LabeledTextfield(
+                            label: 'Time to arrive',
+                            keyboardType: TextInputType.number,
+                            controller: _timeToArriveController,
+                            padding: const EdgeInsets.only(left: 40),
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        const Expanded(
+                          child: LabeledTextfield(
+                            label: '',
+                            enabled: false,
+                            hintText: 'min',
+                            centerHintText: true,
+                            padding: EdgeInsets.only(right: 40),
+                          ),
+                        ),
+                      ],
                     )
                   else
                     Padding(
@@ -197,8 +215,8 @@ class _SubmitOrderPageState extends State<SubmitOrderPage> {
                           'Request submitted successfully',
                           'The request is now approved.',
                           onConfirmBtnTap: () {
-                            Navigator.popUntil(
-                                context, (route) => route.isFirst);
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, '/adminDashboard', (route) => false);
                           },
                         );
                       } else if (state is RequestSubmitFailure) {
@@ -219,7 +237,7 @@ class _SubmitOrderPageState extends State<SubmitOrderPage> {
                             id: widget.order.id!,
                             status: 'approved',
                             scheduledTime: widget.order.scheduledTime!,
-                            minutesToArrive: widget.order.endingTime != null
+                            timeNeededToArrive: widget.order.endingTime != null
                                 ? null
                                 : int.parse(
                                     _timeToArriveController.text.trim()),
@@ -239,6 +257,7 @@ class _SubmitOrderPageState extends State<SubmitOrderPage> {
                 ],
               ),
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),

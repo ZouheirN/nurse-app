@@ -52,3 +52,23 @@ final class RequestSubmitFailure extends RequestState {
 
   RequestSubmitFailure({required this.message});
 }
+
+final class RequestSetStatusLoading extends RequestState {}
+
+final class RequestSetStatusSuccess extends RequestState {}
+
+final class RequestSetStatusFailure extends RequestState {
+  final String message;
+
+  RequestSetStatusFailure({required this.message});
+}
+
+final class RequestDeleteLoading extends RequestState {}
+
+final class RequestDeleteSuccess extends RequestState {}
+
+final class RequestDeleteFailure extends RequestState {
+  final String message;
+
+  RequestDeleteFailure({required this.message});
+}

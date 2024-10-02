@@ -46,7 +46,7 @@ class AboutUsCubit extends Cubit<AboutUsState> {
       final token = await UserToken.getToken();
 
       final response = await dio.put(
-        '$HOST/about',
+        '$HOST/admin/about',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -61,6 +61,9 @@ class AboutUsCubit extends Cubit<AboutUsState> {
       );
 
       emit(AboutUsUpdateSuccess(aboutUs: response.data['about']));
+    } on DioException catch (e) {
+      logger.e(e.response?.data);
+      emit(AboutUsUpdateFailure(message: e.response?.data['message']));
     } catch (e) {
       logger.e(e);
       emit(AboutUsUpdateFailure(message: 'Failed to update about us.'));

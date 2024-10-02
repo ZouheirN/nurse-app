@@ -5,6 +5,9 @@ class LabeledTextfield extends StatefulWidget {
   final TextInputType keyboardType;
   final TextEditingController? controller;
   final bool enabled;
+  final EdgeInsetsGeometry? padding;
+  final String? hintText;
+  final bool? centerHintText;
 
   const LabeledTextfield({
     super.key,
@@ -12,6 +15,9 @@ class LabeledTextfield extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.controller,
     this.enabled = true,
+    this.padding,
+    this.hintText,
+    this.centerHintText,
   });
 
   @override
@@ -36,9 +42,9 @@ class _LabeledTextfieldState extends State<LabeledTextfield> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 70,
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 40),
+      // height: 70,
+      // width: double.infinity,
+      padding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 40),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -50,33 +56,35 @@ class _LabeledTextfieldState extends State<LabeledTextfield> {
             ),
           ),
           const SizedBox(height: 3),
-          Expanded(
-            child: Focus(
-              onFocusChange: _onFocusChange,
-              child: TextField(
-                enabled: widget.enabled,
-                controller: widget.controller,
-                keyboardType: widget.keyboardType,
-                decoration: InputDecoration(
-                  disabledBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Color(0xFFE7E7E7)),
-                  ),
-                  enabledBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Color(0xFFE7E7E7)),
-                  ),
-                  focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(color: Color(0xFFE7E7E7)),
-                  ),
-                  fillColor: _isFocused
-                      ? const Color.fromARGB(255, 245, 245, 245)
-                      : const Color(0xFFE7E7E7),
-                  filled: true,
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          Focus(
+            onFocusChange: _onFocusChange,
+            child: TextField(
+              enabled: widget.enabled,
+              controller: widget.controller,
+              keyboardType: widget.keyboardType,
+              textAlign: widget.centerHintText ?? false
+                  ? TextAlign.center
+                  : TextAlign.start,
+              decoration: InputDecoration(
+                hintText: widget.hintText,
+                disabledBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide: BorderSide(color: Color(0xFFE7E7E7)),
                 ),
+                enabledBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide: BorderSide(color: Color(0xFFE7E7E7)),
+                ),
+                focusedBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide: BorderSide(color: Color(0xFFE7E7E7)),
+                ),
+                fillColor: _isFocused
+                    ? const Color.fromARGB(255, 245, 245, 245)
+                    : const Color(0xFFE7E7E7),
+                filled: true,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               ),
             ),
           ),

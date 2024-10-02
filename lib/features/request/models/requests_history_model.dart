@@ -5,7 +5,7 @@ class RequestsHistoryModel {
   String? phoneNumber;
   num? nurseId;
   String? status;
-  num? minutesToArrive;
+  num? timeNeededToArrive;
   DateTime? scheduledTime;
   DateTime? endingTime;
   String? location;
@@ -24,7 +24,7 @@ class RequestsHistoryModel {
     this.phoneNumber,
     this.nurseId,
     this.status,
-    this.minutesToArrive,
+    this.timeNeededToArrive,
     this.scheduledTime,
     this.endingTime,
     this.location,
@@ -44,7 +44,7 @@ class RequestsHistoryModel {
     phoneNumber: json["phone_number"],
     nurseId: json["nurse_id"],
     status: json["status"],
-    minutesToArrive: json["minutes_to_arrive"],
+    timeNeededToArrive: json["time_needed_to_arrive"],
     scheduledTime: json["scheduled_time"] == null ? null : DateTime.parse(json["scheduled_time"]),
     endingTime: json["ending_time"] == null ? null : DateTime.parse(json["ending_time"]),
     location: json["location"],
@@ -64,7 +64,7 @@ class RequestsHistoryModel {
     "phone_number": phoneNumber,
     "nurse_id": nurseId,
     "status": status,
-    "minutes_to_arrive": minutesToArrive,
+    "time_needed_to_arrive": timeNeededToArrive,
     "scheduled_time": scheduledTime?.toIso8601String(),
     "ending_time": endingTime?.toIso8601String(),
     "location": location,

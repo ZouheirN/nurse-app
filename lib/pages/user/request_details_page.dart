@@ -56,8 +56,6 @@ class RequestDetailsPage extends StatelessWidget {
           if (state is RequestDetailsSuccess) {
             final request = state.request;
 
-            logger.i(request.toJson());
-
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -81,7 +79,7 @@ class RequestDetailsPage extends StatelessWidget {
                       children: [
                         TextData(
                           label: 'Time to get: ',
-                          data: request.minutesToArrive.toString(),
+                          data: '${request.timeNeededToArrive.toString()} min',
                         ),
                         const SizedBox(height: 10),
                       ],

@@ -146,7 +146,7 @@ class _EditNursePageState extends State<EditNursePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const SizedBox(height: 40),
-                      LabeledTextfieldAdmin(
+                      LabeledTextFieldAdmin(
                         label: 'Nurse Name',
                         keyboardType: TextInputType.name,
                         controller: nameController,
@@ -155,7 +155,7 @@ class _EditNursePageState extends State<EditNursePage> {
                       PhoneFieldAdmin(
                         controller: phoneController,
                       ),
-                      LabeledTextfieldAdmin(
+                      LabeledTextFieldAdmin(
                         label: 'Nurse Address',
                         keyboardType: TextInputType.text,
                         controller: addressController,
