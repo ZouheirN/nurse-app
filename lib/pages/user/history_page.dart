@@ -4,6 +4,7 @@ import 'package:nurse_app/components/header.dart';
 import 'package:nurse_app/components/history_card.dart';
 import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/features/request/cubit/request_cubit.dart';
+import 'package:nurse_app/main.dart';
 import 'package:nurse_app/utilities/helper_functions.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -50,7 +51,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   }
 
                   if (state is RequestsHistorySuccess) {
-                    final requests = state.requests;
+                    final requests = state.requests.reversed.toList();
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

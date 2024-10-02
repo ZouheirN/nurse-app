@@ -32,12 +32,17 @@ class Dialogs {
   }
 
   static void showSuccessDialog(
-      BuildContext context, String title, String message) {
+    BuildContext context,
+    String title,
+    String message, {
+    void Function()? onConfirmBtnTap,
+  }) {
     QuickAlert.show(
       context: context,
       type: QuickAlertType.success,
       text: message,
       title: title,
+      onConfirmBtnTap: onConfirmBtnTap,
     );
   }
 

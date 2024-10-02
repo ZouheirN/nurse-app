@@ -5,9 +5,9 @@ import 'package:nurse_app/components/star_rating.dart';
 import 'package:nurse_app/components/text_data.dart';
 import 'package:nurse_app/components/uneditable_labeled_date.dart';
 import 'package:nurse_app/features/nurse/cubit/nurse_cubit.dart';
-import 'package:nurse_app/features/nurse/cubit/nurse_cubit.dart';
 import 'package:nurse_app/features/request/cubit/request_cubit.dart';
 import 'package:nurse_app/features/request/models/requests_history_model.dart';
+import 'package:nurse_app/main.dart';
 import 'package:nurse_app/utilities/helper_functions.dart';
 
 class RequestDetailsPage extends StatelessWidget {
@@ -56,6 +56,8 @@ class RequestDetailsPage extends StatelessWidget {
           if (state is RequestDetailsSuccess) {
             final request = state.request;
 
+            logger.i(request.toJson());
+
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -74,11 +76,16 @@ class RequestDetailsPage extends StatelessWidget {
                     _buildNurseDetails(request.nurseId!),
                   if (request.services != null)
                     _buildServiceDetails(request.services!),
-                  const TextData(
-                    label: 'Time to get: ',
-                    data: '20 mins',
-                  ),
-                  const SizedBox(height: 10),
+                  if (request.endingTime == null)
+                    Column(
+                      children: [
+                        TextData(
+                          label: 'Time to get: ',
+                          data: request.minutesToArrive.toString(),
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
                   if (request.nurse != null && request.nurseId != null)
                     StarRating(onRatingChanged: (rating) {}),
                   const SizedBox(height: 10),
@@ -175,8 +182,7 @@ class RequestDetailsPage extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 40),
         child: Text(
-          'Request Date: ${formateDateTimeForRequestDetails(
-              request.createdAt!)}',
+          'Request Date: ${formateDateTimeForRequestDetails(request.createdAt!)}',
           style: const TextStyle(
             fontSize: 22,
             color: Color(0xFF8E8E8E),

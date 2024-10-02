@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 import 'package:nurse_app/consts.dart';
+import 'package:nurse_app/features/nurse/models/nurses_model.dart';
 import 'package:nurse_app/main.dart';
 
 import '../../../services/user_token.dart';
@@ -13,6 +14,43 @@ final dio = Dio();
 
 class NurseCubit extends Cubit<NurseState> {
   NurseCubit() : super(NurseInitial());
+
+  Future<void> fetchNurses({
+    String? selectedGender,
+  }) async {
+    emit(NurseFetchLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      final response = await dio.get(
+        '$HOST/nurses',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      final nurses = NursesModel.fromJson(response.data);
+
+      // Filter nurses
+      final filteredNurses = nurses.nurses!.where((nurse) {
+        if (selectedGender != null && nurse.gender != selectedGender) {
+          return false;
+        }
+        return true;
+      }).toList();
+
+      emit(NurseFetchSuccess(nurses: NursesModel(nurses: filteredNurses)));
+    } on DioException catch (e) {
+      logger.e(e);
+      emit(NurseFetchFailure(message: 'Failed to fetch nurses'));
+    } catch (e) {
+      logger.e(e);
+      emit(NurseFetchFailure(message: e.toString()));
+    }
+  }
 
   Future<void> fetchNurse(num nurseId) async {
     emit(NurseDetailsFetchLoading());

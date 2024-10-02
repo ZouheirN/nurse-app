@@ -1,9 +1,9 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:nurse_app/main.dart';
 
 class LabeledDropdown extends StatefulWidget {
   final String label;
+  final String? leadingLabel;
   final List<Map<String, dynamic>> services;
   final String? initialValue;
   final void Function(Map<String, dynamic>?)? onChanged;
@@ -16,6 +16,7 @@ class LabeledDropdown extends StatefulWidget {
     this.initialValue,
     this.onChanged,
     this.validator,
+    this.leadingLabel,
   });
 
   @override
@@ -89,12 +90,26 @@ class _LabeledDropdownState extends State<LabeledDropdown> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            widget.label,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
+          Row(
+            children: [
+              Text(
+                widget.label,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              if (widget.leadingLabel != null) ...[
+                const Spacer(),
+                Text(
+                  widget.leadingLabel!,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ],
           ),
           const SizedBox(height: 3),
           Expanded(
@@ -161,8 +176,6 @@ class _LabeledDropdownState extends State<LabeledDropdown> {
                     selectedValue = value;
                   });
                   if (widget.onChanged != null) {
-                    logger.i(widget.services);
-
                     final Map<String, dynamic> selectedNurse = {
                       'name': value,
                       'id': widget.services.firstWhere(

@@ -4,12 +4,13 @@ class LabeledTextfieldAdmin extends StatefulWidget {
   final String label;
   final TextInputType keyboardType;
   final TextEditingController? controller;
+  final String? Function(String?)? validator;
 
   const LabeledTextfieldAdmin({
     super.key,
     required this.label,
     this.keyboardType = TextInputType.text,
-    this.controller,
+    this.controller, this.validator,
   });
 
   @override
@@ -51,7 +52,7 @@ class _LabeledTextfieldAdminState extends State<LabeledTextfieldAdmin> {
           Expanded(
             child: Focus(
               onFocusChange: _onFocusChange,
-              child: TextField(
+              child: TextFormField(
                 controller: widget.controller,
                 keyboardType: widget.keyboardType,
                 decoration: InputDecoration(
@@ -68,8 +69,9 @@ class _LabeledTextfieldAdminState extends State<LabeledTextfieldAdmin> {
                       : const Color(0xFFE8FFD1),
                   filled: true,
                   contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 ),
+                validator: widget.validator,
               ),
             ),
           ),

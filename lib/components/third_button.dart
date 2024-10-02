@@ -4,12 +4,15 @@ class MyThirdButton extends StatelessWidget {
   final Function()? onTap;
   final String buttonText;
   final bool isLoading;
+  final Color? color;
 
-  const MyThirdButton(
-      {super.key,
-      required this.onTap,
-      required this.buttonText,
-      this.isLoading = false});
+  const MyThirdButton({
+    super.key,
+    required this.onTap,
+    required this.buttonText,
+    this.isLoading = false,
+    this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +22,7 @@ class MyThirdButton extends StatelessWidget {
         height: 40,
         margin: const EdgeInsets.symmetric(horizontal: 120),
         decoration: BoxDecoration(
-          color: const Color(0xFF7BB442),
+          color: color ?? const Color(0xFF7BB442),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Center(

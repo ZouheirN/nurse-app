@@ -57,7 +57,7 @@ class SettingsPage extends StatelessWidget {
                         buttonText: 'Logout',
                         onTap: () {
                           logoutUser();
-                          Navigator.pushReplacementNamed(context, '/login');
+                          Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
                         },
                       ),
                     ),

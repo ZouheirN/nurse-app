@@ -128,4 +128,59 @@ class RequestCubit extends Cubit<RequestState> {
       emit(RequestDetailsFailure(message: 'Failed to create request.'));
     }
   }
+
+  Future<void> submitRequest({
+    required num id,
+    required String status,
+    required DateTime scheduledTime,
+    required int? minutesToArrive,
+    required DateTime? endingTime,
+    required String location,
+    required num nurseId,
+    required List<num> serviceIds,
+    required String timeType,
+    required String? problemDescription,
+    required String nurseGender,
+  }) async {
+    emit(RequestSubmitLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      final data = {
+        'status': status,
+        'location': location,
+        'nurse_id': nurseId,
+        'service_ids': serviceIds,
+        'time_type': timeType,
+        'problem_description': problemDescription,
+        'nurse_gender': nurseGender,
+      };
+
+      if (endingTime == null) {
+        data['minutes_to_arrive'] = minutesToArrive;
+      } else {
+        data['scheduled_time'] = scheduledTime.toIso8601String();
+        data['ending_time'] = endingTime.toIso8601String();
+      }
+
+      await dio.put(
+        '$HOST/admin/requests/$id',
+        options: Options(
+            headers: {
+              'Authorization': 'Bearer $token',
+            }
+        ),
+        data: data,
+      );
+
+      emit(RequestSubmitSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(RequestSubmitFailure(message: 'Failed to submit request.'));
+    } catch (e) {
+      logger.e(e);
+      emit(RequestSubmitFailure(message: 'Failed to submit request.'));
+    }
+  }
 }

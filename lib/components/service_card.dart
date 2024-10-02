@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class ServiceCard extends StatefulWidget {
@@ -81,13 +82,15 @@ class _ServiceCardState extends State<ServiceCard> {
           children: [
             _buildImage(widget.imagePath),
             const SizedBox(height: 8),
-            Text(
-              widget.title,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
+            Flexible(
+              child: AutoSizeText(
+                widget.title,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             Row(

@@ -6,6 +6,7 @@ import 'package:nurse_app/components/labeled_textfield.dart';
 import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/features/request/cubit/request_cubit.dart';
+import 'package:nurse_app/main.dart';
 
 import '../../utilities/helper_functions.dart';
 
@@ -169,13 +170,56 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                               ],
                             ),
                           ),
-                        MyThirdButton(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/immediateOrder',
-                                arguments: request);
-                          },
-                          buttonText: 'Accept',
-                        )
+                        if (request.status == 'pending')
+                          MyThirdButton(
+                            onTap: () {
+                              Navigator.pushNamed(context, '/submitOrder',
+                                  arguments: request);
+                            },
+                            buttonText: 'Accept',
+                          )
+                        else if (request.status == 'approved')
+                          MyThirdButton(
+                            color: const Color(0xFF8D8D8D),
+                            onTap: () {},
+                            buttonText: 'Approved',
+                          )
+                        else if (request.status == 'completed')
+                          Column(
+                            children: [
+                              MyThirdButton(
+                                color: const Color(0xFF8D8D8D),
+                                onTap: () {},
+                                buttonText: 'Completed',
+                              ),
+                              const SizedBox(height: 10),
+                              MyThirdButton(
+                                color: Colors.red,
+                                onTap: () {
+                                  // todo
+                                },
+                                buttonText: 'Delete',
+                              ),
+                            ],
+                          )
+                        else if (request.status == 'canceled')
+                          Column(
+                            children: [
+                              MyThirdButton(
+                                color: Colors.red,
+                                onTap: () {},
+                                buttonText: 'Canceled',
+                              ),
+                              const SizedBox(height: 10),
+                              MyThirdButton(
+                                color: Colors.red,
+                                onTap: () {
+                                  // todo
+                                },
+                                buttonText: 'Delete',
+                              ),
+                            ],
+                          ),
                       ],
                     ),
                   ),

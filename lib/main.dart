@@ -10,13 +10,12 @@ import 'package:nurse_app/pages/admin/admin_dashboard_page.dart';
 import 'package:nurse_app/pages/admin/admin_settings_page.dart';
 import 'package:nurse_app/pages/admin/edit_nurse_page.dart';
 import 'package:nurse_app/pages/admin/edit_service_page.dart';
-import 'package:nurse_app/pages/admin/immediate_order_page.dart';
 import 'package:nurse_app/pages/admin/manage_nurses_page.dart';
 import 'package:nurse_app/pages/admin/manage_orders_page.dart';
 import 'package:nurse_app/pages/admin/manage_services_page.dart';
 import 'package:nurse_app/pages/admin/order_details_page.dart';
 import 'package:nurse_app/pages/admin/order_process_page.dart';
-import 'package:nurse_app/pages/admin/scheduled_order_page.dart';
+import 'package:nurse_app/pages/admin/submit_order_page.dart';
 import 'package:nurse_app/pages/user/edit_profile_page.dart';
 import 'package:nurse_app/pages/user/forgot_password_page.dart';
 import 'package:nurse_app/pages/user/immediate_request_page.dart';
@@ -32,6 +31,8 @@ import 'package:nurse_app/pages/user/update_location_page.dart';
 import 'package:nurse_app/pages/user/verify_sms_page.dart';
 import 'package:nurse_app/services/user.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+
+import 'pages/admin/send_notification_page.dart';
 
 final logger = Logger();
 
@@ -104,14 +105,14 @@ class MyApp extends StatelessWidget {
           final args = ModalRoute.of(context)?.settings.arguments as int;
           return OrderDetailsPage(orderId: args);
         },
-        '/immediateOrder': (context) {
+        '/submitOrder': (context) {
           final args = ModalRoute.of(context)?.settings.arguments
               as RequestsHistoryModel;
-          return ImmediateOrderPage(order: args);
+          return SubmitOrderPage(order: args);
         },
-        '/scheduledOrder': (context) => const ScheduledOrderPage(),
         '/orderProcess': (context) => const OrderProcessPage(),
         '/adminSettings': (context) => const AdminSettingsPage(),
+        '/sendNotification': (context) => const SendNotificationPage(),
       },
     );
   }
