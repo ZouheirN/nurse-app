@@ -78,7 +78,7 @@ class RequestDetailsPage extends StatelessWidget {
                     Column(
                       children: [
                         TextData(
-                          label: 'Time to get: ',
+                          label: 'Time to arrive: ',
                           data: '${request.timeNeededToArrive.toString()} min',
                         ),
                         const SizedBox(height: 10),

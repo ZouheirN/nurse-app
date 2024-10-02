@@ -225,7 +225,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                             status: 'completed',
                                           );
 
-                                          _requestCubit.getOrder(
+                                          await _requestCubit.getOrder(
                                               orderId: widget.orderId);
                                         },
                                         buttonText: 'Complete',

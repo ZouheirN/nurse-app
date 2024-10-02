@@ -102,8 +102,9 @@ class RequestCubit extends Cubit<RequestState> {
 
   Future<void> getOrder({
     required num orderId,
+    bool skipLoading = false,
   }) async {
-    emit(RequestDetailsLoading());
+    if (!skipLoading) emit(RequestDetailsLoading());
 
     try {
       final token = await UserToken.getToken();

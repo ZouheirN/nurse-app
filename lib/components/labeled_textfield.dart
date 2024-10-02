@@ -8,6 +8,8 @@ class LabeledTextfield extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
   final String? hintText;
   final bool? centerHintText;
+  final Function? onTap;
+  final String? Function(String?)? validator;
 
   const LabeledTextfield({
     super.key,
@@ -18,6 +20,8 @@ class LabeledTextfield extends StatefulWidget {
     this.padding,
     this.hintText,
     this.centerHintText,
+    this.onTap,
+    this.validator,
   });
 
   @override
@@ -56,35 +60,47 @@ class _LabeledTextfieldState extends State<LabeledTextfield> {
             ),
           ),
           const SizedBox(height: 3),
-          Focus(
-            onFocusChange: _onFocusChange,
-            child: TextField(
-              enabled: widget.enabled,
-              controller: widget.controller,
-              keyboardType: widget.keyboardType,
-              textAlign: widget.centerHintText ?? false
-                  ? TextAlign.center
-                  : TextAlign.start,
-              decoration: InputDecoration(
-                hintText: widget.hintText,
-                disabledBorder: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  borderSide: BorderSide(color: Color(0xFFE7E7E7)),
+          GestureDetector(
+            onTap: () {
+              if (widget.onTap != null) {
+                widget.onTap!();
+              }
+            },
+            child: Focus(
+              onFocusChange: _onFocusChange,
+              child: TextFormField(
+                validator: widget.validator,
+                enabled: widget.enabled,
+                controller: widget.controller,
+                keyboardType: widget.keyboardType,
+                textAlign: widget.centerHintText ?? false
+                    ? TextAlign.center
+                    : TextAlign.start,
+                decoration: InputDecoration(
+                  hintText: widget.hintText,
+                  hintStyle: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+                  disabledBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide(color: Color(0xFFE7E7E7)),
+                  ),
+                  enabledBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide(color: Color(0xFFE7E7E7)),
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide(color: Color(0xFFE7E7E7)),
+                  ),
+                  fillColor: _isFocused
+                      ? const Color.fromARGB(255, 245, 245, 245)
+                      : const Color(0xFFE7E7E7),
+                  filled: true,
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 ),
-                enabledBorder: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  borderSide: BorderSide(color: Color(0xFFE7E7E7)),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  borderSide: BorderSide(color: Color(0xFFE7E7E7)),
-                ),
-                fillColor: _isFocused
-                    ? const Color.fromARGB(255, 245, 245, 245)
-                    : const Color(0xFFE7E7E7),
-                filled: true,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               ),
             ),
           ),

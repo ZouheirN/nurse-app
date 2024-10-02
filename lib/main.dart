@@ -14,7 +14,6 @@ import 'package:nurse_app/pages/admin/manage_nurses_page.dart';
 import 'package:nurse_app/pages/admin/manage_orders_page.dart';
 import 'package:nurse_app/pages/admin/manage_services_page.dart';
 import 'package:nurse_app/pages/admin/order_details_page.dart';
-import 'package:nurse_app/pages/admin/order_process_page.dart';
 import 'package:nurse_app/pages/admin/submit_order_page.dart';
 import 'package:nurse_app/pages/user/edit_profile_page.dart';
 import 'package:nurse_app/pages/user/forgot_password_page.dart';
@@ -110,7 +109,6 @@ class MyApp extends StatelessWidget {
               as RequestsHistoryModel;
           return SubmitOrderPage(order: args);
         },
-        '/orderProcess': (context) => const OrderProcessPage(),
         '/adminSettings': (context) => const AdminSettingsPage(),
         '/sendNotification': (context) => const SendNotificationPage(),
       },

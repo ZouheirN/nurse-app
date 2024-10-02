@@ -32,6 +32,7 @@ class _SubmitOrderPageState extends State<SubmitOrderPage> {
   final _requestCubit = RequestCubit();
 
   final TextEditingController _timeToArriveController = TextEditingController();
+  final ValueNotifier<String> _timeSelection = ValueNotifier('min');
 
   @override
   void initState() {
@@ -166,13 +167,24 @@ class _SubmitOrderPageState extends State<SubmitOrderPage> {
                           ),
                         ),
                         const SizedBox(width: 20),
-                        const Expanded(
-                          child: LabeledTextfield(
-                            label: '',
-                            enabled: false,
-                            hintText: 'min',
-                            centerHintText: true,
-                            padding: EdgeInsets.only(right: 40),
+                        Expanded(
+                          child: ValueListenableBuilder(
+                            valueListenable: _timeSelection,
+                            builder: (context, value, child) {
+                              return LabeledTextfield(
+                                label: '',
+                                enabled: false,
+                                hintText: value == 'min' ? 'min' : 'hour',
+                                centerHintText: true,
+                                padding: const EdgeInsets.only(right: 40),
+                                onTap: () {
+                                  _timeSelection.value =
+                                      _timeSelection.value == 'min'
+                                          ? 'hour'
+                                          : 'min';
+                                },
+                              );
+                            },
                           ),
                         ),
                       ],
@@ -233,14 +245,55 @@ class _SubmitOrderPageState extends State<SubmitOrderPage> {
                       return MyThirdButton(
                         isLoading: isLoading,
                         onTap: () {
+                          if (selectedNurseId == null) {
+                            Dialogs.showErrorDialog(
+                              context,
+                              'Select Nurse',
+                              'Please select a nurse to proceed.',
+                            );
+                            return;
+                          }
+
+                          if (selectedServiceIds.isEmpty) {
+                            Dialogs.showErrorDialog(
+                              context,
+                              'Select Services',
+                              'Please select services to proceed.',
+                            );
+                            return;
+                          }
+
+                          if (widget.order.endingTime == null &&
+                              _timeToArriveController.text.trim().isEmpty) {
+                            Dialogs.showErrorDialog(
+                              context,
+                              'Time to arrive',
+                              'Please enter the time to arrive.',
+                            );
+                            return;
+                          }
+
+                          if (widget.order.endingTime == null &&
+                              int.parse(_timeToArriveController.text.trim()) <=
+                                  0) {
+                            Dialogs.showErrorDialog(
+                              context,
+                              'Invalid time',
+                              'Time to arrive must be greater than 0.',
+                            );
+                            return;
+                          }
+
                           _requestCubit.submitRequest(
                             id: widget.order.id!,
                             status: 'approved',
                             scheduledTime: widget.order.scheduledTime!,
                             timeNeededToArrive: widget.order.endingTime != null
                                 ? null
-                                : int.parse(
-                                    _timeToArriveController.text.trim()),
+                                : _timeSelection.value == 'min'
+                                    ? int.parse(_timeToArriveController.text)
+                                    : int.parse(_timeToArriveController.text) *
+                                        60,
                             endingTime: widget.order.endingTime,
                             location: widget.order.location!,
                             nurseId: int.parse(selectedNurseId!),
