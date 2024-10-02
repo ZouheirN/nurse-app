@@ -7,6 +7,8 @@ class ServiceCard extends StatefulWidget {
   final String? salePrice;
   final int serviceId;
   final ValueChanged<bool> onSelectionChanged;
+  final bool isSelected;
+  final bool enableTap;
 
   const ServiceCard({
     super.key,
@@ -16,6 +18,8 @@ class ServiceCard extends StatefulWidget {
     this.salePrice,
     required this.serviceId,
     required this.onSelectionChanged,
+    this.isSelected = false,
+    this.enableTap = true,
   });
 
   @override
@@ -25,7 +29,15 @@ class ServiceCard extends StatefulWidget {
 class _ServiceCardState extends State<ServiceCard> {
   bool isSelected = false;
 
+  @override
+  void initState() {
+    isSelected = widget.isSelected;
+    super.initState();
+  }
+
   void _toggleSelection() {
+    if (!widget.enableTap) return;
+
     setState(() {
       isSelected = !isSelected;
       widget.onSelectionChanged(isSelected);

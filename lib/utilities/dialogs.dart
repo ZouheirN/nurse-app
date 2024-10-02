@@ -31,6 +31,16 @@ class Dialogs {
     // );
   }
 
+  static void showSuccessDialog(
+      BuildContext context, String title, String message) {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.success,
+      text: message,
+      title: title,
+    );
+  }
+
   static void showForgotPasswordDialog(BuildContext context) {
     final phoneNumberController = TextEditingController();
     final formKey = GlobalKey<FormState>();

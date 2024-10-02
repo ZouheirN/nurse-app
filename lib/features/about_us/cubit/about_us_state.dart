@@ -18,3 +18,17 @@ final class AboutUsFetchFailure extends AboutUsState {
 
   AboutUsFetchFailure({required this.message});
 }
+
+final class AboutUsUpdateLoading extends AboutUsState {}
+
+final class AboutUsUpdateSuccess extends AboutUsState {
+  final Map aboutUs;
+
+  AboutUsUpdateSuccess({required this.aboutUs});
+}
+
+final class AboutUsUpdateFailure extends AboutUsState {
+  final String message;
+
+  AboutUsUpdateFailure({required this.message});
+}

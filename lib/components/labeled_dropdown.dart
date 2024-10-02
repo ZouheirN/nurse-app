@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/material.dart';
+import 'package:nurse_app/main.dart';
 
 class LabeledDropdown extends StatefulWidget {
   final String label;
   final List<Map<String, dynamic>> services;
   final String? initialValue;
-  final void Function(String?)? onChanged;
+  final void Function(Map<String, dynamic>?)? onChanged;
   final String? Function(String?)? validator;
 
   const LabeledDropdown({
@@ -160,7 +161,15 @@ class _LabeledDropdownState extends State<LabeledDropdown> {
                     selectedValue = value;
                   });
                   if (widget.onChanged != null) {
-                    widget.onChanged!(value);
+                    logger.i(widget.services);
+
+                    final Map<String, dynamic> selectedNurse = {
+                      'name': value,
+                      'id': widget.services.firstWhere(
+                          (element) => element['name'] == value)['id'],
+                    };
+
+                    widget.onChanged!(selectedNurse);
                   }
                 },
                 validator: widget.validator,

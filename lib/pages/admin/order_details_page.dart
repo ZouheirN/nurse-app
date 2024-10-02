@@ -24,6 +24,8 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _nurseGenderController = TextEditingController();
+  final TextEditingController _timeTypeController = TextEditingController();
 
   final _requestCubit = RequestCubit();
 
@@ -39,6 +41,8 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     _phoneController.dispose();
     _problemDescriptionController.dispose();
     _locationController.dispose();
+    _nurseGenderController.dispose();
+    _timeTypeController.dispose();
     super.dispose();
   }
 
@@ -59,6 +63,8 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
               _problemDescriptionController.text =
                   request.problemDescription ?? '';
               _locationController.text = request.location ?? '';
+              _nurseGenderController.text = request.nurseGender ?? '';
+              _timeTypeController.text = request.timeType ?? '';
             }
           },
           builder: (context, state) {
@@ -102,6 +108,27 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                           controller: _locationController,
                           label: 'Address',
                           keyboardType: TextInputType.text,
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: LabeledTextfield(
+                                enabled: false,
+                                controller: _nurseGenderController,
+                                label: 'Nurse Gender',
+                                keyboardType: TextInputType.text,
+                              ),
+                            ),
+                            Flexible(
+                              child: LabeledTextfield(
+                                enabled: false,
+                                controller: _timeTypeController,
+                                label: 'Time Type',
+                                keyboardType: TextInputType.text,
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 10),
                         const Padding(
