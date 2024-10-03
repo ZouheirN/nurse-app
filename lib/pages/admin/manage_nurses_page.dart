@@ -1,15 +1,10 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:nurse_app/components/loader.dart';
-import 'package:nurse_app/consts.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/admin_card.dart';
-import 'package:nurse_app/components/nurse_card.dart';
 import 'package:nurse_app/components/admin_header.dart';
-import 'package:nurse_app/main.dart';
-import 'package:quickalert/quickalert.dart';
-
-import '../../services/user_token.dart';
+import 'package:nurse_app/components/loader.dart';
+import 'package:nurse_app/components/nurse_card.dart';
+import 'package:nurse_app/features/nurse/cubit/nurse_cubit.dart';
 
 class ManageNursesPage extends StatefulWidget {
   const ManageNursesPage({super.key});
@@ -19,53 +14,12 @@ class ManageNursesPage extends StatefulWidget {
 }
 
 class _ManageNursesPageState extends State<ManageNursesPage> {
-  List<dynamic> nurses = [];
-  bool isLoading = true;
+  final _nurseCubit = NurseCubit();
 
   @override
   void initState() {
     super.initState();
-    fetchNurses();
-  }
-
-  Future<void> fetchNurses() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    final token = await UserToken.getToken();
-
-    final response = await http.get(
-      Uri.parse('$HOST/nurses'),
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-
-      logger.i(data);
-
-      setState(() {
-        nurses = data['nurses'];
-        isLoading = false;
-      });
-    } else {
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: 'Failed to fetch nurses.',
-      );
-
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  Future<void> _handleRefresh() async {
-    await fetchNurses();
+    _nurseCubit.fetchNurses();
   }
 
   @override
@@ -74,10 +28,20 @@ class _ManageNursesPageState extends State<ManageNursesPage> {
       backgroundColor: Colors.white,
       appBar: const AdminHeader(title: 'Manage Nurses'),
       body: SafeArea(
-        child: isLoading
-            ? const Loader()
-            : RefreshIndicator(
-                onRefresh: _handleRefresh,
+        child: BlocBuilder<NurseCubit, NurseState>(
+          bloc: _nurseCubit,
+          builder: (context, state) {
+            if (state is NurseFetchLoading) {
+              return const Loader();
+            }
+
+            if (state is NurseFetchSuccess) {
+              final nurses = state.nurses.nurses!;
+
+              return RefreshIndicator(
+                onRefresh: () {
+                  return _nurseCubit.fetchNurses();
+                },
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: Column(
@@ -113,16 +77,17 @@ class _ManageNursesPageState extends State<ManageNursesPage> {
                             Column(
                               children: nurses.map((nurse) {
                                 return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 5),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
                                   child: NurseCard(
-                                    imagePath: nurse['profile_picture'] ??
+                                    imagePath: nurse.profilePicture ??
                                         'assets/images/default_profile.png',
-                                    title: nurse['name'],
+                                    title: nurse.name!,
                                     onTap: () {
                                       Navigator.pushNamed(
                                         context,
                                         '/editNurse',
-                                        arguments: nurse['id'],
+                                        arguments: nurse.id!,
                                       );
                                     },
                                   ),
@@ -135,7 +100,14 @@ class _ManageNursesPageState extends State<ManageNursesPage> {
                     ],
                   ),
                 ),
-              ),
+              );
+            }
+
+            return const Center(
+              child: Text('Error loading nurses'),
+            );
+          },
+        ),
       ),
     );
   }

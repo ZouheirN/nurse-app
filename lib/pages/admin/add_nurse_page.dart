@@ -1,15 +1,14 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:nurse_app/components/gender_selection_field_admin.dart';
-import 'package:nurse_app/consts.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/admin_header.dart';
-import 'package:nurse_app/components/phone_field_admin.dart';
+import 'package:nurse_app/components/gender_selection_field_admin.dart';
 import 'package:nurse_app/components/labeled_textfield_admin.dart';
-import 'package:nurse_app/components/third_button.dart';
+import 'package:nurse_app/components/phone_field_admin.dart';
 import 'package:nurse_app/components/pick_image.dart';
-import 'package:nurse_app/services/user_token.dart';
-import 'package:quickalert/quickalert.dart';
+import 'package:nurse_app/components/third_button.dart';
+import 'package:nurse_app/features/nurse/cubit/nurse_cubit.dart';
+
+import '../../utilities/dialogs.dart';
 
 class AddNursePage extends StatefulWidget {
   const AddNursePage({super.key});
@@ -25,60 +24,14 @@ class _AddNursePageState extends State<AddNursePage> {
   final genderController = GenderSelectionController();
   String? _profileImageUrl;
 
+  final _nurseCubit = NurseCubit();
+
   @override
   void dispose() {
     nameController.dispose();
     addressController.dispose();
     phoneNumberController.dispose();
     super.dispose();
-  }
-
-  void createNurse(String name, String phoneNumber, String address,
-      String? imageUrl, BuildContext context) async {
-    try {
-      final token = await UserToken.getToken();
-
-      final response = await http.post(
-        Uri.parse('$HOST/admin/nurses'),
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
-        body: {
-          'name': name,
-          'phone_number': phoneNumber,
-          'address': address,
-          'gender': genderController.getGender(),
-          'profile_picture': imageUrl ?? '',
-        },
-      );
-
-      if (response.statusCode == 201) {
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.success,
-          text: 'Nurse created successfully',
-          onConfirmBtnTap: () {
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
-          },
-        );
-      } else {
-        final errorData = json.decode(response.body);
-        final errorMessage = errorData['message'];
-
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          text: errorMessage,
-        );
-      }
-    } catch (e) {
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: 'An error occurred, please try again later.',
-      );
-    }
   }
 
   @override
@@ -119,17 +72,44 @@ class _AddNursePageState extends State<AddNursePage> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  MyThirdButton(
-                    onTap: () {
-                      createNurse(
-                        nameController.text,
-                        phoneNumberController.text,
-                        addressController.text,
-                        _profileImageUrl,
-                        context,
+                  BlocConsumer<NurseCubit, NurseState>(
+                    bloc: _nurseCubit,
+                    listener: (context, state) {
+                      if (state is NurseAddSuccess) {
+                        Dialogs.showSuccessDialog(
+                          context,
+                          'Success',
+                          'Nurse added successfully',
+                          onConfirmBtnTap: () {
+                            Navigator.pushNamedAndRemoveUntil(context,
+                                '/manageNurses', (route) => route.isFirst);
+                          },
+                        );
+                      } else if (state is NurseAddFailure) {
+                        Dialogs.showErrorDialog(
+                          context,
+                          'Error',
+                          state.message,
+                        );
+                      }
+                    },
+                    builder: (context, state) {
+                      final isLoading = state is NurseAddLoading;
+
+                      return MyThirdButton(
+                        isLoading: isLoading,
+                        onTap: () {
+                          _nurseCubit.addNurse(
+                            name: nameController.text,
+                            phoneNumber: phoneNumberController.text,
+                            address: addressController.text,
+                            gender: genderController.getGender()!,
+                            profilePicture: _profileImageUrl ?? '',
+                          );
+                        },
+                        buttonText: 'Add Nurse',
                       );
                     },
-                    buttonText: 'Add Nurse',
                   ),
                 ],
               ),

@@ -78,7 +78,7 @@ class RequestDetailsPage extends StatelessWidget {
                     _buildNurseDetails(request.nurseId!),
                   if (request.services != null)
                     _buildServiceDetails(request.services!),
-                  if (request.endingTime == null)
+                  if (request.endingTime == null && request.timeNeededToArrive != null)
                     Column(
                       children: [
                         TextData(

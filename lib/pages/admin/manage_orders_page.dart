@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/admin_header.dart';
 import 'package:nurse_app/components/order_card.dart';
 import 'package:nurse_app/features/request/cubit/request_cubit.dart';
-import 'package:nurse_app/main.dart';
 import 'package:nurse_app/utilities/helper_functions.dart';
 
 import '../../components/loader.dart';
@@ -34,54 +33,53 @@ class _ManageOrdersPageState extends State<ManageOrdersPage> {
       backgroundColor: Colors.white,
       appBar: const AdminHeader(title: 'Orders'),
       body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: _handleRefresh,
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Center(
-              child: Column(
-                children: [
-                  const SizedBox(height: 20),
-                  BlocBuilder<RequestCubit, RequestState>(
-                    bloc: _requestCubit,
-                    builder: (context, state) {
-                      if (state is RequestsHistoryLoading) {
-                        return const Loader();
-                      }
-                      if (state is RequestsHistorySuccess) {
-                        final requests = state.requests.reversed.toList();
+        child: BlocBuilder<RequestCubit, RequestState>(
+          bloc: _requestCubit,
+          builder: (context, state) {
+            if (state is RequestsHistoryLoading) {
+              return const Loader();
+            }
 
-                        if (requests.isNotEmpty) {
-                          return Column(
-                            children: [
-                              for (final request in requests)
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 10),
-                                  child: OrderCard(
-                                    title: '#${request.id} From ${request.fullName}',
-                                    time: formatDateTimeForCard(request.scheduledTime!),
-                                    description: 'Check out the details',
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                        context,
-                                        '/orderDetails',
-                                        arguments: request.id,
-                                      );
-                                    },
-                                  ),
-                                ),
-                            ],
-                          );
-                        }
-                      }
+            if (state is RequestsHistorySuccess) {
+              final requests = state.requests.reversed.toList();
 
-                      return const Text('Failed to load orders');
-                    },
+              // for (final request in requests) {
+              //   logger.i(request.toJson());
+              // }
+
+              return RefreshIndicator(
+                onRefresh: _handleRefresh,
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        for (final request in requests)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: OrderCard(
+                              title: '#${request.id} From ${request.fullName}',
+                              time: formatDateTimeForCard(request.createdAt!),
+                              description: 'Check out the details',
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  '/orderDetails',
+                                  arguments: request.id,
+                                );
+                              },
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
+                ),
+              );
+            }
+
+            return const Center(child: Text('Failed to load orders'));
+          },
         ),
       ),
     );

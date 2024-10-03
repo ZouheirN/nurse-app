@@ -4,7 +4,6 @@ import 'package:nurse_app/components/labeled_expandable_textfield_admin.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/features/notification/cubit/notification_cubit.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../../components/admin_header.dart';
 import '../../components/labeled_textfield_admin.dart';
@@ -23,6 +22,13 @@ class _SendNotificationPageState extends State<SendNotificationPage> {
   final _notificationCubit = NotificationCubit();
 
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    contentController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

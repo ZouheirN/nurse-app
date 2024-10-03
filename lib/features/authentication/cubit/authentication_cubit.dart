@@ -67,8 +67,6 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
         },
       );
 
-      logger.i(response.data);
-
       UserToken.setToken(response.data['token']);
 
       final userModel = UserModel.fromJson(response.data['user']);

@@ -17,6 +17,8 @@ class LoginPage extends StatelessWidget {
   final _authenticationCubit = AuthenticationCubit();
 
   void login(BuildContext context) async {
+    FocusManager.instance.primaryFocus?.unfocus();
+
     if (_formKey.currentState!.validate()) {
       _authenticationCubit.signIn(
         email: emailController.text.trim(),

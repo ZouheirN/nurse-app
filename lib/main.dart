@@ -17,11 +17,8 @@ import 'package:nurse_app/pages/admin/order_details_page.dart';
 import 'package:nurse_app/pages/admin/submit_order_page.dart';
 import 'package:nurse_app/pages/user/edit_profile_page.dart';
 import 'package:nurse_app/pages/user/forgot_password_page.dart';
-import 'package:nurse_app/pages/user/immediate_request_page.dart';
 import 'package:nurse_app/pages/user/login_page.dart';
-import 'package:nurse_app/pages/user/make_appointment_page.dart';
 import 'package:nurse_app/pages/user/navbar.dart';
-import 'package:nurse_app/pages/user/pending_page.dart';
 import 'package:nurse_app/pages/user/request_details_page.dart';
 import 'package:nurse_app/pages/user/signup_page.dart';
 import 'package:nurse_app/pages/user/splash_screen.dart';
@@ -64,7 +61,6 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/signup': (context) => const SignupPage(),
         '/home': (context) => const Navbar(),
-        '/pendingPage': (context) => const PendingPage(),
         '/verifySms': (context) {
           final args = ModalRoute.of(context)?.settings.arguments as Map;
           return VerifySmsPage(

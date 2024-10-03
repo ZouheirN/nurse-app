@@ -79,10 +79,47 @@ class NurseCubit extends Cubit<NurseState> {
     }
   }
 
-  Future<void> setRating(
-    num nurseId,
-    double rating,
-  ) async {
+  Future<void> editNurse({
+    required num nurseId,
+    required String name,
+    required String phoneNumber,
+    required String address,
+    String? selectedImage,
+  }) async {
+    emit(NurseEditLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      await dio.put(
+        '$HOST/admin/nurses/$nurseId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+        data: {
+          'name': name,
+          'phone_number': phoneNumber,
+          'address': address,
+          'profile_picture': selectedImage,
+        },
+      );
+
+      emit(NurseEditSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(NurseEditFailure(message: e.response!.data['message']));
+    } catch (e) {
+      logger.e(e);
+      emit(NurseEditFailure(
+          message:
+          'Failed to edit nurse, please check your internet connection'));
+    }
+  }
+
+  Future<void> setRating(num nurseId,
+      double rating,) async {
     emit(NurseRatingSetLoading());
 
     try {
@@ -108,7 +145,46 @@ class NurseCubit extends Cubit<NurseState> {
       logger.e(e);
       emit(NurseRatingSetFailure(
           message:
-              'Failed to set rating, please check your internet connection'));
+          'Failed to set rating, please check your internet connection'));
+    }
+  }
+
+  Future<void> addNurse({
+    required String name,
+    required String phoneNumber,
+    required String address,
+    required String gender,
+    required String profilePicture,
+  }) async {
+    emit(NurseAddLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      await dio.post(
+        '$HOST/admin/nurses',
+        options: Options(
+            headers: {
+              'Authorization': 'Bearer $token',
+            }
+        ),
+        data: {
+          'name': name,
+          'phone_number': phoneNumber,
+          'address': address,
+          'gender': gender,
+          'profile_picture': profilePicture,
+        },
+      );
+
+      emit(NurseAddSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(NurseAddFailure(message: e.response!.data['message']));
+    } catch (e) {
+      logger.e(e);
+      emit(NurseAddFailure(
+          message: 'Failed to add nurse, please check your internet connection'));
     }
   }
 }

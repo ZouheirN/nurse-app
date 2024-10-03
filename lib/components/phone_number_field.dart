@@ -4,9 +4,9 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 class PhoneNumberField extends StatefulWidget {
   final String initialCountryCode;
   final TextEditingController? controller;
-  void Function(String number)? setCompleteNumber;
+  final void Function(String number)? setCompleteNumber;
 
-  PhoneNumberField({
+  const PhoneNumberField({
     super.key,
     this.initialCountryCode = 'LB',
     this.controller,
@@ -72,7 +72,7 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
                       : const Color(0xFFE7E7E7),
                   filled: true,
                   contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 ),
                 style: const TextStyle(
                   fontSize: 16,
@@ -94,7 +94,6 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
     );
   }
 }
-
 
 // import 'package:flutter/material.dart';
 // import 'package:intl_phone_number_input/intl_phone_number_input.dart';

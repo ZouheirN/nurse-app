@@ -42,6 +42,12 @@ class _SubmitOrderPageState extends State<SubmitOrderPage> {
   }
 
   @override
+  void dispose() {
+    _timeToArriveController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,

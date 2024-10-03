@@ -46,30 +46,30 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const AdminHeader(title: 'Settings'),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Center(
-              child: BlocConsumer<AboutUsCubit, AboutUsState>(
-                bloc: _aboutUsCubit,
-                listener: (context, state) {
-                  if (state is AboutUsFetchSuccess) {
-                    final aboutUs = state.aboutUs;
+      body: BlocConsumer<AboutUsCubit, AboutUsState>(
+        bloc: _aboutUsCubit,
+        listener: (context, state) {
+          if (state is AboutUsFetchSuccess) {
+            final aboutUs = state.aboutUs;
 
-                    websiteTextController.text = aboutUs['online_shop_url'];
-                    instagramTextController.text = aboutUs['instagram_url'];
-                    facebookTextController.text = aboutUs['facebook_url'];
-                    whatsappTextController.text = aboutUs['whatsapp_number'];
-                  }
-                },
-                builder: (context, state) {
-                  if (state is AboutUsFetchLoading) {
-                    return const Loader();
-                  }
+            websiteTextController.text = aboutUs['online_shop_url'];
+            instagramTextController.text = aboutUs['instagram_url'];
+            facebookTextController.text = aboutUs['facebook_url'];
+            whatsappTextController.text = aboutUs['whatsapp_number'];
+          }
+        },
+        builder: (context, state) {
+          if (state is AboutUsFetchLoading) {
+            return const Loader();
+          }
 
-                  if (state is AboutUsFetchSuccess) {
-                    return Form(
+          if (state is AboutUsFetchSuccess) {
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Form(
                       key: _formKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -174,15 +174,15 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
                           ),
                         ],
                       ),
-                    );
-                  }
-
-                  return const Text('Failed to fetch about us.');
-                },
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
+            );
+          }
+
+          return const Center(child: Text('Failed to fetch about us.'));
+        },
       ),
     );
   }

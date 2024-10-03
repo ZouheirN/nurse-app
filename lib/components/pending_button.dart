@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class PendingButton extends StatelessWidget {
   final Function()? onTap;
   final String buttonText;
+  final Icon? icon;
 
-  const PendingButton({super.key, required this.onTap, required this.buttonText});
+  const PendingButton({super.key, required this.onTap, required this.buttonText, required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +19,21 @@ class PendingButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Center(
-          child: Text(
-            buttonText,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
+          child:  Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              if (icon != null) icon!,
+              Text(
+                buttonText,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ],
           ),
+
         ),
       ),
     );

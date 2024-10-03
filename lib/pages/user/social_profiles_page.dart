@@ -9,27 +9,36 @@ class SocialProfilesPage extends StatelessWidget {
   SocialProfilesPage({super.key});
 
   final _aboutUsCubit = AboutUsCubit();
+  final header = const Header();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const Header(),
-              BlocBuilder<AboutUsCubit, AboutUsState>(
-                bloc: _aboutUsCubit..fetchAboutUs(),
-                builder: (context, state) {
-                  if (state is AboutUsFetchLoading) {
-                    return const Loader();
-                  }
+        child: BlocBuilder<AboutUsCubit, AboutUsState>(
+          bloc: _aboutUsCubit..fetchAboutUs(),
+          builder: (context, state) {
+            if (state is AboutUsFetchLoading) {
+              return Stack(
+                children: [
+                  Column(
+                    children: [
+                      header,
+                    ],
+                  ),
+                  const Loader(),
+                ],
+              );
+            }
+            if (state is AboutUsFetchSuccess) {
+              final aboutUs = state.aboutUs;
 
-                  if (state is AboutUsFetchSuccess) {
-                    final aboutUs = state.aboutUs;
-
-                    return Column(
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    header,
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
@@ -125,14 +134,14 @@ class SocialProfilesPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 30),
                       ],
-                    );
-                  }
+                    ),
+                  ],
+                ),
+              );
+            }
 
-                  return const Text('Failed to fetch about us.');
-                },
-              ),
-            ],
-          ),
+            return const Text('Failed to fetch about us.');
+          },
         ),
       ),
     );

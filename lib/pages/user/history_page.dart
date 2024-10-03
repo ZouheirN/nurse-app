@@ -16,6 +16,8 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   final _requestCubit = RequestCubit();
 
+  final header = const Header();
+
   @override
   initState() {
     super.initState();
@@ -27,32 +29,50 @@ class _HistoryPageState extends State<HistoryPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const Header(),
-              const Center(
-                child: Text(
-                  'Request History',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
+        child: BlocBuilder<RequestCubit, RequestState>(
+          bloc: _requestCubit,
+          builder: (context, state) {
+            if (state is RequestsHistoryLoading) {
+              return Stack(
+                children: [
+                  Column(
+                    children: [
+                      header,
+                      const Center(
+                        child: Text(
+                          'Request History',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
                   ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const SizedBox(height: 15),
-              BlocBuilder<RequestCubit, RequestState>(
-                bloc: _requestCubit,
-                builder: (context, state) {
-                  if (state is RequestsHistoryLoading) {
-                    return const Loader();
-                  }
+                  const Loader(),
+                ],
+              );
+            }
 
-                  if (state is RequestsHistorySuccess) {
-                    final requests = state.requests.reversed.toList();
-
-                    return Column(
+            if (state is RequestsHistorySuccess) {
+              final requests = state.requests.reversed.toList();
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    header,
+                    const Center(
+                      child: Text(
+                        'Request History',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: requests.map(
                         (request) {
@@ -61,8 +81,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             child: HistoryCard(
                               services: request.services!,
                               description: 'Check out the details',
-                              time:
-                                  formatDateTimeForCard(request.scheduledTime!),
+                              time: formatDateTimeForCard(request.createdAt!),
                               onTap: () {
                                 Navigator.pushNamed(
                                   context,
@@ -74,14 +93,14 @@ class _HistoryPageState extends State<HistoryPage> {
                           );
                         },
                       ).toList(),
-                    );
-                  }
+                    ),
+                  ],
+                ),
+              );
+            }
 
-                  return const Text('Failed to load history');
-                },
-              ),
-            ],
-          ),
+            return const Center(child: Text('Failed to load history.'));
+          },
         ),
       ),
     );

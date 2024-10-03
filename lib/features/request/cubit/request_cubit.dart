@@ -61,7 +61,7 @@ class RequestCubit extends Cubit<RequestState> {
       emit(RequestCreateSuccess());
     } on DioException catch (e) {
       logger.e(e.response!.data);
-      emit(RequestCreateFailure(message: e.response!.data['message']));
+      emit(RequestCreateFailure(message: e.response!.data['errors']['ending_time'][0]));
     } catch (e) {
       logger.e(e);
       emit(RequestCreateFailure(message: 'Failed to create request.'));

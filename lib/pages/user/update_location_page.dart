@@ -36,6 +36,12 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
     });
   }
 
+  @override
+  void dispose() {
+    _locationController.dispose();
+    super.dispose();
+  }
+
   void _setInitialLocation() async {
     var currentLocation = const LatLng(33.851338, 35.518375);
     setState(() {

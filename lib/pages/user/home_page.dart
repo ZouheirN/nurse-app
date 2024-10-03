@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:nurse_app/components/header.dart';
 import 'package:nurse_app/components/second_button.dart';
 import 'package:nurse_app/pages/user/immediate_request_page.dart';
+import 'package:nurse_app/pages/user/pending_page.dart';
 
 import 'make_appointment_page.dart';
 
@@ -101,14 +102,20 @@ class _HomePageState extends State<HomePage> {
                 builder: (context, value, child) {
                   if (value == 'immediate') {
                     return ImmediateRequestPage(
-                      onBack: () {
-                        _selectedOption.value = '';
+                      setValue: (value) {
+                        _selectedOption.value = value;
                       },
                     );
                   } else if (value == 'appointment') {
                     return MakeAppointmentPage(
-                      onBack: () {
-                        _selectedOption.value = '';
+                      setValue: (value) {
+                        _selectedOption.value = value;
+                      },
+                    );
+                  } else if (value == 'success') {
+                    return PendingPage(
+                      setValue: (value) {
+                        _selectedOption.value = value;
                       },
                     );
                   }

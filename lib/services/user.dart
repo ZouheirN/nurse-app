@@ -21,6 +21,7 @@ void loginUser(num userId, num roleId) async {
       },
     );
 
+
     if (roleId == 1) {
       await pusher.subscribe(channelName: 'admin-channel');
     } else {

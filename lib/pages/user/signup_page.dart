@@ -35,6 +35,8 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void signup(BuildContext context) async {
+    FocusManager.instance.primaryFocus?.unfocus();
+
     if (_formKey.currentState!.validate()) {
       _authenticationCubit.signUp(
         phoneNumber: phoneNumberController.text.trim(),

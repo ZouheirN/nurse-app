@@ -1,15 +1,13 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:nurse_app/consts.dart';
-import 'package:http/http.dart' as http;
-import 'package:nurse_app/components/pick_image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/admin_header.dart';
-import 'package:nurse_app/components/third_button.dart';
-import 'package:quickalert/quickalert.dart';
-import 'package:nurse_app/components/phone_field_admin.dart';
 import 'package:nurse_app/components/labeled_textfield_admin.dart';
-
-import '../../services/user_token.dart';
+import 'package:nurse_app/components/loader.dart';
+import 'package:nurse_app/components/phone_field_admin.dart';
+import 'package:nurse_app/components/pick_image.dart';
+import 'package:nurse_app/components/third_button.dart';
+import 'package:nurse_app/features/nurse/cubit/nurse_cubit.dart';
+import 'package:nurse_app/utilities/dialogs.dart';
 
 class EditNursePage extends StatefulWidget {
   final int nurseId;
@@ -21,23 +19,20 @@ class EditNursePage extends StatefulWidget {
 }
 
 class _EditNursePageState extends State<EditNursePage> {
-  String name = '';
-  String phoneNumber = '';
-  String address = '';
   String? profilePicture;
-
-  bool isLoading = true;
-  bool hasError = false;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   String? selectedImage;
 
+  final _nurseCubit = NurseCubit();
+  final _nurseCubitButton = NurseCubit();
+
   @override
   void initState() {
     super.initState();
-    fetchNurseData();
+    _nurseCubit.fetchNurse(widget.nurseId);
   }
 
   @override
@@ -48,138 +43,112 @@ class _EditNursePageState extends State<EditNursePage> {
     super.dispose();
   }
 
-  Future<void> fetchNurseData() async {
-    final token = await UserToken.getToken();
-
-    final response = await http.get(
-      Uri.parse('$HOST/nurses'),
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final jsonData = json.decode(response.body);
-      final nurses = jsonData['nurses'];
-
-      final foundNurse = nurses.firstWhere(
-        (nurse) => nurse['id'] == widget.nurseId,
-        orElse: () => null,
-      );
-
-      if (foundNurse != null) {
-        setState(() {
-          name = foundNurse['name'] ?? '';
-          phoneNumber = foundNurse['phone_number'] ?? '';
-          address = foundNurse['address'] ?? '';
-          profilePicture = foundNurse['profile_picture'];
-
-          nameController.text = name;
-          phoneController.text = phoneNumber;
-          addressController.text = address;
-          isLoading = false;
-        });
-      } else {
-        setState(() {
-          hasError = true;
-          isLoading = false;
-        });
-      }
-    } else {
-      setState(() {
-        hasError = true;
-        isLoading = false;
-      });
-    }
-  }
-
-  Future<void> updateNurse() async {
-    final token = await UserToken.getToken();
-
-    final response = await http.put(
-      Uri.parse('$HOST/admin/nurses/${widget.nurseId}'),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-      body: json.encode({
-        'name': nameController.text,
-        'phone_number': phoneController.text,
-        'address': addressController.text,
-        'profile_picture': selectedImage ?? profilePicture,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.success,
-        text: 'Nurse updated successfully',
-        onConfirmBtnTap: () {
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
-        },
-      );
-    } else {
-      final errorData = json.decode(response.body);
-      final errorMessage = errorData['message'];
-
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: errorMessage,
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const AdminHeader(title: 'Edit Nurse'),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : hasError
-              ? const Center(child: Text('Error loading nurse details'))
-              : SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 40),
-                      LabeledTextFieldAdmin(
-                        label: 'Nurse Name',
-                        keyboardType: TextInputType.name,
-                        controller: nameController,
-                      ),
-                      const SizedBox(height: 10),
-                      PhoneFieldAdmin(
-                        controller: phoneController,
-                      ),
-                      LabeledTextFieldAdmin(
-                        label: 'Nurse Address',
-                        keyboardType: TextInputType.text,
-                        controller: addressController,
-                      ),
-                      const SizedBox(height: 20),
-                      PickImage(
-                        label: 'Nurse Picture',
-                        initialImageUrl: profilePicture,
-                        onImageSelected: (imageUrl) {
-                          setState(() {
-                            selectedImage = imageUrl;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      MyThirdButton(
+      body: BlocConsumer<NurseCubit, NurseState>(
+        bloc: _nurseCubit,
+        listener: (context, state) {
+          if (state is NurseDetailsFetchSuccess) {
+            final nurse = state.nurse.nurse!;
+
+            nameController.text = nurse.name!;
+            phoneController.text = nurse.phoneNumber!;
+            addressController.text = nurse.address!;
+            profilePicture = nurse.profilePicture;
+          }
+        },
+        builder: (context, state) {
+          if (state is NurseDetailsFetchLoading) {
+            return const Loader();
+          }
+
+          if (state is NurseDetailsFetchSuccess) {
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 40),
+                  LabeledTextFieldAdmin(
+                    label: 'Nurse Name',
+                    keyboardType: TextInputType.name,
+                    controller: nameController,
+                  ),
+                  const SizedBox(height: 10),
+                  PhoneFieldAdmin(
+                    controller: phoneController,
+                  ),
+                  LabeledTextFieldAdmin(
+                    label: 'Nurse Address',
+                    keyboardType: TextInputType.text,
+                    controller: addressController,
+                  ),
+                  const SizedBox(height: 20),
+                  PickImage(
+                    label: 'Nurse Picture',
+                    initialImageUrl: profilePicture,
+                    onImageSelected: (imageUrl) {
+                      setState(() {
+                        selectedImage = imageUrl;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  BlocConsumer<NurseCubit, NurseState>(
+                    bloc: _nurseCubitButton,
+                    listener: (context, state) {
+                      if (state is NurseEditSuccess) {
+                        Dialogs.showSuccessDialog(
+                          context,
+                          'Success',
+                          'Nurse updated successfully',
+                          onConfirmBtnTap: () {
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, '/manageNurses', (route) => route.isFirst);
+                          },
+                        );
+                      } else if (state is NurseEditFailure) {
+                        Dialogs.showErrorDialog(
+                          context,
+                          'Error',
+                          state.message,
+                        );
+                      }
+                    },
+                    builder: (context, state) {
+                      final isLoading = state is NurseEditLoading;
+
+                      return MyThirdButton(
+                        isLoading: isLoading,
                         onTap: () {
-                          updateNurse();
+                          final name = nameController.text;
+                          final phoneNumber = phoneController.text;
+                          final address = addressController.text;
+
+                          _nurseCubitButton.editNurse(
+                            nurseId: widget.nurseId,
+                            name: name,
+                            phoneNumber: phoneNumber,
+                            address: address,
+                            selectedImage: selectedImage ?? profilePicture,
+                          );
                         },
                         buttonText: 'Update Nurse',
-                      ),
-                    ],
+                      );
+                    },
                   ),
-                ),
+                ],
+              ),
+            );
+          }
+
+          return const Center(
+            child: Text('Error loading nurse details'),
+          );
+        },
+      ),
     );
   }
 }

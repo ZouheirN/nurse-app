@@ -78,6 +78,14 @@ class _LabeledTextfieldState extends State<LabeledTextfield> {
                     : TextAlign.start,
                 decoration: InputDecoration(
                   hintText: widget.hintText,
+                  errorBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide(color: Colors.red),
+                  ),
+                  focusedErrorBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide(color: Colors.red),
+                  ),
                   hintStyle: const TextStyle(
                     fontSize: 14,
                     color: Colors.black,

@@ -46,3 +46,23 @@ final class NurseRatingSetFailure extends NurseState {
 
   NurseRatingSetFailure({required this.message});
 }
+
+final class NurseEditLoading extends NurseState {}
+
+final class NurseEditSuccess extends NurseState {}
+
+final class NurseEditFailure extends NurseState {
+  final String message;
+
+  NurseEditFailure({required this.message});
+}
+
+final class NurseAddLoading extends NurseState {}
+
+final class NurseAddSuccess extends NurseState {}
+
+final class NurseAddFailure extends NurseState {
+  final String message;
+
+  NurseAddFailure({required this.message});
+}

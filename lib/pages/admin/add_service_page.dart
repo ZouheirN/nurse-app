@@ -1,15 +1,14 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/admin_header.dart';
+import 'package:nurse_app/components/labeled_mini_textfield_admin.dart';
+import 'package:nurse_app/components/labeled_textfield_admin.dart';
 import 'package:nurse_app/components/pick_image.dart';
 import 'package:nurse_app/components/third_button.dart';
-import 'package:nurse_app/components/labeled_textfield_admin.dart';
-import 'package:nurse_app/components/labeled_mini_textfield_admin.dart';
+import 'package:nurse_app/features/services/cubit/services_cubit.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:nurse_app/consts.dart';
 
-import '../../services/user_token.dart';
+import '../../utilities/dialogs.dart';
 
 class AddServicePage extends StatefulWidget {
   const AddServicePage({super.key});
@@ -23,7 +22,8 @@ class _AddServicePageState extends State<AddServicePage> {
   final priceController = TextEditingController();
   final discountPriceController = TextEditingController();
   String? _serviceImageUrl;
-  bool _isSubmitting = false;
+
+  final _servicesCubit = ServicesCubit();
 
   @override
   void dispose() {
@@ -33,83 +33,71 @@ class _AddServicePageState extends State<AddServicePage> {
     super.dispose();
   }
 
-  bool _validateInputs() {
-    if (nameController.text.isEmpty || priceController.text.isEmpty) {
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: 'Service name and price are required.',
-      );
-      return false;
-    }
-    return true;
-  }
-
-  void createService(String serviceName, double price, double discountPrice,
-      String? imageUrl, BuildContext context) async {
-    if (!_validateInputs()) return;
-
-    setState(() {
-      _isSubmitting = true;
-    });
-
-    try {
-      final token = await UserToken.getToken();
-
-      final Map<String, dynamic> requestBody = {
-        'name': serviceName,
-        'price': price,
-        'service_pic': imageUrl ?? '',
-      };
-
-      if (discountPrice != 0) {
-        requestBody['discount_price'] = discountPrice;
-      }
-
-      final response = await http.post(
-        Uri.parse('$HOST/admin/services'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(requestBody),
-      );
-
-      setState(() {
-        _isSubmitting = false;
-      });
-
-      if (response.statusCode == 201) {
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.success,
-          text: 'Service created successfully',
-          onConfirmBtnTap: () {
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
-          },
-        );
-      } else {
-        final errorData = json.decode(response.body);
-        final errorMessage = errorData['message'];
-
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          text: errorMessage,
-        );
-      }
-    } catch (e) {
-      setState(() {
-        _isSubmitting = false;
-      });
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: 'An error occurred, please try again later.',
-      );
-    }
-  }
+  // void createService(String serviceName, double price, double discountPrice,
+  //     String? imageUrl, BuildContext context) async {
+  //   if (!_validateInputs()) return;
+  //
+  //   setState(() {
+  //     _isSubmitting = true;
+  //   });
+  //
+  //   try {
+  //     final token = await UserToken.getToken();
+  //
+  //     final Map<String, dynamic> requestBody = {
+  //       'name': serviceName,
+  //       'price': price,
+  //       'service_pic': imageUrl ?? '',
+  //     };
+  //
+  //     if (discountPrice != 0) {
+  //       requestBody['discount_price'] = discountPrice;
+  //     }
+  //
+  //     final response = await http.post(
+  //       Uri.parse('$HOST/admin/services'),
+  //       headers: {
+  //         'Authorization': 'Bearer $token',
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: jsonEncode(requestBody),
+  //     );
+  //
+  //     setState(() {
+  //       _isSubmitting = false;
+  //     });
+  //
+  //     if (response.statusCode == 201) {
+  //       QuickAlert.show(
+  //         context: context,
+  //         type: QuickAlertType.success,
+  //         text: 'Service created successfully',
+  //         onConfirmBtnTap: () {
+  //           Navigator.of(context).pop();
+  //           Navigator.of(context).pop();
+  //         },
+  //       );
+  //     } else {
+  //       final errorData = json.decode(response.body);
+  //       final errorMessage = errorData['message'];
+  //
+  //       QuickAlert.show(
+  //         context: context,
+  //         type: QuickAlertType.error,
+  //         text: errorMessage,
+  //       );
+  //     }
+  //   } catch (e) {
+  //     setState(() {
+  //       _isSubmitting = false;
+  //     });
+  //     QuickAlert.show(
+  //       context: context,
+  //       type: QuickAlertType.error,
+  //       text: 'An error occurred, please try again later.',
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -164,27 +152,58 @@ class _AddServicePageState extends State<AddServicePage> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  MyThirdButton(
-                    onTap: _isSubmitting
-                        ? null
-                        : () {
-                            final double price =
-                                double.tryParse(priceController.text) ?? 0.0;
-                            final double discountPrice =
-                                double.tryParse(discountPriceController.text) ??
-                                    0.0;
-
-                            if (!_validateInputs()) return;
-
-                            createService(
-                              nameController.text,
-                              price,
-                              discountPrice,
-                              _serviceImageUrl,
-                              context,
-                            );
+                  BlocConsumer<ServicesCubit, ServicesState>(
+                    bloc: _servicesCubit,
+                    listener: (context, state) {
+                      if (state is ServiceAddSuccess) {
+                        Dialogs.showSuccessDialog(
+                          context,
+                          'Success',
+                          'Service created successfully',
+                          onConfirmBtnTap: () {
+                            Navigator.pushNamedAndRemoveUntil(context,
+                                '/manageServices', (route) => route.isFirst);
                           },
-                    buttonText: _isSubmitting ? 'Submitting...' : 'Add Service',
+                        );
+                      } else if (state is ServiceAddFailure) {
+                        Dialogs.showErrorDialog(
+                          context,
+                          'Error',
+                          state.message,
+                        );
+                      }
+                    },
+                    builder: (context, state) {
+                      final isLoading = state is ServiceAddLoading;
+
+                      return MyThirdButton(
+                        isLoading: isLoading,
+                        onTap: () {
+                          final double price =
+                              double.tryParse(priceController.text) ?? 0.0;
+                          final double? discountPrice =
+                              double.tryParse(discountPriceController.text);
+
+                          if (nameController.text.isEmpty ||
+                              priceController.text.isEmpty) {
+                            QuickAlert.show(
+                              context: context,
+                              type: QuickAlertType.error,
+                              text: 'Service name and price are required.',
+                            );
+                            return false;
+                          }
+
+                          _servicesCubit.addService(
+                            name: nameController.text,
+                            price: price,
+                            discountPrice: discountPrice,
+                            image: _serviceImageUrl,
+                          );
+                        },
+                        buttonText: 'Add Service',
+                      );
+                    },
                   ),
                 ],
               ),
