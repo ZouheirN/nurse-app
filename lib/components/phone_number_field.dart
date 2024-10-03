@@ -67,6 +67,14 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     borderSide: BorderSide(color: Color(0xFFE7E7E7)),
                   ),
+                  focusedErrorBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide(color: Color(0xFFE7E7E7)),
+                  ),
+                  errorBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide(color: Color(0xFFE7E7E7)),
+                  ),
                   fillColor: _isFocused
                       ? const Color.fromARGB(255, 245, 245, 245)
                       : const Color(0xFFE7E7E7),

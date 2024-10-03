@@ -12,7 +12,8 @@ class MyThirdButton extends StatelessWidget {
     required this.onTap,
     required this.buttonText,
     this.isLoading = false,
-    this.color, this.margin,
+    this.color,
+    this.margin,
   });
 
   @override

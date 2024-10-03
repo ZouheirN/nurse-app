@@ -78,7 +78,8 @@ class RequestDetailsPage extends StatelessWidget {
                     _buildNurseDetails(request.nurseId!),
                   if (request.services != null)
                     _buildServiceDetails(request.services!),
-                  if (request.endingTime == null && request.timeNeededToArrive != null)
+                  if (request.endingTime == null &&
+                      request.timeNeededToArrive != null)
                     Column(
                       children: [
                         TextData(
@@ -96,11 +97,15 @@ class RequestDetailsPage extends StatelessWidget {
                       ],
                     ),
                   if (request.nurse != null && request.nurseId != null)
-                    StarRating(
-                      nurseId: request.nurseId!,
-                      initialRating: 0,
+                    Column(
+                      children: [
+                        StarRating(
+                          nurseId: request.nurseId!,
+                          initialRating: 0,
+                        ),
+                        const SizedBox(height: 10),
+                      ],
                     ),
-                  const SizedBox(height: 10),
                   _buildRequestDate(request),
                   const SizedBox(height: 30),
                   const Center(
@@ -137,11 +142,18 @@ class RequestDetailsPage extends StatelessWidget {
 
           return Column(
             children: [
-              Image.network(
-                nurse.profilePicture!,
-                height: 250,
-                fit: BoxFit.contain,
-              ),
+              if (nurse.profilePicture != null)
+                Image.network(
+                  nurse.profilePicture!,
+                  height: 250,
+                  fit: BoxFit.contain,
+                )
+              else
+                Image.asset(
+                  'assets/images/default_profile.png',
+                  height: 250,
+                  fit: BoxFit.contain,
+                ),
               const SizedBox(height: 20),
               TextData(
                 label: 'Nurse name: ',
