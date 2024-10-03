@@ -21,7 +21,6 @@ import 'package:nurse_app/pages/user/immediate_request_page.dart';
 import 'package:nurse_app/pages/user/login_page.dart';
 import 'package:nurse_app/pages/user/make_appointment_page.dart';
 import 'package:nurse_app/pages/user/navbar.dart';
-import 'package:nurse_app/pages/user/notification_page.dart';
 import 'package:nurse_app/pages/user/pending_page.dart';
 import 'package:nurse_app/pages/user/request_details_page.dart';
 import 'package:nurse_app/pages/user/signup_page.dart';
@@ -68,7 +67,6 @@ class MyApp extends StatelessWidget {
         '/immediateRequest': (context) => const ImmediateRequestPage(),
         '/makeAppointment': (context) => const MakeAppointmentPage(),
         '/pendingPage': (context) => const PendingPage(),
-        '/notification': (context) => const NotificationPage(),
         '/verifySms': (context) {
           final args = ModalRoute.of(context)?.settings.arguments as Map;
           return VerifySmsPage(

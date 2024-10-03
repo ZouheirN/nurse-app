@@ -39,7 +39,7 @@ class _LabeledDateFieldState extends State<LabeledDateField> {
     final DateTime? date = await showDatePicker(
       context: context,
       initialDate: widget.currentDate,
-      firstDate: DateTime(1900),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2100),
     );
     if (date == null) return;

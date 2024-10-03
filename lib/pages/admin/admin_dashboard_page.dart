@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nurse_app/components/admin_card.dart';
 import 'package:nurse_app/components/logout_button.dart';
-import 'package:nurse_app/services/user.dart';
+
+import '../../services/user.dart';
 
 class AdminDashboardPage extends StatelessWidget {
   const AdminDashboardPage({super.key});

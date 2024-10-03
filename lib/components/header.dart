@@ -119,15 +119,6 @@ class _HeaderState extends State<Header> {
                     ),
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.notifications_none,
-                    color: Color(0xFF7BB442),
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/notification');
-                  },
-                ),
               ],
             ),
             GestureDetector(

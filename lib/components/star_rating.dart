@@ -30,15 +30,32 @@ class _StarRatingState extends State<StarRating> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NurseCubit, NurseState>(
+    return BlocConsumer<NurseCubit, NurseState>(
       bloc: _nurseCubit,
+      listener: (context, state) {
+        if (state is NurseRatingSetFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+            ),
+          );
+        }
+      },
       builder: (context, state) {
         return RatingBar(
           initialRating: _currentRating,
           minRating: 1,
           maxRating: 5,
-          allowHalfRating: true,
+          // allowHalfRating: true,
           onRatingUpdate: (rating) {
+            if (rating == _currentRating) {
+              return;
+            }
+
+            if (state is NurseRatingSetLoading) {
+              return;
+            }
+
             _nurseCubit.setRating(widget.nurseId, rating);
           },
           ratingWidget: RatingWidget(

@@ -228,7 +228,11 @@ class _SubmitOrderPageState extends State<SubmitOrderPage> {
                           'The request is now approved.',
                           onConfirmBtnTap: () {
                             Navigator.pushNamedAndRemoveUntil(
-                                context, '/adminDashboard', (route) => false);
+                              context,
+                              '/orderDetails',
+                              arguments: widget.order.id,
+                              (route) => route.isFirst,
+                            );
                           },
                         );
                       } else if (state is RequestSubmitFailure) {

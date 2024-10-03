@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:nurse_app/components/labeled_edit_textfield.dart';
 import 'package:nurse_app/components/third_button.dart';
-import 'package:nurse_app/utilities/dialogs.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:nurse_app/features/location/cubit/location_cubit.dart';
+import 'package:nurse_app/main.dart';
+import 'package:nurse_app/utilities/dialogs.dart';
 
 class UpdateLocationPage extends StatefulWidget {
   const UpdateLocationPage({super.key});
@@ -22,10 +22,18 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
 
   final _locationCubit = LocationCubit();
 
+  bool _isGetLocationLoading = false;
+
+  final _locationController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
-    _setInitialLocation();
+    Future.delayed(Duration.zero, () async {
+      _setInitialLocation();
+    });
   }
 
   void _setInitialLocation() async {
@@ -40,10 +48,35 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
     setState(() {
       _initialPosition = latLng;
     });
+  }
 
-    _locationCubit.updateLocation(latitude: latLng.latitude, longitude: latLng.longitude);
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
 
-    print("Location Updated: $_initialPosition");
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location services are disabled. Please enable the services')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+    return true;
   }
 
   @override
@@ -82,80 +115,131 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            SizedBox(
-              height: MediaQuery.of(context).size.width * 0.9,
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: FlutterMap(
-                mapController: _mapController,
-                options: MapOptions(
-                  initialCenter: _initialPosition,
-                  initialZoom: 16,
-                  onTap: (tapPosition, point) {
-                    _updateLocation(point);
-                  },
-                ),
-                children: [
-                  TileLayer(
-                    urlTemplate:
-                        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                    // subdomains: ['a', 'b', 'c'],
-                  ),
-                  MarkerLayer(
-                    markers: [
-                      Marker(
-                        point: _initialPosition,
-                        width: 80,
-                        height: 80,
-                        child: const Icon(
-                          Icons.location_on,
-                          color: Colors.red,
-                          size: 40,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            const LabeledEditTextfield(
-              label: 'Enter Your Location Details',
-              keyboardType: TextInputType.text,
-            ),
-            const SizedBox(height: 20),
-            BlocConsumer<LocationCubit, LocationState>(
-              bloc:  _locationCubit,
-              listener: (context, state) {
-                if (state is LocationUpdateSuccess) {
-                  QuickAlert.show(
-                    context: context,
-                    type: QuickAlertType.success,
-                    text: 'Location Updated Successfully',
-                    onConfirmBtnTap: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              SizedBox(
+                height: MediaQuery.of(context).size.width * 0.9,
+                width: MediaQuery.of(context).size.width * 0.9,
+                child: FlutterMap(
+                  mapController: _mapController,
+                  options: MapOptions(
+                    initialCenter: _initialPosition,
+                    initialZoom: 16,
+                    onTap: (tapPosition, point) {
+                      _updateLocation(point);
                     },
-                  );
-                } else if (state is LocationUpdateFailure) {
-                  Dialogs.showErrorDialog(context, 'Error Updating Location', state.message);
-                }
-              },
-              builder: (context, state) {
-                final isLoading = state is LocationUpdateLoading;
+                  ),
+                  children: [
+                    TileLayer(
+                      urlTemplate:
+                          "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                      // subdomains: ['a', 'b', 'c'],
+                    ),
+                    MarkerLayer(
+                      markers: [
+                        Marker(
+                          point: _initialPosition,
+                          width: 80,
+                          height: 80,
+                          child: const Icon(
+                            Icons.location_on,
+                            color: Colors.red,
+                            size: 40,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              MyThirdButton(
+                isLoading: _isGetLocationLoading,
+                onTap: () async {
+                  if (_isGetLocationLoading) return;
 
-                return MyThirdButton(
-                  isLoading: isLoading,
-                  onTap: () {
-                    _updateLocation(_initialPosition);
-                  },
-                  buttonText: 'Save',
-                );
-              },
-            ),
-          ],
+                  final hasPermission = await _handleLocationPermission();
+                  if (!hasPermission) return;
+
+                  setState(() {
+                    _isGetLocationLoading = true;
+                  });
+
+                  await Geolocator.getCurrentPosition(
+                    locationSettings: const LocationSettings(
+                      accuracy: LocationAccuracy.high,
+                    ),
+                  ).then((Position position) {
+                    setState(() => _initialPosition =
+                        LatLng(position.latitude, position.longitude));
+                    _mapController.move(_initialPosition, 15.0);
+                  }).catchError((e) {
+                    Dialogs.showErrorDialog(context, 'Error', e.toString());
+                    logger.e(e);
+                  });
+
+                  setState(() {
+                    _isGetLocationLoading = false;
+                  });
+                },
+                buttonText: 'Get Current Location',
+                margin: const EdgeInsets.symmetric(horizontal: 110),
+              ),
+              const SizedBox(height: 20),
+              LabeledEditTextfield(
+                label: 'Enter Your Location Details',
+                keyboardType: TextInputType.text,
+                controller: _locationController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your location details';
+                  }
+
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              BlocConsumer<LocationCubit, LocationState>(
+                bloc: _locationCubit,
+                listener: (context, state) {
+                  if (state is LocationUpdateSuccess) {
+                    Dialogs.showSuccessDialog(
+                      context,
+                      'Success',
+                      'Location Updated Successfully',
+                      onConfirmBtnTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      },
+                    );
+                  } else if (state is LocationUpdateFailure) {
+                    Dialogs.showErrorDialog(
+                        context, 'Error Updating Location', state.message);
+                  }
+                },
+                builder: (context, state) {
+                  final isLoading = state is LocationUpdateLoading;
+
+                  return MyThirdButton(
+                    isLoading: isLoading,
+                    onTap: () async {
+                      if (_formKey.currentState!.validate()) {
+                        await _locationCubit.updateLocation(
+                          latitude: _initialPosition.latitude,
+                          longitude: _initialPosition.longitude,
+                          locationDetails: _locationController.text.trim(),
+                        );
+                      }
+                    },
+                    buttonText: 'Save',
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

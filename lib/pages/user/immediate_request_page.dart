@@ -11,7 +11,6 @@ import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/components/time_type_selection_field.dart';
 import 'package:nurse_app/features/request/cubit/request_cubit.dart';
 import 'package:nurse_app/features/services/cubit/services_cubit.dart';
-import 'package:nurse_app/main.dart';
 import 'package:quickalert/quickalert.dart';
 
 class ImmediateRequestPage extends StatefulWidget {
@@ -173,7 +172,8 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
                           runSpacing: 10,
                           children: services.map((service) {
                             return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 5),
                               child: ServiceCard(
                                 serviceId: service['id'],
                                 imagePath: service['service_pic'] ??
@@ -186,7 +186,8 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
                                     if (isSelected) {
                                       selectedServiceIds.add(service['id']);
                                     } else {
-                                      selectedServiceIds.remove(service['id']);
+                                      selectedServiceIds
+                                          .remove(service['id']);
                                     }
                                   });
                                 },

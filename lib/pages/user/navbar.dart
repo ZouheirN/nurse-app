@@ -47,7 +47,7 @@ class _NavbarState extends State<Navbar> {
           ),
           BottomNavigationBarItem(
             icon: Image(
-                image: AssetImage('assets/images/history.png'),
+                image: AssetImage('assets/images/bell.png'),
                 height: 30,
                 width: 30),
             label: '',

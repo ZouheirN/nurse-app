@@ -103,7 +103,7 @@ class NurseCubit extends Cubit<NurseState> {
       emit(NurseRatingSetSuccess(rating: response.data['rating']['rating']));
     } on DioException catch (e) {
       logger.e(e.response!.data);
-      emit(NurseRatingSetFailure(message: 'Failed to set rating'));
+      emit(NurseRatingSetFailure(message: e.response!.data['message']));
     } catch (e) {
       logger.e(e);
       emit(NurseRatingSetFailure(

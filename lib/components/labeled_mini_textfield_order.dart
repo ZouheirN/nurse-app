@@ -39,7 +39,7 @@ class _LabeledMiniTextfieldOrderState extends State<LabeledMiniTextfieldOrder> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 70,
+      // height: 70,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Focus(
@@ -51,6 +51,7 @@ class _LabeledMiniTextfieldOrderState extends State<LabeledMiniTextfieldOrder> {
           textAlign: widget.textAlign ?? TextAlign.start,
           decoration: InputDecoration(
             hintText: widget.hintText,
+
             disabledBorder: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               borderSide: BorderSide(color: Color(0xFFE7E7E7)),

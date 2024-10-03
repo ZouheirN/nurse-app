@@ -217,14 +217,14 @@ class RequestCubit extends Cubit<RequestState> {
     }
   }
 
-  Future<void> emitRequestSetStatusSuccess({
+  Future<void> emitRequestDetailsSuccess({
     required RequestsHistoryModel order,
     required String status,
   }) async {
     final updatedOrder =
         RequestsHistoryModel.fromJson(order.toJson()..['status'] = status);
 
-    emit(RequestSetStatusSuccess(request: updatedOrder));
+    emit(RequestDetailsSuccess(request: updatedOrder));
   }
 
   Future<void> deleteOrder({

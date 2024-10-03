@@ -10,6 +10,7 @@ import 'package:nurse_app/features/request/cubit/request_cubit.dart';
 import 'package:nurse_app/features/request/models/requests_history_model.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
 
+import '../../components/service_card.dart';
 import '../../utilities/helper_functions.dart';
 
 class OrderDetailsPage extends StatefulWidget {
@@ -77,12 +78,6 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
             }
 
             if (state is RequestDetailsSuccess) {
-              final request = state.request;
-
-              return _buildRequestDetails(request);
-            }
-
-            if (state is RequestSetStatusSuccess) {
               final request = state.request;
 
               return _buildRequestDetails(request);
@@ -168,23 +163,66 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
               const SizedBox(height: 10),
               for (int i = 0; i < request.services!.length; i++)
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 35),
+                  padding:
+                      const EdgeInsets.only(left: 35, right: 35, bottom: 10),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Flexible(
-                        flex: 9,
+                        flex: 2,
                         child: LabeledMiniTextfieldOrder(
                           label: '',
                           hintText: request.services![i].name,
                         ),
                       ),
                       Flexible(
-                        flex: 3,
-                        child: LabeledMiniTextfieldOrder(
-                          textAlign: TextAlign.center,
-                          label: '',
-                          hintText: // todo fix
-                              '\$${request.services![i].discountPrice == null ? formatPrice(request.services![i].price!) : formatPrice(request.services![i].discountPrice!)}',
+                        child: Container(
+                          height: 50,
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE7E7E7),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: const Color(0xFFE7E7E7),
+                            ),
+                          ),
+                          child: Center(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Stack(
+                                  children: [
+                                    Text(
+                                      '\$${formatPrice(request.services![i].price!)}',
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    if (request.services![i].discountPrice != null)
+                                      Positioned.fill(
+                                        child: CustomPaint(
+                                          painter: DiagonalLinePainter(),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                                if (request.services![i].discountPrice != null) ...[
+                                  const SizedBox(width: 5),
+                                  FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      '\$${formatPrice(request.services![i].discountPrice!)}',
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -200,7 +238,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                         context, 'Error Deleting Request', state.message);
                   } else if (state is RequestDeleteSuccess) {
                     Navigator.pushNamedAndRemoveUntil(
-                        context, '/adminDashboard', (route) => false);
+                        context, '/manageOrders', (route) => route.isFirst);
                     Dialogs.showSuccessDialog(
                       context,
                       'Request Deleted',
@@ -239,7 +277,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                   status: 'completed',
                                 );
 
-                                await _requestCubit.emitRequestSetStatusSuccess(
+                                await _requestCubit.emitRequestDetailsSuccess(
                                   order: request,
                                   status: 'completed',
                                 );

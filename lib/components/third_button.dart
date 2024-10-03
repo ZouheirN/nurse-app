@@ -5,13 +5,14 @@ class MyThirdButton extends StatelessWidget {
   final String buttonText;
   final bool isLoading;
   final Color? color;
+  final EdgeInsets? margin;
 
   const MyThirdButton({
     super.key,
     required this.onTap,
     required this.buttonText,
     this.isLoading = false,
-    this.color,
+    this.color, this.margin,
   });
 
   @override
@@ -20,7 +21,7 @@ class MyThirdButton extends StatelessWidget {
       onTap: isLoading ? null : onTap,
       child: Container(
         height: 40,
-        margin: const EdgeInsets.symmetric(horizontal: 120),
+        margin: margin ?? const EdgeInsets.symmetric(horizontal: 120),
         decoration: BoxDecoration(
           color: color ?? const Color(0xFF7BB442),
           borderRadius: BorderRadius.circular(10),

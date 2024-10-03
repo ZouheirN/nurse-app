@@ -59,7 +59,7 @@ class _ManageOrdersPageState extends State<ManageOrdersPage> {
                                   padding: const EdgeInsets.only(bottom: 10),
                                   child: OrderCard(
                                     title: '#${request.id} From ${request.fullName}',
-                                    time: formatDateTimeForCard(request.createdAt!),
+                                    time: formatDateTimeForCard(request.scheduledTime!),
                                     description: 'Check out the details',
                                     onTap: () {
                                       Navigator.pushNamed(
