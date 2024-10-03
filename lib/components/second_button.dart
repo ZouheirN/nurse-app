@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 class MySecondButton extends StatelessWidget {
   final Function()? onTap;
   final String buttonText;
+  final Icon? icon;
 
-  const MySecondButton({super.key, required this.onTap, required this.buttonText});
+  const MySecondButton({
+    super.key,
+    required this.onTap,
+    required this.buttonText,
+    this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +24,19 @@ class MySecondButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Center(
-          child: Text(
-            buttonText,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              if (icon != null) icon!,
+              Text(
+                buttonText,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ],
           ),
         ),
       ),

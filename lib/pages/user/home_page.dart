@@ -2,9 +2,19 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:nurse_app/components/header.dart';
 import 'package:nurse_app/components/second_button.dart';
+import 'package:nurse_app/pages/user/immediate_request_page.dart';
 
-class HomePage extends StatelessWidget {
+import 'make_appointment_page.dart';
+
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final ValueNotifier<String> _selectedOption = ValueNotifier('');
 
   @override
   Widget build(BuildContext context) {
@@ -86,26 +96,49 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              MySecondButton(
-                onTap: () {
-                  Navigator.pushNamed(context, '/immediateRequest');
+              ValueListenableBuilder(
+                valueListenable: _selectedOption,
+                builder: (context, value, child) {
+                  if (value == 'immediate') {
+                    return ImmediateRequestPage(
+                      onBack: () {
+                        _selectedOption.value = '';
+                      },
+                    );
+                  } else if (value == 'appointment') {
+                    return MakeAppointmentPage(
+                      onBack: () {
+                        _selectedOption.value = '';
+                      },
+                    );
+                  }
+
+                  return Column(
+                    children: [
+                      MySecondButton(
+                        onTap: () {
+                          _selectedOption.value = 'immediate';
+                        },
+                        buttonText: 'Immediate Request',
+                      ),
+                      const SizedBox(height: 15),
+                      MySecondButton(
+                        onTap: () {
+                          _selectedOption.value = 'appointment';
+                        },
+                        buttonText: 'Make an Appointment',
+                      ),
+                      const SizedBox(height: 50),
+                      const Center(
+                        child: Image(
+                          image: AssetImage('assets/images/logo.png'),
+                          height: 150,
+                          width: 300,
+                        ),
+                      ),
+                    ],
+                  );
                 },
-                buttonText: 'Immediate Request',
-              ),
-              const SizedBox(height: 15),
-              MySecondButton(
-                onTap: () {
-                  Navigator.pushNamed(context, '/makeAppointment');
-                },
-                buttonText: 'Make an Appointment',
-              ),
-              const SizedBox(height: 50),
-              const Center(
-                child: Image(
-                  image: AssetImage('assets/images/logo.png'),
-                  height: 150,
-                  width: 300,
-                ),
               ),
             ],
           ),

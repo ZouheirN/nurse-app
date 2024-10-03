@@ -64,8 +64,6 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/signup': (context) => const SignupPage(),
         '/home': (context) => const Navbar(),
-        '/immediateRequest': (context) => const ImmediateRequestPage(),
-        '/makeAppointment': (context) => const MakeAppointmentPage(),
         '/pendingPage': (context) => const PendingPage(),
         '/verifySms': (context) {
           final args = ModalRoute.of(context)?.settings.arguments as Map;
