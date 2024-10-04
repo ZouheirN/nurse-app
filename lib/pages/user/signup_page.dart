@@ -110,6 +110,7 @@ class _SignupPageState extends State<SignupPage> {
                   controller: phoneNumberController,
                   padding: const EdgeInsets.symmetric(horizontal: 27),
                   showLabel: false,
+                  showHintText: true,
                   fillColor: const Color(0xFFE8FFD1),
                   outlineColor: const Color(0xFF7BB442),
                   setCompleteNumber: (number) {

@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:nurse_app/consts.dart';
 import 'package:http/http.dart' as http;
-import 'package:quickalert/quickalert.dart';
-import 'package:nurse_app/components/loader.dart';
-import 'package:nurse_app/components/third_button.dart';
+import 'package:intl_phone_field/phone_number.dart';
 import 'package:nurse_app/components/labeled_edit_textfield.dart';
-import 'package:nurse_app/components/edit_phone_number_field.dart';
+import 'package:nurse_app/components/loader.dart';
+import 'package:nurse_app/components/phone_number_field.dart';
+import 'package:nurse_app/components/third_button.dart';
+import 'package:nurse_app/consts.dart';
+import 'package:quickalert/quickalert.dart';
 
 import '../../services/user_token.dart';
 
@@ -26,6 +27,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String phoneNumber = '';
   String email = '';
   String location = '';
+  String completeNumber = '';
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -71,7 +73,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
         location = jsonData['location'] ?? '';
 
         nameController.text = name;
-        phoneController.text = phoneNumber;
+        phoneController.text = PhoneNumber.fromCompleteNumber(
+                completeNumber: jsonData['phone_number'])
+            .number;
+        completeNumber = jsonData['phone_number'];
         emailController.text = email;
         locationController.text = location;
 
@@ -93,7 +98,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       },
       body: json.encode({
         'name': nameController.text,
-        'phone_number': phoneController.text,
+        'phone_number': completeNumber,
         'email': emailController.text,
         'location': locationController.text,
       }),
@@ -184,12 +189,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               controller: nameController,
                             ),
                             const SizedBox(height: 7),
-                            LabeledEditTextfield(
-                              label: 'Phone Number',
-                              keyboardType: TextInputType.phone,
+                            PhoneNumberField(
                               controller: phoneController,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              fillColor:
+                                  const Color(0xFFC2C2C2),
+                              outlineColor:  const Color(0xFFC2C2C2),
+                              focusedColor: const Color.fromARGB(255, 185, 185, 185),
+                              setCompleteNumber: (number) {
+                                completeNumber = number;
+                              },
                             ),
-                            // EditPhoneNumberField(controller: phoneController),
                             const SizedBox(height: 7),
                             LabeledEditTextfield(
                               label: 'Email',

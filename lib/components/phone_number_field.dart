@@ -10,6 +10,9 @@ class PhoneNumberField extends StatefulWidget {
   final bool? showLabel;
   final Color? fillColor;
   final Color? outlineColor;
+  final Color? focusedColor;
+  final bool? showHintText;
+  final bool? isNurse;
 
   const PhoneNumberField({
     super.key,
@@ -20,6 +23,9 @@ class PhoneNumberField extends StatefulWidget {
     this.showLabel = true,
     this.fillColor,
     this.outlineColor,
+    this.focusedColor,
+    this.showHintText = false,
+    this.isNurse = false,
   });
 
   @override
@@ -58,7 +64,15 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-          if (widget.showLabel!) const SizedBox(height: 3),
+          if (widget.isNurse!)
+            const Text(
+              'Nurse Phone Number',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          if (widget.showLabel! || widget.isNurse!) const SizedBox(height: 3),
           Focus(
             onFocusChange: _onFocusChange,
             child: IntlPhoneField(
@@ -71,6 +85,11 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
               initialCountryCode: widget.initialCountryCode,
               flagsButtonMargin: const EdgeInsets.only(right: 10),
               decoration: InputDecoration(
+                hintText: widget.showHintText! ? 'Phone Number' : null,
+                hintStyle: widget.showHintText!
+                    ? TextStyle(
+                        color: Colors.grey[500], fontWeight: FontWeight.w300)
+                    : null,
                 enabledBorder: OutlineInputBorder(
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                   borderSide: BorderSide(
@@ -92,7 +111,8 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
                       color: widget.outlineColor ?? const Color(0xFFE7E7E7)),
                 ),
                 fillColor: _isFocused
-                    ? widget.fillColor ??
+                    ? widget.focusedColor ??
+                        widget.fillColor ??
                         const Color.fromARGB(255, 245, 245, 245)
                     : widget.fillColor ?? const Color(0xFFE7E7E7),
                 filled: true,
@@ -108,7 +128,8 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
               dropdownDecoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: _isFocused
-                    ? widget.fillColor ??
+                    ? widget.focusedColor ??
+                        widget.fillColor ??
                         const Color.fromARGB(255, 245, 245, 245)
                     : widget.fillColor ?? const Color(0xFFE7E7E7),
                 border: Border.all(

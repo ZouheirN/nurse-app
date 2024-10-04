@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/admin_header.dart';
 import 'package:nurse_app/components/gender_selection_field_admin.dart';
 import 'package:nurse_app/components/labeled_textfield_admin.dart';
-import 'package:nurse_app/components/phone_field_admin.dart';
 import 'package:nurse_app/components/pick_image.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/features/nurse/cubit/nurse_cubit.dart';
 
+import '../../components/phone_number_field.dart';
 import '../../utilities/dialogs.dart';
 
 class AddNursePage extends StatefulWidget {
@@ -23,6 +23,7 @@ class _AddNursePageState extends State<AddNursePage> {
   final phoneNumberController = TextEditingController();
   final genderController = GenderSelectionController();
   String? _profileImageUrl;
+  String completeNumber = '';
 
   final _nurseCubit = NurseCubit();
 
@@ -54,7 +55,17 @@ class _AddNursePageState extends State<AddNursePage> {
                     controller: nameController,
                   ),
                   const SizedBox(height: 10),
-                  PhoneFieldAdmin(controller: phoneNumberController),
+                  PhoneNumberField(
+                    controller: phoneNumberController,
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    showLabel: false,
+                    isNurse: true,
+                    fillColor: const Color(0xFFE8FFD1),
+                    outlineColor: const Color(0xFF7BB442),
+                    setCompleteNumber: (number) {
+                      completeNumber = number;
+                    },
+                  ),
                   LabeledTextFieldAdmin(
                     label: 'Nurse Address',
                     keyboardType: TextInputType.text,
@@ -101,7 +112,7 @@ class _AddNursePageState extends State<AddNursePage> {
                         onTap: () {
                           _nurseCubit.addNurse(
                             name: nameController.text,
-                            phoneNumber: phoneNumberController.text,
+                            phoneNumber: completeNumber.trim(),
                             address: addressController.text,
                             gender: genderController.getGender()!,
                             profilePicture: _profileImageUrl ?? '',

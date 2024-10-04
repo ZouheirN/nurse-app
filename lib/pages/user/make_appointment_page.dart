@@ -169,6 +169,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                         return Wrap(
                           spacing: 10,
                           runSpacing: 10,
+                          crossAxisAlignment: WrapCrossAlignment.center,
                           children: services.map((service) {
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 5),
@@ -325,7 +326,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                   );
                 },
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 20),
             ],
           ),
         ),

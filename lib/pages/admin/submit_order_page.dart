@@ -115,6 +115,7 @@ class _SubmitOrderPageState extends State<SubmitOrderPage> {
                                       return Wrap(
                                         spacing: 10,
                                         runSpacing: 10,
+                                        crossAxisAlignment: WrapCrossAlignment.center,
                                         children: services.map((service) {
                                           return Padding(
                                             padding: const EdgeInsets.symmetric(

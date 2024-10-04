@@ -11,7 +11,6 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-  intl_phone_number_input: ^0.7.4
   intl_phone_field: ^3.2.0
   dropdown_button2: ^2.3.9
   url_launcher: ^6.3.0
