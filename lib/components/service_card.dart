@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../utilities/helper_functions.dart';
@@ -141,12 +142,12 @@ class _ServiceCardState extends State<ServiceCard> {
 
   Widget _buildImage(String imagePath) {
     if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
-      return Image.network(
-        imagePath,
+      return CachedNetworkImage(
+imageUrl:         imagePath,
         height: MediaQuery.of(context).size.width * 0.17,
         width: MediaQuery.of(context).size.width * 0.24,
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
+        errorWidget: (context, error, stackTrace) {
           return Image.asset(
             'assets/images/square_logo.png',
             height: MediaQuery.of(context).size.width * 0.17,

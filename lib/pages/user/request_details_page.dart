@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/loader.dart';
@@ -143,8 +144,8 @@ class RequestDetailsPage extends StatelessWidget {
           return Column(
             children: [
               if (nurse.profilePicture != null)
-                Image.network(
-                  nurse.profilePicture!,
+                CachedNetworkImage(
+                  imageUrl: nurse.profilePicture!,
                   height: 250,
                   fit: BoxFit.contain,
                 )

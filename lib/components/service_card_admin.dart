@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class ServiceCardAdmin extends StatelessWidget {
@@ -98,12 +99,12 @@ class ServiceCardAdmin extends StatelessWidget {
 
   Widget _buildImage(String imagePath) {
     if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
-      return Image.network(
-        imagePath,
+      return CachedNetworkImage(
+        imageUrl: imagePath,
         width: 60,
         height: 60,
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
+        errorWidget: (context, error, stackTrace) {
           return Image.asset(
             'assets/images/square_logo.png',
             width: 60,

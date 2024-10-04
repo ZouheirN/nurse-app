@@ -1,8 +1,10 @@
-import 'dart:io';
 import 'dart:convert';
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:nurse_app/consts.dart';
 
 class PickImage extends StatefulWidget {
@@ -58,8 +60,8 @@ class _PickImageState extends State<PickImage> {
               fit: BoxFit.cover,
             )
           else if (_imageUrl != null)
-            Image.network(
-              _imageUrl!,
+            CachedNetworkImage(
+              imageUrl: _imageUrl!,
               width: 85,
               height: 85,
               fit: BoxFit.cover,

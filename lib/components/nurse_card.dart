@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class NurseCard extends StatelessWidget {
@@ -62,12 +63,12 @@ class NurseCard extends StatelessWidget {
 
   Widget _buildImage(String imagePath) {
     if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
-      return Image.network(
-        imagePath,
+      return CachedNetworkImage(
+        imageUrl: imagePath,
         width: 60,
         height: 60,
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
+        errorWidget: (context, error, stackTrace) {
           return Image.asset(
             'assets/images/default_profile.png',
             width: 60,
