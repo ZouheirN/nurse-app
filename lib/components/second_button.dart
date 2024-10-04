@@ -23,21 +23,25 @@ class MySecondButton extends StatelessWidget {
           color: const Color(0xFF7BB442),
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              if (icon != null) icon!,
-              Text(
-                buttonText,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
+        child: Row(
+          children: [
+            if (icon != null) Row(
+              children: [
+                const SizedBox(width: 10),
+                icon!,
+              ],
+            ),
+            const Spacer(),
+            Text(
+              buttonText,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
-            ],
-          ),
+            ),
+            const Spacer(),
+          ],
         ),
       ),
     );

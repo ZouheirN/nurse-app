@@ -9,37 +9,28 @@ class SocialProfilesPage extends StatelessWidget {
   SocialProfilesPage({super.key});
 
   final _aboutUsCubit = AboutUsCubit();
-  final header = const Header();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: BlocBuilder<AboutUsCubit, AboutUsState>(
-          bloc: _aboutUsCubit..fetchAboutUs(),
-          builder: (context, state) {
-            if (state is AboutUsFetchLoading) {
-              return Stack(
-                children: [
-                  Column(
-                    children: [
-                      header,
-                    ],
-                  ),
-                  const Loader(),
-                ],
-              );
-            }
-            if (state is AboutUsFetchSuccess) {
-              final aboutUs = state.aboutUs;
+        child: Column(
+          children: [
+            const Header(),
+            BlocBuilder<AboutUsCubit, AboutUsState>(
+              bloc: _aboutUsCubit..fetchAboutUs(),
+              builder: (context, state) {
+                if (state is AboutUsFetchLoading) {
+                  return const Expanded(child: Loader());
+                }
 
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    header,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                if (state is AboutUsFetchSuccess) {
+                  final aboutUs = state.aboutUs;
+
+                  return Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(16),
@@ -52,8 +43,8 @@ class SocialProfilesPage extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
                                   image: const DecorationImage(
-                                    image:
-                                        AssetImage('assets/images/image2.png'),
+                                    image: AssetImage(
+                                        'assets/images/image2.png'),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -129,19 +120,20 @@ class SocialProfilesPage extends StatelessWidget {
                           child: SocialMediaButton(
                             logoPath: 'assets/images/whatsapp.png',
                             accountName: aboutUs['whatsapp_number'],
-                            url: 'https://wa.me/${aboutUs['whatsapp_number']}',
+                            url:
+                            'https://wa.me/${aboutUs['whatsapp_number']}',
                           ),
                         ),
                         const SizedBox(height: 30),
                       ],
                     ),
-                  ],
-                ),
-              );
-            }
+                  );
+                }
 
-            return const Text('Failed to fetch about us.');
-          },
+                return const Text('Failed to fetch about us.');
+              },
+            ),
+          ],
         ),
       ),
     );

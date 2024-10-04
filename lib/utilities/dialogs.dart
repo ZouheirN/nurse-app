@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
@@ -49,37 +50,25 @@ class Dialogs {
   static void showForgotPasswordDialog(BuildContext context) {
     final phoneNumberController = TextEditingController();
     final formKey = GlobalKey<FormState>();
+    String completeNumber = '';
 
     QuickAlert.show(
       context: context,
       type: QuickAlertType.info,
-      widget: Form(
-        key: formKey,
-        child: TextFormField(
-          controller: phoneNumberController,
-          keyboardType: TextInputType.phone,
-          decoration: const InputDecoration(
-            hintText: 'Phone Number',
-          ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your phone number';
-            }
-
-            if (!value.contains('+')) {
-              return 'Please include country code';
-            }
-
-            return null;
-          },
-        ),
+      widget: PhoneNumberField(
+        controller: phoneNumberController,
+        setCompleteNumber: (number) {
+          completeNumber = number;
+        },
+        showLabel: false,
+        padding: const EdgeInsets.only(top: 10),
       ),
       onConfirmBtnTap: () {
         if (formKey.currentState!.validate()) {
           Navigator.pushReplacementNamed(
             context,
             '/forgotPassword',
-            arguments: phoneNumberController.text.trim(),
+            arguments: completeNumber.trim(),
           );
         }
       },
@@ -92,29 +81,18 @@ class Dialogs {
     final phoneNumberController = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
+    String completeNumber = '';
+
     QuickAlert.show(
       context: context,
       type: QuickAlertType.info,
-      widget: Form(
-        key: formKey,
-        child: TextFormField(
-          controller: phoneNumberController,
-          keyboardType: TextInputType.phone,
-          decoration: const InputDecoration(
-            hintText: 'Phone Number',
-          ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your phone number';
-            }
-
-            if (!value.contains('+')) {
-              return 'Please include country code';
-            }
-
-            return null;
-          },
-        ),
+      widget: PhoneNumberField(
+        controller: phoneNumberController,
+        setCompleteNumber: (number) {
+          completeNumber = number;
+        },
+        showLabel: false,
+        padding: const EdgeInsets.only(top: 10),
       ),
       onConfirmBtnTap: () {
         if (formKey.currentState!.validate()) {
@@ -122,7 +100,7 @@ class Dialogs {
             context,
             '/verifySms',
             arguments: {
-              'phoneNumber': phoneNumberController.text.trim(),
+              'phoneNumber': completeNumber.trim(),
               'resend': true,
             },
           );

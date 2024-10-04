@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/button.dart';
+import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/textfield.dart';
+import 'package:nurse_app/main.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
 
 import '../../features/authentication/cubit/authentication_cubit.dart';
@@ -19,6 +21,7 @@ class _SignupPageState extends State<SignupPage> {
   final phoneNumberController = TextEditingController();
   final passwordController = TextEditingController();
   final passwordConfirmationController = TextEditingController();
+  String completeNumber = '';
 
   final _formKey = GlobalKey<FormState>();
 
@@ -34,12 +37,12 @@ class _SignupPageState extends State<SignupPage> {
     super.dispose();
   }
 
-  void signup(BuildContext context) async {
+  void signup() async {
     FocusManager.instance.primaryFocus?.unfocus();
 
     if (_formKey.currentState!.validate()) {
       _authenticationCubit.signUp(
-        phoneNumber: phoneNumberController.text.trim(),
+        phoneNumber: completeNumber.trim(),
         name: nameController.text.trim(),
         email: emailController.text.trim(),
         password: passwordController.text,
@@ -103,25 +106,14 @@ class _SignupPageState extends State<SignupPage> {
                   },
                 ),
                 const SizedBox(height: 14),
-                // SignUpPhoneNumberField(
-                //   controller: phoneNumberController,
-                // ),
-                MyTextField(
+                PhoneNumberField(
                   controller: phoneNumberController,
-                  icon: const Icon(Icons.phone_outlined),
-                  hintText: 'Phone Number',
-                  inputType: TextInputType.phone,
-                  obscureText: false,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your phone number';
-                    }
-
-                    if (!value.contains('+')) {
-                      return 'Please include country code';
-                    }
-
-                    return null;
+                  padding: const EdgeInsets.symmetric(horizontal: 27),
+                  showLabel: false,
+                  fillColor: const Color(0xFFE8FFD1),
+                  outlineColor: const Color(0xFF7BB442),
+                  setCompleteNumber: (number) {
+                    completeNumber = number;
                   },
                 ),
                 const SizedBox(height: 14),
@@ -135,6 +127,11 @@ class _SignupPageState extends State<SignupPage> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
                     }
+
+                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                      return 'Please enter a valid email';
+                    }
+
                     return null;
                   },
                 ),
@@ -199,7 +196,7 @@ class _SignupPageState extends State<SignupPage> {
                     return MyButton(
                       isLoading: isLoading,
                       onTap: () {
-                        signup(context);
+                        signup();
                       },
                       buttonText: 'Sign Up',
                     );

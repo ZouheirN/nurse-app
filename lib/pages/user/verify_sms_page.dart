@@ -43,6 +43,7 @@ class _VerifySmsPageState extends State<VerifySmsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(),
       body: SafeArea(
         child: Center(
           child: Column(

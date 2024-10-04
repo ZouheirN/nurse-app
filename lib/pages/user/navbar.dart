@@ -39,31 +39,55 @@ class _NavbarState extends State<Navbar> {
         currentIndex: myIndex,
         items: const [
           BottomNavigationBarItem(
-            icon: Image(
-                image: AssetImage('assets/images/home.png'),
-                height: 30,
-                width: 30),
+            icon: Icon(
+              Icons.home_outlined,
+              size: 30,
+              color: Colors.black,
+            ),
+            activeIcon: Icon(
+              Icons.home,
+              size: 30,
+              color: Color(0xFF7BB442),
+            ),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Image(
-                image: AssetImage('assets/images/bell.png'),
-                height: 30,
-                width: 30),
+            icon: Icon(
+              Icons.notifications_outlined,
+              size: 30,
+              color: Colors.black,
+            ),
+            activeIcon: Icon(
+              Icons.notifications,
+              size: 30,
+              color: Color(0xFF7BB442),
+            ),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Image(
-                image: AssetImage('assets/images/info.png'),
-                height: 30,
-                width: 30),
+            icon: Icon(
+              Icons.info_outline,
+              size: 30,
+              color: Colors.black,
+            ),
+            activeIcon: Icon(
+              Icons.info,
+              size: 30,
+              color: Color(0xFF7BB442),
+            ),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Image(
-                image: AssetImage('assets/images/profile.png'),
-                height: 30,
-                width: 30),
+            icon: Icon(
+              Icons.person_outline,
+              size: 30,
+              color: Colors.black,
+            ),
+            activeIcon: Icon(
+              Icons.person,
+              size: 30,
+              color: Color(0xFF7BB442),
+            ),
             label: '',
           ),
         ],
