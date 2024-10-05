@@ -117,7 +117,6 @@ class _SubmitOrderPageState extends State<SubmitOrderPage> {
                                       return ServicesList(
                                         services: services,
                                         selectedServiceIds: selectedServiceIds,
-                                        useIsSelected: true,
                                       );
 
                                       return Wrap(

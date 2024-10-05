@@ -6,13 +6,11 @@ import 'package:nurse_app/components/service_card.dart';
 class ServicesList extends StatefulWidget {
   final List<dynamic> services;
   final List<num> selectedServiceIds;
-  final bool useIsSelected;
 
   const ServicesList({
     super.key,
     required this.services,
     required this.selectedServiceIds,
-    this.useIsSelected = false,
   });
 
   @override
@@ -144,9 +142,8 @@ class _ServicesListState extends State<ServicesList> {
                         'assets/images/square_logo.png',
                     title: service['name'],
                     price: service['price'],
-                    isSelected: widget.useIsSelected
-                        ? widget.selectedServiceIds.contains(service['id'])
-                        : false,
+                    isSelected:
+                        widget.selectedServiceIds.contains(service['id']),
                     salePrice: service['discount_price'],
                     onSelectionChanged: (isSelected) {
                       setState(() {

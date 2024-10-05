@@ -97,7 +97,6 @@ class _ServiceCardState extends State<ServiceCard> {
                 ],
               ),
             ),
-
             // const SizedBox(height: 8),
             Row(
               mainAxisAlignment: (widget.salePrice != null)
