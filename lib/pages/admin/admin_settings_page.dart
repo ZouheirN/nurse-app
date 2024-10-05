@@ -19,6 +19,7 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
   final websiteTextController = TextEditingController();
   final instagramTextController = TextEditingController();
   final facebookTextController = TextEditingController();
+  final tiktokTextController = TextEditingController();
   final List<TextEditingController> whatsappTextController = [];
 
   final _aboutUsCubit = AboutUsCubit();
@@ -57,6 +58,7 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
             websiteTextController.text = aboutUs['online_shop_url'];
             instagramTextController.text = aboutUs['instagram_url'];
             facebookTextController.text = aboutUs['facebook_url'];
+            tiktokTextController.text = aboutUs['tiktok_url'];
             final numbers = aboutUs['whatsapp_numbers'];
             for (var number in numbers) {
               whatsappTextController.add(TextEditingController(text: number));
@@ -119,6 +121,19 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
                             },
                           ),
                           const SizedBox(height: 10),
+                          LabeledTextFieldAdmin(
+                            label: 'TikTok Link',
+                            controller: tiktokTextController,
+                            keyboardType: TextInputType.url,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'TikTok link cannot be empty';
+                              }
+
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 10),
                           for (var i = 0;
                               i < whatsappTextController.length;
                               i++) ...[
@@ -149,6 +164,8 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
                                     aboutUs['instagram_url'];
                                 facebookTextController.text =
                                     aboutUs['facebook_url'];
+                                tiktokTextController.text =
+                                    aboutUs['tiktok_url'];
                                 final numbers = aboutUs['whatsapp_numbers'];
                                 for (int i = 0; i < numbers.length; i++) {
                                   if (i < whatsappTextController.length) {
@@ -187,6 +204,7 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
                                           instagramTextController.text.trim(),
                                       facebook:
                                           facebookTextController.text.trim(),
+                                      tiktok: tiktokTextController.text.trim(),
                                       whatsapp: phoneNumbers,
                                     );
                                   }

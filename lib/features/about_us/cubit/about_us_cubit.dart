@@ -38,6 +38,7 @@ class AboutUsCubit extends Cubit<AboutUsState> {
     required String website,
     required String instagram,
     required String facebook,
+    required String tiktok,
     required List<String> whatsapp,
   }) async {
     emit(AboutUsUpdateLoading());
@@ -56,6 +57,7 @@ class AboutUsCubit extends Cubit<AboutUsState> {
           'online_shop_url': website,
           'instagram_url': instagram,
           'facebook_url': facebook,
+          'tiktok_url': tiktok,
           'whatsapp_number': whatsapp,
         },
       );
