@@ -5,11 +5,11 @@ import 'package:nurse_app/components/labeled_textfield.dart';
 import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/second_button.dart';
-import 'package:nurse_app/components/service_card.dart';
+import 'package:nurse_app/components/services_list.dart';
 import 'package:nurse_app/components/third_button.dart';
-import 'package:nurse_app/components/time_type_selection_field.dart';
 import 'package:nurse_app/features/request/cubit/request_cubit.dart';
 import 'package:nurse_app/features/services/cubit/services_cubit.dart';
+import 'package:nurse_app/main.dart';
 import 'package:quickalert/quickalert.dart';
 
 import '../../utilities/dialogs.dart';
@@ -29,7 +29,6 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
   final problemDescriptionController = TextEditingController();
   final locationController = TextEditingController();
   final genderController = GenderSelectionController();
-  final timeTypeController = TimeTypeSelectionController();
 
   List<int> selectedServiceIds = [];
 
@@ -95,7 +94,7 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
               ),
               const SizedBox(height: 10),
               LabeledTextfield(
-                label: 'Full Name',
+                label: 'Patient Full Name',
                 keyboardType: TextInputType.name,
                 controller: nameController,
                 validator: (value) {
@@ -136,8 +135,6 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
               const SizedBox(height: 7),
               GenderSelectionField(controller: genderController),
               const SizedBox(height: 7),
-              TimeTypeSelectionField(controller: timeTypeController),
-              const SizedBox(height: 7),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 child: Text(
@@ -160,32 +157,9 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
                       } else if (state is ServicesFetchSuccess) {
                         final services = state.services;
 
-                        return Wrap(
-                          spacing: 10,
-                          runSpacing: 10,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: services.map((service) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5),
-                              child: ServiceCard(
-                                serviceId: service['id'],
-                                imagePath: service['service_pic'] ??
-                                    'assets/images/square_logo.png',
-                                title: service['name'],
-                                price: service['price'],
-                                salePrice: service['discount_price'],
-                                onSelectionChanged: (isSelected) {
-                                  setState(() {
-                                    if (isSelected) {
-                                      selectedServiceIds.add(service['id']);
-                                    } else {
-                                      selectedServiceIds.remove(service['id']);
-                                    }
-                                  });
-                                },
-                              ),
-                            );
-                          }).toList(),
+                        return ServicesList(
+                          services: services,
+                          selectedServiceIds: selectedServiceIds,
                         );
                       } else {
                         return const Text('Failed to fetch services.');
@@ -238,15 +212,6 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
                         return;
                       }
 
-                      if (timeTypeController.getTimeType() == null) {
-                        Dialogs.showErrorDialog(
-                          context,
-                          'Error',
-                          'Please select a time type.',
-                        );
-                        return;
-                      }
-
                       if (selectedServiceIds.isEmpty) {
                         Dialogs.showErrorDialog(
                           context,
@@ -264,7 +229,6 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
                             problemDescriptionController.text.trim(),
                         nurseGender: genderController.getGender()!,
                         selectedServices: selectedServiceIds,
-                        timeType: timeTypeController.getTimeType()!,
                       );
                     },
                     buttonText: 'Submit',

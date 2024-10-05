@@ -13,6 +13,7 @@ class ServiceCard extends StatefulWidget {
   final ValueChanged<bool> onSelectionChanged;
   final bool isSelected;
   final bool enableTap;
+  final double? height;
 
   const ServiceCard({
     super.key,
@@ -24,6 +25,7 @@ class ServiceCard extends StatefulWidget {
     required this.onSelectionChanged,
     this.isSelected = false,
     this.enableTap = true,
+    this.height,
   });
 
   @override
@@ -53,6 +55,8 @@ class _ServiceCardState extends State<ServiceCard> {
     return GestureDetector(
       onTap: _toggleSelection,
       child: Container(
+        // height: MediaQuery.of(context).size.width * 0.4,
+        height: widget.height ?? MediaQuery.of(context).size.width * 0.4,
         width: MediaQuery.of(context).size.width * 0.24,
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
@@ -72,20 +76,29 @@ class _ServiceCardState extends State<ServiceCard> {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildImage(widget.imagePath),
-            const SizedBox(height: 8),
             Flexible(
-              child: AutoSizeText(
-                widget.title,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.center,
+              child: Column(
+                children: [
+                  _buildImage(widget.imagePath),
+                  const SizedBox(height: 8),
+                  Flexible(
+                    child: AutoSizeText(
+                      minFontSize: 10,
+                      widget.title,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 8),
+
+            // const SizedBox(height: 8),
             Row(
               mainAxisAlignment: (widget.salePrice != null)
                   ? MainAxisAlignment.spaceBetween
@@ -143,7 +156,7 @@ class _ServiceCardState extends State<ServiceCard> {
   Widget _buildImage(String imagePath) {
     if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
       return CachedNetworkImage(
-imageUrl:         imagePath,
+        imageUrl: imagePath,
         height: MediaQuery.of(context).size.width * 0.17,
         width: MediaQuery.of(context).size.width * 0.24,
         fit: BoxFit.cover,

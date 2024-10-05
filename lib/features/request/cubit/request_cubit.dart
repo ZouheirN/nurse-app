@@ -19,7 +19,7 @@ class RequestCubit extends Cubit<RequestState> {
     required String location,
     required String problemDescription,
     required String nurseGender,
-    required String timeType,
+    String? timeType,
     required List<int> selectedServices,
     DateTime? startDate,
     DateTime? endDate,
@@ -61,7 +61,7 @@ class RequestCubit extends Cubit<RequestState> {
       emit(RequestCreateSuccess());
     } on DioException catch (e) {
       logger.e(e.response!.data);
-      emit(RequestCreateFailure(message: e.response!.data['errors']['ending_time'][0]));
+      emit(RequestCreateFailure(message: e.response!.data['error'] ?? 'Failed to create request.'));
     } catch (e) {
       logger.e(e);
       emit(RequestCreateFailure(message: 'Failed to create request.'));
@@ -139,7 +139,7 @@ class RequestCubit extends Cubit<RequestState> {
     required String location,
     required num nurseId,
     required List<num> serviceIds,
-    required String timeType,
+    required String? timeType,
     required String? problemDescription,
     required String nurseGender,
   }) async {

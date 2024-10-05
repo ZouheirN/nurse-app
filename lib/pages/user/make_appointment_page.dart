@@ -11,6 +11,7 @@ import 'package:nurse_app/utilities/dialogs.dart';
 import 'package:quickalert/quickalert.dart';
 
 import '../../components/loader.dart';
+import '../../components/services_list.dart';
 import '../../components/time_type_selection_field.dart';
 import '../../features/request/cubit/request_cubit.dart';
 import '../../features/services/cubit/services_cubit.dart';
@@ -35,8 +36,6 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
   DateTime endDate = DateTime.now();
 
   List<dynamic> services = [];
-  bool isLoading = true;
-
   List<int> selectedServiceIds = [];
 
   final _requestCubit = RequestCubit();
@@ -101,7 +100,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
               ),
               const SizedBox(height: 10),
               LabeledTextfield(
-                label: 'Full Name',
+                label: 'Patient Full Name',
                 keyboardType: TextInputType.name,
                 controller: nameController,
                 validator: (value) {
@@ -165,6 +164,11 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                         return const Loader();
                       } else if (state is ServicesFetchSuccess) {
                         final services = state.services;
+
+                        return ServicesList(
+                          services: services,
+                          selectedServiceIds: selectedServiceIds,
+                        );
 
                         return Wrap(
                           spacing: 10,

@@ -9,9 +9,11 @@ import 'package:nurse_app/features/nurse/cubit/nurse_cubit.dart';
 import 'package:nurse_app/features/request/cubit/request_cubit.dart';
 import 'package:nurse_app/features/request/models/requests_history_model.dart';
 import 'package:nurse_app/features/services/cubit/services_cubit.dart';
+import 'package:nurse_app/main.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
 
 import '../../components/service_card.dart';
+import '../../components/services_list.dart';
 import '../../components/uneditable_labeled_date.dart';
 
 class SubmitOrderPage extends StatefulWidget {
@@ -111,6 +113,12 @@ class _SubmitOrderPageState extends State<SubmitOrderPage> {
                                           .order.services!
                                           .map((e) => e.id!)
                                           .toList();
+
+                                      return ServicesList(
+                                        services: services,
+                                        selectedServiceIds: selectedServiceIds,
+                                        useIsSelected: true,
+                                      );
 
                                       return Wrap(
                                         spacing: 10,
@@ -309,7 +317,7 @@ class _SubmitOrderPageState extends State<SubmitOrderPage> {
                             location: widget.order.location!,
                             nurseId: int.parse(selectedNurseId!),
                             serviceIds: selectedServiceIds,
-                            timeType: widget.order.timeType!,
+                            timeType: widget.order.timeType,
                             problemDescription: widget.order.problemDescription,
                             nurseGender: widget.order.nurseGender!,
                           );

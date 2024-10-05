@@ -38,7 +38,7 @@ class AboutUsCubit extends Cubit<AboutUsState> {
     required String website,
     required String instagram,
     required String facebook,
-    required String whatsapp,
+    required List<String> whatsapp,
   }) async {
     emit(AboutUsUpdateLoading());
 

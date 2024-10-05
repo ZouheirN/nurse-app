@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nurse_app/components/header.dart';
 import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/components/social_media_button.dart';
 import 'package:nurse_app/features/about_us/cubit/about_us_cubit.dart';
+import 'package:nurse_app/main.dart';
 
 class SocialProfilesPage extends StatelessWidget {
   SocialProfilesPage({super.key});
@@ -28,6 +30,8 @@ class SocialProfilesPage extends StatelessWidget {
                 if (state is AboutUsFetchSuccess) {
                   final aboutUs = state.aboutUs;
 
+                  logger.i(aboutUs);
+
                   return Expanded(
                     child: ListView(
                       shrinkWrap: true,
@@ -43,8 +47,8 @@ class SocialProfilesPage extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
                                   image: const DecorationImage(
-                                    image: AssetImage(
-                                        'assets/images/image2.png'),
+                                    image:
+                                        AssetImage('assets/images/image2.png'),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -70,25 +74,18 @@ class SocialProfilesPage extends StatelessWidget {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        const Center(
-                          child: Text(
-                            'Check our website',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Center(
-                          child: SocialMediaButton(
-                            accountName: 'www.alahmadnursingcare.com',
-                            url: aboutUs['online_shop_url'],
-                          ),
-                        ),
-                        const SizedBox(height: 15),
+                        // const SizedBox(height: 10),
+                        // const Center(
+                        //   child: Text(
+                        //     'Check our website',
+                        //     style: TextStyle(
+                        //       fontSize: 20,
+                        //       fontWeight: FontWeight.w700,
+                        //     ),
+                        //     textAlign: TextAlign.center,
+                        //   ),
+                        // ),
+                        // const SizedBox(height: 15),
                         const Center(
                           child: Text(
                             'Check our Social Media profiles',
@@ -100,30 +97,73 @@ class SocialProfilesPage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 15),
-                        Center(
-                          child: SocialMediaButton(
-                            logoPath: 'assets/images/instagram.png',
-                            accountName: 'al_ahmad_nursing_care',
-                            url: aboutUs['instagram_url'],
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            SocialMediaButton(
+                              icon: const Icon(
+                                Icons.language,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                              url: aboutUs['online_shop_url'],
+                              addPadding: false,
+                            ),
+                            SocialMediaButton(
+                              icon: const Icon(
+                                FontAwesomeIcons.instagram,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                              url: aboutUs['instagram_url'],
+                              addPadding: false,
+                            ),
+                            SocialMediaButton(
+                              icon: const Icon(
+                                FontAwesomeIcons.facebook,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                              url: aboutUs['facebook_url'],
+                              addPadding: false,
+                            ),
+                            SocialMediaButton(
+                              icon: const Icon(
+                                FontAwesomeIcons.tiktok,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                              url: aboutUs['tiktok_url'],
+                              addPadding: false,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 15),
+                        const Center(
+                          child: Text(
+                            'Contact us',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        Center(
-                          child: SocialMediaButton(
-                            logoPath: 'assets/images/facebook.png',
-                            accountName: 'Al Ahmad Nursing Care',
-                            url: aboutUs['facebook_url'],
+                        const SizedBox(height: 15),
+                        for (final number in aboutUs['whatsapp_numbers']) ...[
+                          Center(
+                            child: SocialMediaButton(
+                              icon: const Icon(
+                                FontAwesomeIcons.whatsapp,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                              url: 'https://wa.me/$number',
+                              accountName: number,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 10),
-                        Center(
-                          child: SocialMediaButton(
-                            logoPath: 'assets/images/whatsapp.png',
-                            accountName: aboutUs['whatsapp_number'],
-                            url:
-                            'https://wa.me/${aboutUs['whatsapp_number']}',
-                          ),
-                        ),
+                          const SizedBox(height: 10),
+                        ],
                         const SizedBox(height: 30),
                       ],
                     ),

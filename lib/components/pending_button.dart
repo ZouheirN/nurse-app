@@ -5,7 +5,11 @@ class PendingButton extends StatelessWidget {
   final String buttonText;
   final Icon? icon;
 
-  const PendingButton({super.key, required this.onTap, required this.buttonText, required this.icon});
+  const PendingButton(
+      {super.key,
+      required this.onTap,
+      required this.buttonText,
+      required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -18,22 +22,26 @@ class PendingButton extends StatelessWidget {
           color: const Color(0xFF8E8E8E),
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Center(
-          child:  Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              if (icon != null) icon!,
-              Text(
-                buttonText,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
+        child: Row(
+          children: [
+            if (icon != null)
+              Row(
+                children: [
+                  const SizedBox(width: 10),
+                  icon!,
+                ],
               ),
-            ],
-          ),
-
+            const Spacer(),
+            Text(
+              buttonText,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            const Spacer(),
+          ],
         ),
       ),
     );

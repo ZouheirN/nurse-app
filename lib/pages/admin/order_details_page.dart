@@ -136,6 +136,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                       keyboardType: TextInputType.text,
                     ),
                   ),
+                  if (request.timeType != null)
                   Flexible(
                     child: LabeledTextfield(
                       enabled: false,

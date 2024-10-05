@@ -19,7 +19,7 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
   final websiteTextController = TextEditingController();
   final instagramTextController = TextEditingController();
   final facebookTextController = TextEditingController();
-  final whatsappTextController = TextEditingController();
+  final List<TextEditingController> whatsappTextController = [];
 
   final _aboutUsCubit = AboutUsCubit();
   final _aboutUsCubitButton = AboutUsCubit();
@@ -37,7 +37,9 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
     websiteTextController.dispose();
     instagramTextController.dispose();
     facebookTextController.dispose();
-    whatsappTextController.dispose();
+    for (var controller in whatsappTextController) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -55,7 +57,10 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
             websiteTextController.text = aboutUs['online_shop_url'];
             instagramTextController.text = aboutUs['instagram_url'];
             facebookTextController.text = aboutUs['facebook_url'];
-            whatsappTextController.text = aboutUs['whatsapp_number'];
+            final numbers = aboutUs['whatsapp_numbers'];
+            for (var number in numbers) {
+              whatsappTextController.add(TextEditingController(text: number));
+            }
           }
         },
         builder: (context, state) {
@@ -114,18 +119,23 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
                             },
                           ),
                           const SizedBox(height: 10),
-                          LabeledTextFieldAdmin(
-                            label: 'WhatsApp Link',
-                            controller: whatsappTextController,
-                            keyboardType: TextInputType.url,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'WhatsApp link cannot be empty';
-                              }
+                          for (var i = 0;
+                              i < whatsappTextController.length;
+                              i++) ...[
+                            LabeledTextFieldAdmin(
+                              label: 'WhatsApp Link ${i + 1}',
+                              controller: whatsappTextController[i],
+                              keyboardType: TextInputType.url,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'WhatsApp link cannot be empty';
+                                }
 
-                              return null;
-                            },
-                          ),
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                          ],
                           const SizedBox(height: 20),
                           BlocConsumer<AboutUsCubit, AboutUsState>(
                             bloc: _aboutUsCubitButton,
@@ -139,8 +149,16 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
                                     aboutUs['instagram_url'];
                                 facebookTextController.text =
                                     aboutUs['facebook_url'];
-                                whatsappTextController.text =
-                                    aboutUs['whatsapp_number'];
+                                final numbers = aboutUs['whatsapp_numbers'];
+                                for (int i = 0; i < numbers.length; i++) {
+                                  if (i < whatsappTextController.length) {
+                                    whatsappTextController[i].text = numbers[i];
+                                  } else {
+                                    whatsappTextController.add(
+                                        TextEditingController(
+                                            text: numbers[i]));
+                                  }
+                                }
 
                                 Dialogs.showSuccessDialog(context, 'Success',
                                     'About us updated successfully.');
@@ -156,6 +174,12 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
                                 isLoading: isLoading,
                                 onTap: () {
                                   if (_formKey.currentState!.validate()) {
+                                    List<String> phoneNumbers =
+                                        whatsappTextController
+                                            .map((controller) =>
+                                                controller.text.trim())
+                                            .toList();
+
                                     _aboutUsCubitButton.updateAboutUs(
                                       website:
                                           websiteTextController.text.trim(),
@@ -163,8 +187,7 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
                                           instagramTextController.text.trim(),
                                       facebook:
                                           facebookTextController.text.trim(),
-                                      whatsapp:
-                                          whatsappTextController.text.trim(),
+                                      whatsapp: phoneNumbers,
                                     );
                                   }
                                 },
