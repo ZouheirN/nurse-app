@@ -9,7 +9,6 @@ import 'package:nurse_app/components/services_list.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/features/request/cubit/request_cubit.dart';
 import 'package:nurse_app/features/services/cubit/services_cubit.dart';
-import 'package:nurse_app/main.dart';
 import 'package:quickalert/quickalert.dart';
 
 import '../../utilities/dialogs.dart';

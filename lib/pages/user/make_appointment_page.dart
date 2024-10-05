@@ -7,7 +7,6 @@ import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/second_button.dart';
 import 'package:nurse_app/components/service_card.dart';
 import 'package:nurse_app/components/third_button.dart';
-import 'package:nurse_app/main.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
 import 'package:quickalert/quickalert.dart';
 

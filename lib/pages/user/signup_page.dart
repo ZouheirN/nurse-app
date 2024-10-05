@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/button.dart';
 import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/textfield.dart';
-import 'package:nurse_app/main.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
 
 import '../../features/authentication/cubit/authentication_cubit.dart';

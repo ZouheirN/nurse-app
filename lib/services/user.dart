@@ -4,8 +4,6 @@ import 'package:nurse_app/features/authentication/models/user_model.dart';
 import 'package:nurse_app/services/user_token.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
-import '../consts.dart';
-import '../main.dart';
 
 void loginUser(num userId, num roleId) async {
   OneSignal.login(userId.toString());

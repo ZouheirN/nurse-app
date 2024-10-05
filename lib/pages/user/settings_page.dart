@@ -3,7 +3,6 @@ import 'package:nurse_app/components/logout_button.dart';
 import 'package:nurse_app/components/settings_button.dart';
 
 import '../../services/user.dart';
-import '../../services/user_token.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});

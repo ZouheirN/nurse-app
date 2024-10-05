@@ -9,7 +9,6 @@ import 'package:nurse_app/features/nurse/cubit/nurse_cubit.dart';
 import 'package:nurse_app/features/request/cubit/request_cubit.dart';
 import 'package:nurse_app/features/request/models/requests_history_model.dart';
 import 'package:nurse_app/features/services/cubit/services_cubit.dart';
-import 'package:nurse_app/main.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
 
 import '../../components/service_card.dart';
