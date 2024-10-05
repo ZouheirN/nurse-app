@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
@@ -32,7 +34,6 @@ class RequestCubit extends Cubit<RequestState> {
       final data = {
         "service_ids": selectedServices,
         "location": location,
-        "time_type": timeType,
         "problem_description": problemDescription,
         "nurse_gender": nurseGender,
         "full_name": name,
@@ -46,6 +47,7 @@ class RequestCubit extends Cubit<RequestState> {
 
       if (endDate != null) {
         data['ending_time'] = endDate.toIso8601String();
+        data['time_type'] = timeType!;
       }
 
       await dio.post(
@@ -61,7 +63,8 @@ class RequestCubit extends Cubit<RequestState> {
       emit(RequestCreateSuccess());
     } on DioException catch (e) {
       logger.e(e.response!.data);
-      emit(RequestCreateFailure(message: e.response!.data['error'] ?? 'Failed to create request.'));
+      emit(RequestCreateFailure(
+          message: e.response!.data['error'] ?? 'Failed to create request.'));
     } catch (e) {
       logger.e(e);
       emit(RequestCreateFailure(message: 'Failed to create request.'));
@@ -153,7 +156,6 @@ class RequestCubit extends Cubit<RequestState> {
         'location': location,
         'nurse_id': nurseId,
         'service_ids': serviceIds,
-        'time_type': timeType,
         'problem_description': problemDescription,
         'nurse_gender': nurseGender,
       };
@@ -163,13 +165,16 @@ class RequestCubit extends Cubit<RequestState> {
       } else {
         data['scheduled_time'] = scheduledTime.toIso8601String();
         data['ending_time'] = endingTime.toIso8601String();
+        data['time_type'] = timeType;
       }
 
       await dio.put(
         '$HOST/admin/requests/$id',
-        options: Options(headers: {
-          'Authorization': 'Bearer $token',
-        }),
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
         data: data,
       );
 
