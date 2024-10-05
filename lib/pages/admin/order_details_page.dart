@@ -114,9 +114,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
               const SizedBox(height: 10),
               LabeledTextfield(
                 enabled: false,
+                expand: true,
                 controller: _problemDescriptionController,
                 label: 'Describe Your Problem',
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.multiline,
               ),
               const SizedBox(height: 10),
               LabeledTextfield(

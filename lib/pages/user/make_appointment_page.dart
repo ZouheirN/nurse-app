@@ -116,8 +116,9 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
               ),
               const SizedBox(height: 7),
               LabeledTextfield(
+                expand: true,
                 label: 'Describe Your Problem',
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.multiline,
                 controller: problemDescriptionController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {

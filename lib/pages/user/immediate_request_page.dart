@@ -110,8 +110,9 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
               ),
               const SizedBox(height: 7),
               LabeledTextfield(
+                expand: true,
                 label: 'Describe Your Problem',
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.multiline,
                 controller: problemDescriptionController,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
