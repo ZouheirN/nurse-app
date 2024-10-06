@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nurse_app/consts.dart';
+import 'package:nurse_app/main.dart';
 import 'package:nurse_app/services/user.dart';
 import 'package:nurse_app/services/user_token.dart';
 
@@ -14,8 +15,7 @@ class Header extends StatefulWidget {
 }
 
 class _HeaderState extends State<Header> {
-  String name = '';
-  String location = 'Loading...';
+  // String location = 'Loading...';
 
   @override
   void initState() {
@@ -37,9 +37,6 @@ class _HeaderState extends State<Header> {
 
         if (response.statusCode == 200) {
           final jsonData = json.decode(response.body);
-          setState(() {
-            name = jsonData['name'].split(' ')[0] ?? '';
-          });
 
           // Fetch location based on latitude and longitude
           final double? latitude = jsonData['latitude'];
@@ -48,14 +45,15 @@ class _HeaderState extends State<Header> {
           if (latitude != null && longitude != null) {
             fetchLocationFromCoordinates(latitude, longitude);
           } else {
-            setState(() {
-              location = 'Location not available\nTap to update your location';
-            });
+            UserBox.setUserLocation('Location not available\nTap to update your location');
+            // setState(() {
+            //   location = 'Location not available\nTap to update your location';
+            // });
           }
         }
       }
     } catch (e) {
-      print('Error fetching user data: $e');
+      logger.e('Error fetching user data: $e');
     }
   }
 
@@ -69,19 +67,18 @@ class _HeaderState extends State<Header> {
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
-        setState(() {
-          location = jsonData['display_name'] ?? 'Unknown Location';
-        });
+        UserBox.setUserLocation(jsonData['display_name'] ?? 'Unknown Location');
       } else {
-        setState(() {
-          location = 'Unable to fetch location';
-        });
+        // UserBox.setUserLocation('Unable to fetch location');
+        // setState(() {
+        //   location = 'Unable to fetch location';
+        // });
       }
     } catch (e) {
-      print('Error fetching location: $e');
-      setState(() {
-        location = 'Unable to fetch location';
-      });
+      logger.e('Error fetching location: $e');
+      // setState(() {
+      //   location = 'Unable to fetch location';
+      // });
     }
   }
 
@@ -90,6 +87,8 @@ class _HeaderState extends State<Header> {
     return ValueListenableBuilder(
       valueListenable: UserBox.listenToUser(),
       builder: (context, value, child) {
+        final user = UserBox.getUser();
+
         return Column(
           children: [
             Row(
@@ -108,7 +107,7 @@ class _HeaderState extends State<Header> {
                         ),
                         Expanded(
                           child: Text(
-                            location,
+                            user?.location ?? 'Loading...',
                             style: const TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: 16,
@@ -132,7 +131,7 @@ class _HeaderState extends State<Header> {
                     child: Icon(Icons.person),
                   ),
                   Text(
-                    'Welcome Back ${UserBox.getUser()?.name ?? ''}',
+                    'Welcome Back ${user?.name ?? ''}',
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16,

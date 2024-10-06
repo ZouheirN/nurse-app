@@ -11,6 +11,7 @@ class LabeledTextfield extends StatefulWidget {
   final Function? onTap;
   final String? Function(String?)? validator;
   final bool? expand;
+  final Widget? suffixIcon;
 
   const LabeledTextfield({
     super.key,
@@ -24,6 +25,7 @@ class LabeledTextfield extends StatefulWidget {
     this.onTap,
     this.validator,
     this.expand = false,
+    this.suffixIcon,
   });
 
   @override
@@ -85,6 +87,7 @@ class _LabeledTextfieldState extends State<LabeledTextfield> {
                       : TextAlign.start,
                   decoration: InputDecoration(
                     hintText: widget.hintText,
+                    suffixIcon: widget.suffixIcon,
                     errorBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       borderSide: BorderSide(color: Colors.red),
@@ -113,8 +116,8 @@ class _LabeledTextfieldState extends State<LabeledTextfield> {
                         ? const Color.fromARGB(255, 245, 245, 245)
                         : const Color(0xFFE7E7E7),
                     filled: true,
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
                   ),
                 ),
               ),

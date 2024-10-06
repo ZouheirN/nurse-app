@@ -4,7 +4,6 @@ import 'package:nurse_app/features/authentication/models/user_model.dart';
 import 'package:nurse_app/services/user_token.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
-
 void loginUser(num userId, num roleId) async {
   OneSignal.login(userId.toString());
 
@@ -52,14 +51,8 @@ class UserBox {
     _box.put('user', user);
   }
 
-  static void setUserLocation({
-    required double latitude,
-    required double longitude,
-    required String location,
-  }) {
+  static void setUserLocation(String location) {
     final user = _box.get('user') as UserModel;
-    user.latitude = latitude;
-    user.longitude = longitude;
     user.location = location;
     _box.put('user', user);
   }

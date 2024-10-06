@@ -76,7 +76,8 @@ class RequestCubit extends Cubit<RequestState> {
     try {
       final token = await UserToken.getToken();
 
-      final url = isAdmin ? '$HOST/admin/requests' : '$HOST/requests';
+      // final url = isAdmin ? '$HOST/admin/requests' : '$HOST/requests';
+      final url = isAdmin ? '$HOST/requests' : '$HOST/requests';
 
       final response = await dio.get(
         url,
