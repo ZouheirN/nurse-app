@@ -139,7 +139,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                     showModalBottomSheet(
                       context: context,
                       builder: (context) {
-                        return OrderMap(patientLocation: initialPosition);
+                        return OrderMap(
+                          patientLocation: initialPosition,
+                          patientName: request.fullName!,
+                        );
                       },
                     );
                   },

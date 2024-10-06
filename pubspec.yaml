@@ -36,6 +36,7 @@ dependencies:
   font_awesome_flutter: ^10.7.0
   expandable_page_view: ^1.0.17
   intrinsic_size_builder: ^2.0.2
+  map_launcher: ^3.5.0
 
 dev_dependencies:
   flutter_test:
