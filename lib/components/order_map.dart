@@ -19,7 +19,6 @@ class OrderMap extends StatefulWidget {
 }
 
 class _OrderMapState extends State<OrderMap> {
-  List _points = [];
   List<LatLng> _latLongPoints = [];
 
   bool isInDelay = false;
@@ -40,9 +39,9 @@ class _OrderMapState extends State<OrderMap> {
       );
 
       setState(() {
-        _points = response.data['features'][0]['geometry']['coordinates'];
+        List points = response.data['features'][0]['geometry']['coordinates'];
         _latLongPoints =
-            _points.map((point) => LatLng(point[1], point[0])).toList();
+            points.map((point) => LatLng(point[1], point[0])).toList();
       });
     } on DioException catch (e) {
       logger.e(e.response!.data);
@@ -59,6 +58,32 @@ class _OrderMapState extends State<OrderMap> {
 
   @override
   Widget build(BuildContext context) {
+    return FlutterMap(
+      options: MapOptions(
+        initialCenter: widget.patientLocation,
+        initialZoom: 16,
+      ),
+      children: [
+        TileLayer(
+          urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        ),
+        MarkerLayer(
+          markers: [
+            Marker(
+              point: widget.patientLocation,
+              width: 80,
+              height: 80,
+              child: const Icon(
+                Icons.location_on,
+                color: Colors.red,
+                size: 40,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+
     return StreamBuilder(
       stream: Geolocator.getPositionStream(
         locationSettings: const LocationSettings(

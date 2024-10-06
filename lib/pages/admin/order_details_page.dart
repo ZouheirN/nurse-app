@@ -103,7 +103,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                 LabeledTextfield(
                   enabled: false,
                   controller: _nameController,
-                  label: 'Full Name',
+                  label: 'Patient Full Name',
                   keyboardType: TextInputType.name,
                 ),
                 const SizedBox(height: 10),
