@@ -6,11 +6,13 @@ import 'package:nurse_app/components/service_card.dart';
 class ServicesList extends StatefulWidget {
   final List<dynamic> services;
   final List<num> selectedServiceIds;
+  final EdgeInsets padding;
 
   const ServicesList({
     super.key,
     required this.services,
     required this.selectedServiceIds,
+    this.padding = const EdgeInsets.symmetric(horizontal: 40),
   });
 
   @override
@@ -175,7 +177,7 @@ class _ServicesListState extends State<ServicesList> {
             ),
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: widget.padding,
             children: services.map(
               (service) {
                 return Padding(

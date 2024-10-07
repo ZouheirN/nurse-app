@@ -11,7 +11,6 @@ import 'package:nurse_app/features/request/models/requests_history_model.dart';
 import 'package:nurse_app/features/services/cubit/services_cubit.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
 
-import '../../components/service_card.dart';
 import '../../components/services_list.dart';
 import '../../components/uneditable_labeled_date.dart';
 
@@ -96,67 +95,27 @@ class _SubmitOrderPageState extends State<SubmitOrderPage> {
                             ),
                             const SizedBox(height: 20),
                             Center(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 40),
-                                child:
-                                    BlocBuilder<ServicesCubit, ServicesState>(
-                                  bloc: _servicesCubit,
-                                  builder: (context, state) {
-                                    if (state is ServicesFetchLoading) {
-                                      return const SizedBox();
-                                    } else if (state is ServicesFetchSuccess) {
-                                      final services = state.services;
+                              child: BlocBuilder<ServicesCubit, ServicesState>(
+                                bloc: _servicesCubit,
+                                builder: (context, state) {
+                                  if (state is ServicesFetchLoading) {
+                                    return const SizedBox();
+                                  } else if (state is ServicesFetchSuccess) {
+                                    final services = state.services;
 
-                                      selectedServiceIds = widget
-                                          .order.services!
-                                          .map((e) => e.id!)
-                                          .toList();
+                                    selectedServiceIds = widget.order.services!
+                                        .map((e) => e.id!)
+                                        .toList();
 
-                                      return ServicesList(
-                                        services: services,
-                                        selectedServiceIds: selectedServiceIds,
-                                      );
-
-                                      return Wrap(
-                                        spacing: 10,
-                                        runSpacing: 10,
-                                        crossAxisAlignment: WrapCrossAlignment.center,
-                                        children: services.map((service) {
-                                          return Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 5),
-                                            child: ServiceCard(
-                                              serviceId: service['id'],
-                                              imagePath: service[
-                                                      'service_pic'] ??
-                                                  'assets/images/square_logo.png',
-                                              title: service['name'],
-                                              price: service['price'],
-                                              salePrice:
-                                                  service['discount_price'],
-                                              isSelected: selectedServiceIds
-                                                  .contains(service['id']),
-                                              onSelectionChanged: (isSelected) {
-                                                if (isSelected) {
-                                                  selectedServiceIds
-                                                      .add(service['id']);
-                                                } else {
-                                                  selectedServiceIds
-                                                      .remove(service['id']);
-                                                }
-                                              },
-                                              enableTap: true,
-                                            ),
-                                          );
-                                        }).toList(),
-                                      );
-                                    } else {
-                                      return const Text(
-                                          'Failed to fetch services.');
-                                    }
-                                  },
-                                ),
+                                    return ServicesList(
+                                      services: services,
+                                      selectedServiceIds: selectedServiceIds,
+                                    );
+                                  } else {
+                                    return const Text(
+                                        'Failed to fetch services.');
+                                  }
+                                },
                               ),
                             ),
                           ],
