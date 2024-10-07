@@ -125,12 +125,57 @@ class _ServicesListState extends State<ServicesList> {
         }).toList(),
       ),
       builder: (context, subjectSize, subject) {
+        // return Align(
+        //   alignment: Alignment.topCenter,
+        //   child: Container(
+        //     color: Colors.red,
+        //     child: Wrap(
+        //       spacing: 10,
+        //       runSpacing: 10,
+        //       crossAxisAlignment: WrapCrossAlignment.center,
+        //       children: services.map(
+        //             (service) {
+        //           return Padding(
+        //             padding: const EdgeInsets.symmetric(vertical: 5),
+        //             child: ServiceCard(
+        //               height: subjectSize.height,
+        //               serviceId: service['id'],
+        //               imagePath: service['service_pic'] ??
+        //                   'assets/images/square_logo.png',
+        //               title: service['name'],
+        //               price: service['price'],
+        //               isSelected:
+        //               widget.selectedServiceIds.contains(service['id']),
+        //               salePrice: service['discount_price'],
+        //               onSelectionChanged: (isSelected) {
+        //                 setState(() {
+        //                   if (isSelected) {
+        //                     widget.selectedServiceIds.add(service['id']);
+        //                   } else {
+        //                     widget.selectedServiceIds.remove(service['id']);
+        //                   }
+        //                 });
+        //               },
+        //             ),
+        //           );
+        //         },
+        //       ).toList(),
+        //     ),
+        //   ),
+        // );
+
         return Align(
           alignment: Alignment.topCenter,
-          child: Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            crossAxisAlignment: WrapCrossAlignment.center,
+          child: GridView(
+           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              mainAxisExtent: subjectSize.height,
+            ),
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             children: services.map(
               (service) {
                 return Padding(
