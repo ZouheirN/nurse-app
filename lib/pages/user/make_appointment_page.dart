@@ -107,6 +107,12 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your name.';
                   }
+
+                  // check if full name
+                  if (value.split(' ').length < 2) {
+                    return 'Please enter your full name.';
+                  }
+
                   return null;
                 },
               ),
