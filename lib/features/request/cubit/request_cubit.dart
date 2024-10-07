@@ -1,4 +1,3 @@
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
@@ -120,6 +119,7 @@ class RequestCubit extends Cubit<RequestState> {
           },
         ),
       );
+      logger.i(response.data);
 
       final request = RequestsHistoryModel.fromJson(response.data);
 
@@ -162,9 +162,10 @@ class RequestCubit extends Cubit<RequestState> {
 
       if (endingTime == null) {
         data['time_needed_to_arrive'] = timeNeededToArrive;
+        logger.i(data);
       } else {
-        data['scheduled_time'] = scheduledTime.toIso8601String();
-        data['ending_time'] = endingTime.toIso8601String();
+        data['scheduled_time'] = scheduledTime.toLocal().toIso8601String();
+        data['ending_time'] = endingTime.toLocal().toIso8601String();
         data['time_type'] = timeType;
       }
 

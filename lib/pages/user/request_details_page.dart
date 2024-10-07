@@ -59,8 +59,6 @@ class RequestDetailsPage extends StatelessWidget {
           if (state is RequestDetailsSuccess) {
             final request = state.request;
 
-            logger.d(request.toJson());
-
             return SingleChildScrollView(
               child: Column(
                 children: [
