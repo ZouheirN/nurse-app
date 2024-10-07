@@ -85,6 +85,8 @@ class _ServiceCardState extends State<ServiceCard> {
                   const SizedBox(height: 8),
                   AutoSizeText(
                     widget.title,
+                    minFontSize: 8,
+                    maxLines: 4,
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,

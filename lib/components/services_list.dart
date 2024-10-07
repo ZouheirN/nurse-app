@@ -83,7 +83,7 @@ class _ServicesListState extends State<ServicesList> {
                         color: selectedPage == index
                             ? const Color(0xFF7BB442)
                             : Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Center(
                         child: Text(
