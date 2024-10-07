@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:nurse_app/preferred_countries.dart';
 
 class PhoneNumberField extends StatefulWidget {
   final String initialCountryCode;
@@ -34,6 +34,12 @@ class PhoneNumberField extends StatefulWidget {
 
 class _PhoneNumberFieldState extends State<PhoneNumberField> {
   late bool _isFocused;
+  List<Country> preferredCountries = List.from(countries)
+    ..removeWhere(
+      (element) {
+        return element.code == 'IL';
+      },
+    );
 
   @override
   void initState() {
