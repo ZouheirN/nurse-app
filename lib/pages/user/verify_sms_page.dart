@@ -10,8 +10,11 @@ class VerifySmsPage extends StatefulWidget {
   final String phoneNumber;
   final bool resend;
 
-  const VerifySmsPage(
-      {super.key, required this.phoneNumber, required this.resend});
+  const VerifySmsPage({
+    super.key,
+    required this.phoneNumber,
+    required this.resend,
+  });
 
   @override
   State<VerifySmsPage> createState() => _VerifySmsPageState();
@@ -43,7 +46,37 @@ class _VerifySmsPageState extends State<VerifySmsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Row(
+          children: [
+            const Text(
+              'Verify Phone Number',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w700,
+                fontSize: 23,
+              ),
+            ),
+            const Spacer(),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: Center(
           child: Column(

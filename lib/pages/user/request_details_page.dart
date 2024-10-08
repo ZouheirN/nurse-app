@@ -84,7 +84,7 @@ class RequestDetailsPage extends StatelessWidget {
                         TextData(
                           label: 'Time to arrive: ',
                           data: Text(
-                            '${request.timeNeededToArrive} minutes',
+                            '${request.timeNeededToArrive?.toStringAsFixed(0)} minutes',
                             style: const TextStyle(
                               fontSize: 22,
                               color: Color(0xFF000000),
@@ -95,16 +95,16 @@ class RequestDetailsPage extends StatelessWidget {
                         const SizedBox(height: 10),
                       ],
                     ),
-                  if (request.nurse != null && request.nurseId != null)
-                    Column(
-                      children: [
-                        StarRating(
-                          nurseId: request.nurseId!,
-                          initialRating: 0,
-                        ),
-                        const SizedBox(height: 10),
-                      ],
-                    ),
+                  // if (request.nurse != null && request.nurseId != null)
+                  //   Column(
+                  //     children: [
+                  //       StarRating(
+                  //         nurseId: request.nurseId!,
+                  //         initialRating: 0,
+                  //       ),
+                  //       const SizedBox(height: 10),
+                  //     ],
+                  //   ),
                   _buildRequestDate(request),
                   const SizedBox(height: 30),
                   const Center(
