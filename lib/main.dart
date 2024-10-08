@@ -50,6 +50,7 @@ Future<void> main() async {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarIconBrightness: Brightness.dark,
+      statusBarColor: Colors.white,
     ),
   );
 
@@ -66,7 +67,10 @@ class MyApp extends StatelessWidget {
       home: const SplashScreen(),
       theme: Theme.of(context).copyWith(
         appBarTheme: Theme.of(context).appBarTheme.copyWith(
-              systemOverlayStyle: SystemUiOverlayStyle.dark,
+              systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarIconBrightness: Brightness.dark,
+                statusBarColor: Colors.white,
+              ),
             ),
       ),
       routes: {
