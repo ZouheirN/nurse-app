@@ -5,7 +5,6 @@ import 'package:nurse_app/components/labeled_date.dart';
 import 'package:nurse_app/components/labeled_textfield.dart';
 import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/second_button.dart';
-import 'package:nurse_app/components/service_card.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
 import 'package:quickalert/quickalert.dart';
@@ -107,6 +106,12 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your name.';
                   }
+
+                  // check if full name
+                  if (value.split(' ').length < 2) {
+                    return 'Please enter your full name.';
+                  }
+
                   return null;
                 },
               ),
@@ -156,53 +161,22 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
               ),
               const SizedBox(height: 10),
               Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: BlocBuilder<ServicesCubit, ServicesState>(
-                    bloc: _servicesCubit,
-                    builder: (context, state) {
-                      if (state is ServicesFetchLoading) {
-                        return const Loader();
-                      } else if (state is ServicesFetchSuccess) {
-                        final services = state.services;
+                child: BlocBuilder<ServicesCubit, ServicesState>(
+                  bloc: _servicesCubit,
+                  builder: (context, state) {
+                    if (state is ServicesFetchLoading) {
+                      return const Loader();
+                    } else if (state is ServicesFetchSuccess) {
+                      final services = state.services;
 
-                        return ServicesList(
-                          services: services,
-                          selectedServiceIds: selectedServiceIds,
-                        );
-
-                        return Wrap(
-                          spacing: 10,
-                          runSpacing: 10,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: services.map((service) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5),
-                              child: ServiceCard(
-                                serviceId: service['id'],
-                                imagePath: service['service_pic'] ??
-                                    'assets/images/square_logo.png',
-                                title: service['name'],
-                                price: service['price'],
-                                salePrice: service['discount_price'],
-                                onSelectionChanged: (isSelected) {
-                                  setState(() {
-                                    if (isSelected) {
-                                      selectedServiceIds.add(service['id']);
-                                    } else {
-                                      selectedServiceIds.remove(service['id']);
-                                    }
-                                  });
-                                },
-                              ),
-                            );
-                          }).toList(),
-                        );
-                      } else {
-                        return const Text('Failed to fetch services.');
-                      }
-                    },
-                  ),
+                      return ServicesList(
+                        services: services,
+                        selectedServiceIds: selectedServiceIds,
+                      );
+                    } else {
+                      return const Text('Failed to fetch services.');
+                    }
+                  },
                 ),
               ),
               const SizedBox(height: 20),

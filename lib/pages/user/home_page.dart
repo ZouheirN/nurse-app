@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: CarouselSlider(
                   options: CarouselOptions(
-                    height: MediaQuery.of(context).size.height * 0.25,
+                    // height: MediaQuery.of(context).size.height * 0.25,
                     enableInfiniteScroll: true,
                     autoPlay: true,
                     enlargeCenterPage: true,

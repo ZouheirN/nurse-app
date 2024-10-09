@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nurse_app/components/service_card.dart';
 import 'package:nurse_app/features/request/models/requests_history_model.dart';
-import 'package:nurse_app/utilities/helper_functions.dart';
+
+import '../utilities/helper_functions.dart';
 
 class HistoryCard extends StatelessWidget {
   final List<Service> services;
@@ -49,76 +50,67 @@ class HistoryCard extends StatelessWidget {
               Expanded(
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              for (final service in services)
-                                Text(
-                                  "${service.name}",
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                  maxLines: 5,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                            ],
-                          ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                    for (final service in services)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            for (final service in services)
-                              Row(
-                                children: [
-                                  Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      FittedBox(
-                                        fit: BoxFit.scaleDown,
-                                        child: Text(
-                                          '\$${formatPrice(service.price!)}',
-                                          style: TextStyle(
-                                            color: service.discountPrice != null
-                                                ? Colors.grey
-                                                : Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                      ),
-                                      if (service.discountPrice != null)
-                                        Positioned.fill(
-                                          child: CustomPaint(
-                                            painter: DiagonalLinePainter(),
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                  if (service.discountPrice != null) ...[
-                                    const SizedBox(width: 5),
+                            Flexible(
+                              child: Text(
+                                service.name.toString(),
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            Row(
+                              children: [
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: [
                                     FittedBox(
                                       fit: BoxFit.scaleDown,
                                       child: Text(
-                                        '\$${formatPrice(service.discountPrice!)}',
-                                        style: const TextStyle(
+                                        '\$${formatPrice(service.price!)}',
+                                        style: TextStyle(
+                                          color: service.discountPrice != null
+                                              ? Colors.grey
+                                              : Colors.black,
                                           fontSize: 14,
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ),
                                     ),
+                                    if (service.discountPrice != null)
+                                      Positioned.fill(
+                                        child: CustomPaint(
+                                          painter: DiagonalLinePainter(),
+                                        ),
+                                      ),
                                   ],
+                                ),
+                                if (service.discountPrice != null) ...[
+                                  const SizedBox(width: 5),
+                                  FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      '\$${formatPrice(service.discountPrice!)}',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
                                 ],
-                              ),
+                              ],
+                            ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
                     const SizedBox(height: 5),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,

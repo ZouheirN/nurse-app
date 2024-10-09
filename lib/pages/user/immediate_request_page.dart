@@ -100,6 +100,12 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your name.';
                   }
+
+                  // check if full name
+                  if (value.split(' ').length < 2) {
+                    return 'Please enter your full name.';
+                  }
+
                   return null;
                 },
               ),
@@ -147,25 +153,22 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
               ),
               const SizedBox(height: 7),
               Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: BlocBuilder<ServicesCubit, ServicesState>(
-                    bloc: _servicesCubit,
-                    builder: (context, state) {
-                      if (state is ServicesFetchLoading) {
-                        return const Loader();
-                      } else if (state is ServicesFetchSuccess) {
-                        final services = state.services;
+                child: BlocBuilder<ServicesCubit, ServicesState>(
+                  bloc: _servicesCubit,
+                  builder: (context, state) {
+                    if (state is ServicesFetchLoading) {
+                      return const Loader();
+                    } else if (state is ServicesFetchSuccess) {
+                      final services = state.services;
 
-                        return ServicesList(
-                          services: services,
-                          selectedServiceIds: selectedServiceIds,
-                        );
-                      } else {
-                        return const Text('Failed to fetch services.');
-                      }
-                    },
-                  ),
+                      return ServicesList(
+                        services: services,
+                        selectedServiceIds: selectedServiceIds,
+                      );
+                    } else {
+                      return const Text('Failed to fetch services.');
+                    }
+                  },
                 ),
               ),
               const SizedBox(height: 20),

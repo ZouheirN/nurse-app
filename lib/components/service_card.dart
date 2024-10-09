@@ -56,7 +56,7 @@ class _ServiceCardState extends State<ServiceCard> {
       onTap: _toggleSelection,
       child: Container(
         // height: MediaQuery.of(context).size.width * 0.4,
-        height: widget.height ?? MediaQuery.of(context).size.width * 0.4,
+        height: widget.height,
         width: MediaQuery.of(context).size.width * 0.24,
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
@@ -83,21 +83,19 @@ class _ServiceCardState extends State<ServiceCard> {
                 children: [
                   _buildImage(widget.imagePath),
                   const SizedBox(height: 8),
-                  Flexible(
-                    child: AutoSizeText(
-                      minFontSize: 10,
-                      widget.title,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      textAlign: TextAlign.center,
+                  AutoSizeText(
+                    widget.title,
+                    minFontSize: 8,
+                    // maxLines: 4,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
                     ),
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
             ),
-            // const SizedBox(height: 8),
             Row(
               mainAxisAlignment: (widget.salePrice != null)
                   ? MainAxisAlignment.spaceBetween

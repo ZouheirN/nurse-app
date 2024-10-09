@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:nurse_app/consts.dart';
@@ -46,6 +47,13 @@ Future<void> main() async {
     loginUser(user!.id!, user.roleId!);
   }
 
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarIconBrightness: Brightness.dark,
+      statusBarColor: Colors.white,
+    ),
+  );
+
   runApp(const MyApp());
 }
 
@@ -57,6 +65,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),
+      theme: Theme.of(context).copyWith(
+        appBarTheme: Theme.of(context).appBarTheme.copyWith(
+              systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarIconBrightness: Brightness.dark,
+                statusBarColor: Colors.white,
+              ),
+            ),
+      ),
       routes: {
         '/login': (context) => LoginPage(),
         '/signup': (context) => const SignupPage(),
