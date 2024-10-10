@@ -72,6 +72,9 @@ class MyApp extends StatelessWidget {
                 statusBarColor: Colors.white,
               ),
             ),
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: Color(0xFF7BB442),
+        ),
       ),
       routes: {
         '/login': (context) => LoginPage(),

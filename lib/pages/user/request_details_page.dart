@@ -2,13 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/loader.dart';
-import 'package:nurse_app/components/star_rating.dart';
 import 'package:nurse_app/components/text_data.dart';
 import 'package:nurse_app/components/uneditable_labeled_date.dart';
 import 'package:nurse_app/features/nurse/cubit/nurse_cubit.dart';
 import 'package:nurse_app/features/request/cubit/request_cubit.dart';
 import 'package:nurse_app/features/request/models/requests_history_model.dart';
-import 'package:nurse_app/main.dart';
 import 'package:nurse_app/utilities/helper_functions.dart';
 
 import '../../components/service_card.dart';
