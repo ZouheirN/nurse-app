@@ -6,6 +6,7 @@ import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/components/social_media_button.dart';
 import 'package:nurse_app/features/about_us/cubit/about_us_cubit.dart';
 import 'package:nurse_app/main.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SocialProfilesPage extends StatelessWidget {
   SocialProfilesPage({super.key});
@@ -164,6 +165,25 @@ class SocialProfilesPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 10),
                         ],
+                        const SizedBox(height: 15),
+                        Center(
+                          child: GestureDetector(
+                            onTap: () async {
+                              final privacyPolicyUrl = Uri.parse(
+                                  'https://devzurapi.alahmadnursecare.com/privacy-policy');
+
+                              launchUrl(privacyPolicyUrl);
+                            },
+                            child: const Text(
+                              'Privacy Policy',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF7BB442),
+                              ),
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: 30),
                       ],
                     ),
