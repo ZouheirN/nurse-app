@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -39,8 +40,10 @@ Future<void> main() async {
 
   await Hive.openBox('userBox');
 
-  OneSignal.initialize(ONE_SIGNAL_APP_ID);
-  OneSignal.Notifications.requestPermission(true);
+  if (!kIsWeb) {
+    OneSignal.initialize(ONE_SIGNAL_APP_ID);
+    OneSignal.Notifications.requestPermission(true);
+  }
 
   if (UserBox.isUserLoggedIn()) {
     final user = UserBox.getUser();

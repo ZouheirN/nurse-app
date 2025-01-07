@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../utilities/helper_functions.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 
 class ServiceCard extends StatefulWidget {
   final String imagePath;
@@ -157,6 +158,7 @@ class _ServiceCardState extends State<ServiceCard> {
         height: MediaQuery.of(context).size.width * 0.17,
         width: MediaQuery.of(context).size.width * 0.24,
         fit: BoxFit.cover,
+        imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
         errorWidget: (context, error, stackTrace) {
           return Image.asset(
             'assets/images/square_logo.png',

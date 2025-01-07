@@ -8,6 +8,7 @@ import 'package:nurse_app/features/nurse/cubit/nurse_cubit.dart';
 import 'package:nurse_app/features/request/cubit/request_cubit.dart';
 import 'package:nurse_app/features/request/models/requests_history_model.dart';
 import 'package:nurse_app/utilities/helper_functions.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 
 import '../../components/service_card.dart';
 
@@ -143,6 +144,7 @@ class RequestDetailsPage extends StatelessWidget {
                 CachedNetworkImage(
                   imageUrl: nurse.profilePicture!,
                   height: 250,
+                  imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
                   fit: BoxFit.contain,
                 )
               else

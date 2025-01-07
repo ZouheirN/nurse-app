@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 
 class LabeledDropdown extends StatefulWidget {
   final String label;
@@ -55,6 +56,7 @@ class _LabeledDropdownState extends State<LabeledDropdown> {
         width: 35,
         height: 35,
         fit: BoxFit.cover,
+        imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
         errorWidget: (context, error, stackTrace) {
           return Image.asset(
             'assets/images/default_profile.png',

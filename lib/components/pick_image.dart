@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:nurse_app/consts.dart';
+import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 
 class PickImage extends StatefulWidget {
   final String label;
@@ -61,6 +62,7 @@ class _PickImageState extends State<PickImage> {
             )
           else if (_imageUrl != null)
             CachedNetworkImage(
+              imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
               imageUrl: _imageUrl!,
               width: 85,
               height: 85,

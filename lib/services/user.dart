@@ -1,11 +1,14 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nurse_app/features/authentication/models/user_model.dart';
 import 'package:nurse_app/services/user_token.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 void loginUser(num userId, num roleId) async {
-  OneSignal.login(userId.toString());
+  if (!kIsWeb) {
+    OneSignal.login(userId.toString());
+  }
 
   // PusherChannelsFlutter pusher = PusherChannelsFlutter.getInstance();
   // try {
@@ -31,8 +34,9 @@ void loginUser(num userId, num roleId) async {
 }
 
 void logoutUser() {
-  OneSignal.logout();
-
+  if (!kIsWeb) {
+    OneSignal.logout();
+  }
   // PusherChannelsFlutter pusher = PusherChannelsFlutter.getInstance();
   // try {
   //   pusher.disconnect();
