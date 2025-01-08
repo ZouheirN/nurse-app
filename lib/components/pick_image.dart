@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -54,12 +55,20 @@ class _PickImageState extends State<PickImage> {
           ),
           const SizedBox(height: 10),
           if (_selectedImage != null)
-            Image.file(
-              _selectedImage!,
-              width: 85,
-              height: 85,
-              fit: BoxFit.cover,
-            )
+            if (kIsWeb)
+              Image.network(
+                _selectedImage!.path,
+                width: 85,
+                height: 85,
+                fit: BoxFit.cover,
+              )
+            else
+              Image.file(
+                _selectedImage!,
+                width: 85,
+                height: 85,
+                fit: BoxFit.cover,
+              )
           else if (_imageUrl != null)
             CachedNetworkImage(
               imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
@@ -108,7 +117,7 @@ class _PickImageState extends State<PickImage> {
         _imageUrl = null;
         status = 'Uploading image...';
       });
-      final imageUrl = await _uploadImage(_selectedImage!);
+      final imageUrl = await _uploadImage(await pickedImage.readAsBytes());
       if (imageUrl != null) {
         setState(() {
           _imageUrl = imageUrl;
@@ -126,7 +135,7 @@ class _PickImageState extends State<PickImage> {
     }
   }
 
-  Future<String?> _uploadImage(File image) async {
+  Future<String?> _uploadImage(Uint8List image) async {
     final Uri uploadUrl =
         Uri.parse('https://api.imgbb.com/1/upload?key=$IMGBB_API_KEY');
 
@@ -135,7 +144,7 @@ class _PickImageState extends State<PickImage> {
         ..files.add(
           http.MultipartFile.fromBytes(
             'image',
-            await image.readAsBytes(),
+            image,
             filename: 'image.jpg',
           ),
         );

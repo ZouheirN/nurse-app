@@ -49,7 +49,6 @@ class Dialogs {
 
   static void showForgotPasswordDialog(BuildContext context) {
     final phoneNumberController = TextEditingController();
-    final formKey = GlobalKey<FormState>();
     String completeNumber = '';
 
     QuickAlert.show(
@@ -64,13 +63,20 @@ class Dialogs {
         padding: const EdgeInsets.only(top: 10),
       ),
       onConfirmBtnTap: () {
-        if (formKey.currentState!.validate()) {
-          Navigator.pushReplacementNamed(
+        if (completeNumber.isEmpty) {
+          showErrorDialog(
             context,
-            '/forgotPassword',
-            arguments: completeNumber.trim(),
+            'Phone Number Required',
+            'Please enter your phone number',
           );
+          return;
         }
+
+        Navigator.pushReplacementNamed(
+          context,
+          '/forgotPassword',
+          arguments: completeNumber.trim(),
+        );
       },
       text: 'Enter your phone number to reset your password',
       title: 'Forgot Password',
@@ -79,8 +85,6 @@ class Dialogs {
 
   static void showVerifySmsDialog(BuildContext context) {
     final phoneNumberController = TextEditingController();
-    final formKey = GlobalKey<FormState>();
-
     String completeNumber = '';
 
     QuickAlert.show(
@@ -95,16 +99,23 @@ class Dialogs {
         padding: const EdgeInsets.only(top: 10),
       ),
       onConfirmBtnTap: () {
-        if (formKey.currentState!.validate()) {
-          Navigator.pushReplacementNamed(
+        if (completeNumber.isEmpty) {
+          showErrorDialog(
             context,
-            '/verifySms',
-            arguments: {
-              'phoneNumber': completeNumber.trim(),
-              'resend': true,
-            },
+            'Phone Number Required',
+            'Please enter your phone number',
           );
+          return;
         }
+
+        Navigator.pushReplacementNamed(
+          context,
+          '/verifySms',
+          arguments: {
+            'phoneNumber': completeNumber.trim(),
+            'resend': true,
+          },
+        );
       },
       text: 'Enter your phone number to verify your account',
       title: 'Verify Account',
