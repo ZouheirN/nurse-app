@@ -1,4 +1,4 @@
-package com.example.nurse_app
+package com.devzur.alahmad
 
 import io.flutter.embedding.android.FlutterActivity
 
