@@ -1,7 +1,7 @@
 definitions:
   environment:
     shared_env: &shared_env
-      flutter: 3.24.1
+      flutter: 3.27.1
       groups:
         # Export the shorebird group to make $SHOREBIRD_TOKEN available to
         #   the Shorebird CLI.
