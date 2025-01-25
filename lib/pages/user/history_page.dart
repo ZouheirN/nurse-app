@@ -52,6 +52,22 @@ class _HistoryPageState extends State<HistoryPage> {
                 if (state is RequestsHistorySuccess) {
                   final requests = state.requests.reversed.toList();
 
+                  // return HistoryCard(
+                  //   services: [
+                  //     Service(
+                  //       name: 'Basic Nursing Service',
+                  //       price: '15',
+                  //       id: 1,
+                  //       categoryId: 1,
+                  //       createdAt: DateTime.now(),
+                  //       description: 'Basic Nursing Service',
+                  //     )
+                  //   ],
+                  //   description: 'Check out the details',
+                  //   time: formatDateTimeForCard(DateTime.now()),
+                  //   onTap: () {},
+                  // );
+
                   return Expanded(
                     child: ListView(
                       shrinkWrap: true,

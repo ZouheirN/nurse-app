@@ -1,3 +1,4 @@
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,7 +29,7 @@ import 'package:nurse_app/pages/user/update_location_page.dart';
 import 'package:nurse_app/pages/user/verify_sms_page.dart';
 import 'package:nurse_app/services/user.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-
+import 'package:device_preview/device_preview.dart';
 import 'pages/admin/send_notification_page.dart';
 
 final logger = Logger();
@@ -57,24 +58,75 @@ Future<void> main() async {
     ),
   );
 
-  runApp(const MyApp());
+  runApp(
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => const MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _onKey(KeyEvent event) {
+    final key = event.logicalKey;
+
+    if (event is KeyDownEvent) {
+      if (key == LogicalKeyboardKey.f9) {
+        DevicePreview.screenshot(context).then(
+              (value) async {
+            await FileSaver.instance.saveFile(
+              name: 'screenshot.png',
+              bytes: value.bytes,
+            );
+          },
+        );
+      }
+    }
+
+    return false;
+  }
+
+  @override
+  void initState() {
+    if (kDebugMode) {
+      ServicesBinding.instance.keyboard.addHandler(_onKey);
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    if (kDebugMode) {
+      ServicesBinding.instance.keyboard.removeHandler(_onKey);
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),
       theme: Theme.of(context).copyWith(
-        appBarTheme: Theme.of(context).appBarTheme.copyWith(
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarIconBrightness: Brightness.dark,
-                statusBarColor: Colors.white,
-              ),
-            ),
+        appBarTheme: Theme
+            .of(context)
+            .appBarTheme
+            .copyWith(
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarIconBrightness: Brightness.dark,
+            statusBarColor: Colors.white,
+          ),
+        ),
         textSelectionTheme: const TextSelectionThemeData(
           cursorColor: Color(0xFF7BB442),
         ),
@@ -84,18 +136,27 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => const SignupPage(),
         '/home': (context) => const Navbar(),
         '/verifySms': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as Map;
+          final args = ModalRoute
+              .of(context)
+              ?.settings
+              .arguments as Map;
           return VerifySmsPage(
             phoneNumber: args['phoneNumber'],
             resend: args['resend'],
           );
         },
         '/forgotPassword': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as String;
+          final args = ModalRoute
+              .of(context)
+              ?.settings
+              .arguments as String;
           return ForgotPasswordPage(phoneNumber: args);
         },
         '/requestDetails': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as num;
+          final args = ModalRoute
+              .of(context)
+              ?.settings
+              .arguments as num;
           return RequestDetailsPage(requestId: args);
         },
         '/editProfile': (context) => const EditProfilePage(),
@@ -104,23 +165,35 @@ class MyApp extends StatelessWidget {
         '/manageNurses': (context) => const ManageNursesPage(),
         '/addNurse': (context) => const AddNursePage(),
         '/editNurse': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as int;
+          final args = ModalRoute
+              .of(context)
+              ?.settings
+              .arguments as int;
           return EditNursePage(nurseId: args);
         },
         '/manageServices': (context) => const ManageServicesPage(),
         '/addService': (context) => const AddServicePage(),
         '/editService': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as int;
+          final args = ModalRoute
+              .of(context)
+              ?.settings
+              .arguments as int;
           return EditServicePage(serviceId: args);
         },
         '/manageOrders': (context) => const ManageOrdersPage(),
         '/orderDetails': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as int;
+          final args = ModalRoute
+              .of(context)
+              ?.settings
+              .arguments as int;
           return OrderDetailsPage(orderId: args);
         },
         '/submitOrder': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments
-              as RequestsHistoryModel;
+          final args = ModalRoute
+              .of(context)
+              ?.settings
+              .arguments
+          as RequestsHistoryModel;
           return SubmitOrderPage(order: args);
         },
         '/adminSettings': (context) => const AdminSettingsPage(),
