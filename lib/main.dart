@@ -57,10 +57,10 @@ Future<void> main() async {
       statusBarColor: Colors.white,
     ),
   );
-
+  
   runApp(
     DevicePreview(
-      enabled: !kReleaseMode,
+      enabled: !kReleaseMode && kIsWeb,
       builder: (context) => const MyApp(),
     ),
   );
