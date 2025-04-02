@@ -31,68 +31,24 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: CarouselSlider(
                   options: CarouselOptions(
-                    // height: MediaQuery.of(context).size.height * 0.25,
                     enableInfiniteScroll: true,
                     autoPlay: true,
                     enlargeCenterPage: true,
                     pauseAutoPlayOnTouch: true,
                     autoPlayInterval: const Duration(seconds: 5),
+                    height: 180,
+                    // viewportFraction: 0.8,
+                    // enlargeFactor: 0.4,
                   ),
                   items: [
-                    Container(
-                      decoration: BoxDecoration(
+                    for (int i = 0; i <= 9; i++)
+                      ClipRRect(
                         borderRadius: BorderRadius.circular(20),
-                        image: const DecorationImage(
-                          image: AssetImage('assets/images/image1.png'),
-                          fit: BoxFit.cover,
+                        child: Image(
+                          image: AssetImage('assets/images/$i.png'),
+                          fit: BoxFit.fitWidth,
                         ),
                       ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.black.withOpacity(0.5),
-                        ),
-                        padding: const EdgeInsets.all(16),
-                        child: const Center(
-                          child: Text(
-                            'Request your Nurse Now',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 36,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        image: const DecorationImage(
-                          image: AssetImage('assets/images/image2.png'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.black.withOpacity(0.5),
-                        ),
-                        padding: const EdgeInsets.all(16),
-                        child: const Center(
-                          child: Text(
-                            'Request your Nurse Now',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 36,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
