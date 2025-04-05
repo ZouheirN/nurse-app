@@ -45,7 +45,8 @@ class _HeaderState extends State<Header> {
           if (latitude != null && longitude != null) {
             fetchLocationFromCoordinates(latitude, longitude);
           } else {
-            UserBox.setUserLocation('Location not available\nTap to update your location');
+            UserBox.setUserLocation(
+                'Location not available\nTap to update your location');
             // setState(() {
             //   location = 'Location not available\nTap to update your location';
             // });
@@ -88,6 +89,99 @@ class _HeaderState extends State<Header> {
       valueListenable: UserBox.listenToUser(),
       builder: (context, value, child) {
         final user = UserBox.getUser();
+
+        return Column(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/header_background.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: ListTile(
+                minVerticalPadding: 0,
+                leading: const ColorFiltered(
+                  colorFilter:
+                      ColorFilter.mode(Colors.white, BlendMode.srcATop),
+                  child: Image(
+                    image: AssetImage('assets/images/square_logo.png'),
+                  ),
+                ),
+                title: IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      const VerticalDivider(
+                        color: Colors.white,
+                        thickness: 2,
+                      ),
+                      Expanded(
+                        child: Text(
+                          'Welcome Back,\n${user?.name ?? ''}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 20,
+                            fontStyle: FontStyle.italic,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                trailing: IconButton(
+                    onPressed: () {},
+                    icon: const CircleAvatar(
+                      backgroundColor: Color.fromRGBO(217, 217, 217, 1),
+                      child: Icon(
+                        Icons.person_outline_rounded,
+                        color: Color(0xFF7BB442),
+                      ),
+                    )),
+              ),
+            ),
+            ListTile(
+              contentPadding: const EdgeInsets.only(
+                left: 4,
+                right: 4,
+              ),
+              leading: const Icon(
+                Icons.location_on,
+                color: Colors.black,
+              ),
+              title: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/updateLocation');
+                },
+                child: Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        user?.location ?? 'Loading...',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    const Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.black,
+                    ),
+                  ],
+                ),
+              ),
+              trailing: IconButton(
+                onPressed: () {
+                },
+                icon: const Icon(
+                  Icons.notifications_outlined,
+                  color: Color(0xFF7BB442),
+                ),
+              ),
+            ),
+          ],
+        );
 
         return Column(
           children: [
