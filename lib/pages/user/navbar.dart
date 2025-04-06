@@ -37,59 +37,143 @@ class _NavbarState extends State<Navbar> {
           });
         },
         currentIndex: myIndex,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home_outlined,
-              size: 30,
-              color: Colors.black,
+            icon: ColorFiltered(
+              colorFilter: const ColorFilter.mode(
+                Colors.black,
+                BlendMode.srcIn,
+              ),
+              child: Image.asset(
+                'assets/images/home.png',
+              ),
             ),
-            activeIcon: Icon(
-              Icons.home,
-              size: 30,
-              color: Color(0xFF7BB442),
+            activeIcon: ColorFiltered(
+              colorFilter: const ColorFilter.mode(
+                Color(0xFF7BB442),
+                BlendMode.srcIn,
+              ),
+              child: Image.asset(
+                'assets/images/home.png',
+              ),
             ),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.notifications_outlined,
-              size: 30,
-              color: Colors.black,
+            icon: ColorFiltered(
+              colorFilter: const ColorFilter.mode(
+                Colors.black,
+                BlendMode.srcIn,
+              ),
+              child: Image.asset(
+                'assets/images/history.png',
+              ),
             ),
-            activeIcon: Icon(
-              Icons.notifications,
-              size: 30,
-              color: Color(0xFF7BB442),
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.info_outline,
-              size: 30,
-              color: Colors.black,
-            ),
-            activeIcon: Icon(
-              Icons.info,
-              size: 30,
-              color: Color(0xFF7BB442),
+            activeIcon: ColorFiltered(
+              colorFilter: const ColorFilter.mode(
+                Color(0xFF7BB442),
+                BlendMode.srcIn,
+              ),
+              child: Image.asset(
+                'assets/images/history.png',
+              ),
             ),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person_outline,
-              size: 30,
-              color: Colors.black,
+            icon: ColorFiltered(
+              colorFilter: const ColorFilter.mode(
+                Colors.black,
+                BlendMode.srcIn,
+              ),
+              child: Image.asset(
+                'assets/images/info.png',
+              ),
             ),
-            activeIcon: Icon(
-              Icons.person,
-              size: 30,
-              color: Color(0xFF7BB442),
+            activeIcon: ColorFiltered(
+              colorFilter: const ColorFilter.mode(
+                Color(0xFF7BB442),
+                BlendMode.srcIn,
+              ),
+              child: Image.asset(
+                'assets/images/info.png',
+              ),
             ),
             label: '',
           ),
+          BottomNavigationBarItem(
+            icon: ColorFiltered(
+              colorFilter: const ColorFilter.mode(
+                Colors.black,
+                BlendMode.srcIn,
+              ),
+              child: Image.asset(
+                'assets/images/profile.png',
+              ),
+            ),
+            activeIcon: ColorFiltered(
+              colorFilter: const ColorFilter.mode(
+                Color(0xFF7BB442),
+                BlendMode.srcIn,
+              ),
+              child: Image.asset(
+                'assets/images/profile.png',
+              ),
+            ),
+            label: '',
+          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.home_outlined,
+          //     size: 30,
+          //     color: Colors.black,
+          //   ),
+          //   activeIcon: Icon(
+          //     Icons.home,
+          //     size: 30,
+          //     color: Color(0xFF7BB442),
+          //   ),
+          //   label: '',
+          // ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.notifications_outlined,
+          //     size: 30,
+          //     color: Colors.black,
+          //   ),
+          //   activeIcon: Icon(
+          //     Icons.notifications,
+          //     size: 30,
+          //     color: Color(0xFF7BB442),
+          //   ),
+          //   label: '',
+          // ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.info_outline,
+          //     size: 30,
+          //     color: Colors.black,
+          //   ),
+          //   activeIcon: Icon(
+          //     Icons.info,
+          //     size: 30,
+          //     color: Color(0xFF7BB442),
+          //   ),
+          //   label: '',
+          // ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.person_outline,
+          //     size: 30,
+          //     color: Colors.black,
+          //   ),
+          //   activeIcon: Icon(
+          //     Icons.person,
+          //     size: 30,
+          //     color: Color(0xFF7BB442),
+          //   ),
+          //   label: '',
+          // ),
         ],
       ),
     );

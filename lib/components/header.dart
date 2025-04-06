@@ -130,14 +130,17 @@ class _HeaderState extends State<Header> {
                   ),
                 ),
                 trailing: IconButton(
-                    onPressed: () {},
-                    icon: const CircleAvatar(
-                      backgroundColor: Color.fromRGBO(217, 217, 217, 1),
-                      child: Icon(
-                        Icons.person_outline_rounded,
-                        color: Color(0xFF7BB442),
-                      ),
-                    )),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/editProfile');
+                  },
+                  icon: const CircleAvatar(
+                    backgroundColor: Color.fromRGBO(217, 217, 217, 1),
+                    child: Icon(
+                      Icons.person_outline_rounded,
+                      color: Color(0xFF7BB442),
+                    ),
+                  ),
+                ),
               ),
             ),
             ListTile(
@@ -172,8 +175,7 @@ class _HeaderState extends State<Header> {
                 ),
               ),
               trailing: IconButton(
-                onPressed: () {
-                },
+                onPressed: () {},
                 icon: const Icon(
                   Icons.notifications_outlined,
                   color: Color(0xFF7BB442),
