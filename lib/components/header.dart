@@ -161,6 +161,7 @@ class _HeaderState extends State<Header> {
                     Flexible(
                       child: Text(
                         user?.location ?? 'Loading...',
+                        // 'Saida, Lebanon',
                         style: const TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 16,
@@ -172,13 +173,6 @@ class _HeaderState extends State<Header> {
                       color: Colors.black,
                     ),
                   ],
-                ),
-              ),
-              trailing: IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.notifications_outlined,
-                  color: Color(0xFF7BB442),
                 ),
               ),
             ),

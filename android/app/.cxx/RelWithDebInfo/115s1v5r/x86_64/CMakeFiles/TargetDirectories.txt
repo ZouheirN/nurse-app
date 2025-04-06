@@ -1,0 +1,2 @@
+C:/Users/zouhe/IdeaProjects/nurse-app/android/app/.cxx/RelWithDebInfo/115s1v5r/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/zouhe/IdeaProjects/nurse-app/android/app/.cxx/RelWithDebInfo/115s1v5r/x86_64/CMakeFiles/rebuild_cache.dir
