@@ -8,7 +8,9 @@ import 'package:nurse_app/services/user.dart';
 import 'package:nurse_app/services/user_token.dart';
 
 class Header extends StatefulWidget {
-  const Header({super.key});
+  final bool showLocation;
+
+  const Header({super.key, required this.showLocation});
 
   @override
   State<Header> createState() => _HeaderState();
@@ -143,39 +145,40 @@ class _HeaderState extends State<Header> {
                 ),
               ),
             ),
-            ListTile(
-              contentPadding: const EdgeInsets.only(
-                left: 4,
-                right: 4,
-              ),
-              leading: const Icon(
-                Icons.location_on,
-                color: Colors.black,
-              ),
-              title: GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/updateLocation');
-                },
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        user?.location ?? 'Loading...',
-                        // 'Saida, Lebanon',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
+            if (widget.showLocation)
+              ListTile(
+                contentPadding: const EdgeInsets.only(
+                  left: 4,
+                  right: 4,
+                ),
+                leading: const Icon(
+                  Icons.location_on,
+                  color: Colors.black,
+                ),
+                title: GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/updateLocation');
+                  },
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          user?.location ?? 'Loading...',
+                          // 'Saida, Lebanon',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                          ),
                         ),
                       ),
-                    ),
-                    const Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.black,
-                    ),
-                  ],
+                      const Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.black,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
           ],
         );
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:nurse_app/components/header.dart';
 import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/components/social_media_button.dart';
@@ -20,7 +22,9 @@ class SocialProfilesPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const Header(),
+            const Header(
+              showLocation: false,
+            ),
             BlocBuilder<AboutUsCubit, AboutUsState>(
               bloc: _aboutUsCubit..fetchAboutUs(),
               builder: (context, state) {
@@ -37,20 +41,20 @@ class SocialProfilesPage extends StatelessWidget {
                     child: ListView(
                       shrinkWrap: true,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.asset(
-                                  'assets/images/social.png',
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.all(16),
+                        //   child: Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.stretch,
+                        //     children: [
+                        //       ClipRRect(
+                        //         borderRadius: BorderRadius.circular(20),
+                        //         child: Image.asset(
+                        //           'assets/images/social.png',
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         // const SizedBox(height: 10),
                         // const Center(
                         //   child: Text(
@@ -63,6 +67,48 @@ class SocialProfilesPage extends StatelessWidget {
                         //   ),
                         // ),
                         // const SizedBox(height: 15),
+                        const Text(
+                          'Office Location',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          height: 400,
+                          width: double.infinity,
+                          child: FlutterMap(
+                            options: const MapOptions(
+                              initialCenter: LatLng(
+                                  33.563520668688156, 35.389677252154485),
+                              initialZoom: 15.0,
+                            ),
+                            children: [
+                              TileLayer(
+                                urlTemplate:
+                                    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                subdomains: const ['a', 'b', 'c'],
+                              ),
+                              // MarkerLayer(
+                              //   markers: [
+                              //     Marker(
+                              //       point: LatLng(
+                              //         aboutUs['location']['latitude'],
+                              //         aboutUs['location']['longitude'],
+                              //       ),
+                              //       child: const Icon(
+                              //         Icons.location_on,
+                              //         color: Colors.red,
+                              //         size: 40,
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
+                            ],
+                          ),
+                        ),
                         const Center(
                           child: Text(
                             'Check our Social Media profiles',

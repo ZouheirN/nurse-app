@@ -71,43 +71,91 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              MySecondButton(
-                onTap: () {
-                  widget.setValue('home');
-                },
-                buttonText: 'Immediate Request',
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                ),
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.chevron_left,
+                      size: 32,
+                      color: Colors.black,
+                    ),
+                    onPressed: () {
+                      widget.setValue('home');
+                    },
+                  ),
+                  const Text(
+                    'GUARD REQUEST',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 15),
-              const Center(
+              // MySecondButton(
+              //   onTap: () {
+              //     widget.setValue('home');
+              //   },
+              //   buttonText: 'Immediate Request',
+              //   icon: const Icon(
+              //     Icons.arrow_back,
+              //     color: Colors.white,
+              //   ),
+              // ),
+              // const SizedBox(height: 15),
+              const Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 40,
+                ),
                 child: Text(
                   'Please fill the below form:',
                   style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w500,
+                    fontStyle: FontStyle.italic,
                   ),
                 ),
               ),
               const SizedBox(height: 10),
-              LabeledTextfield(
-                label: 'Patient Full Name',
-                keyboardType: TextInputType.name,
-                controller: nameController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name.';
-                  }
+              Row(
+                children: [
+                  Expanded(
+                    child: LabeledTextfield(
+                      padding: const EdgeInsets.only(
+                        left: 40,
+                      ),
+                      label: 'First Name',
+                      keyboardType: TextInputType.name,
+                      controller: nameController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your first name.';
+                        }
 
-                  // check if full name
-                  if (value.split(' ').length < 2) {
-                    return 'Please enter your full name.';
-                  }
+                        return null;
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Expanded(
+                    child: LabeledTextfield(
+                      padding: const EdgeInsets.only(
+                        right: 40,
+                      ),
+                      label: 'Last Name',
+                      keyboardType: TextInputType.name,
+                      controller: nameController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your last name.';
+                        }
 
-                  return null;
-                },
+                        return null;
+                      },
+                    ),
+                  )
+                ],
               ),
               const SizedBox(height: 7),
               PhoneNumberField(
@@ -144,7 +192,7 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 child: Text(
-                  'Select Service',
+                  'Select Services',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,

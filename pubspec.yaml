@@ -40,6 +40,7 @@ dependencies:
   device_preview: ^1.2.0
   file_saver: ^0.2.14
   flutter_carousel_widget: ^3.1.0
+  dots_indicator: ^4.0.1
 
 dev_dependencies:
   flutter_test:

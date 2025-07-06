@@ -20,7 +20,14 @@ class MyButton extends StatelessWidget {
         height: 50,
         margin: const EdgeInsets.symmetric(horizontal: 50),
         decoration: BoxDecoration(
-          color: const Color(0xFF7BB442),
+          gradient: const LinearGradient(
+            colors: [
+              Color.fromRGBO(19, 27, 10, 1),
+              Color.fromRGBO(101, 148, 54, 1),
+            ],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+          ),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Center(
@@ -34,6 +41,7 @@ class MyButton extends StatelessWidget {
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
+                    fontStyle: FontStyle.italic,
                   ),
                 ),
         ),

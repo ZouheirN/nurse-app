@@ -24,7 +24,14 @@ class MyThirdButton extends StatelessWidget {
         height: 40,
         margin: margin ?? const EdgeInsets.symmetric(horizontal: 120),
         decoration: BoxDecoration(
-          color: color ?? const Color(0xFF7BB442),
+          gradient: const LinearGradient(
+            colors: [
+              Color.fromRGBO(19, 27, 10, 1),
+              Color.fromRGBO(101, 148, 54, 1),
+            ],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+          ),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Center(

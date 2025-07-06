@@ -12,10 +12,11 @@ class Navbar extends StatefulWidget {
 }
 
 class _NavbarState extends State<Navbar> {
-  int myIndex = 0;
+  int myIndex = 2; // Default to HomePage index
   List<Widget> widgetList = [
-    const HomePage(),
     const HistoryPage(),
+    const Placeholder(),
+    const HomePage(),
     SocialProfilesPage(),
     const SettingsPage(),
   ];
@@ -28,9 +29,21 @@ class _NavbarState extends State<Navbar> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        showUnselectedLabels: false,
-        showSelectedLabels: false,
+        showUnselectedLabels: true,
+        showSelectedLabels: true,
         backgroundColor: Colors.white,
+        selectedItemColor: const Color(0xFF7BB442),
+        unselectedItemColor: Colors.black,
+        selectedLabelStyle: const TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w500,
+          color: Color(0xFF7BB442),
+        ),
+        unselectedLabelStyle: const TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w500,
+          color: Colors.black,
+        ),
         onTap: (index) {
           setState(() {
             myIndex = index;
@@ -45,7 +58,9 @@ class _NavbarState extends State<Navbar> {
                 BlendMode.srcIn,
               ),
               child: Image.asset(
-                'assets/images/home.png',
+                'assets/images/clipboard.png',
+                height: 25,
+                width: 25,
               ),
             ),
             activeIcon: ColorFiltered(
@@ -54,8 +69,48 @@ class _NavbarState extends State<Navbar> {
                 BlendMode.srcIn,
               ),
               child: Image.asset(
-                'assets/images/home.png',
+                'assets/images/clipboard.png',
+                height: 25,
+                width: 25,
               ),
+            ),
+            label: 'Requests',
+          ),
+          BottomNavigationBarItem(
+            icon: ColorFiltered(
+              colorFilter: const ColorFilter.mode(
+                Colors.black,
+                BlendMode.srcIn,
+              ),
+              child: Image.asset(
+                'assets/images/notification2.png',
+                height: 25,
+                width: 25,
+              ),
+            ),
+            activeIcon: ColorFiltered(
+              colorFilter: const ColorFilter.mode(
+                Color(0xFF7BB442),
+                BlendMode.srcIn,
+              ),
+              child: Image.asset(
+                'assets/images/notification2.png',
+                height: 25,
+                width: 25,
+              ),
+            ),
+            label: 'Notifications',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              'assets/images/home2.png',
+              height: 40,
+              width: 80.27,
+            ),
+            activeIcon: Image.asset(
+              'assets/images/home2.png',
+              height: 40,
+              width: 80.27,
             ),
             label: '',
           ),
@@ -66,7 +121,9 @@ class _NavbarState extends State<Navbar> {
                 BlendMode.srcIn,
               ),
               child: Image.asset(
-                'assets/images/history.png',
+                'assets/images/info2.png',
+                height: 25,
+                width: 25,
               ),
             ),
             activeIcon: ColorFiltered(
@@ -75,10 +132,12 @@ class _NavbarState extends State<Navbar> {
                 BlendMode.srcIn,
               ),
               child: Image.asset(
-                'assets/images/history.png',
+                'assets/images/info2.png',
+                height: 25,
+                width: 25,
               ),
             ),
-            label: '',
+            label: 'Contact',
           ),
           BottomNavigationBarItem(
             icon: ColorFiltered(
@@ -87,7 +146,9 @@ class _NavbarState extends State<Navbar> {
                 BlendMode.srcIn,
               ),
               child: Image.asset(
-                'assets/images/info.png',
+                'assets/images/user.png',
+                height: 25,
+                width: 25,
               ),
             ),
             activeIcon: ColorFiltered(
@@ -96,31 +157,12 @@ class _NavbarState extends State<Navbar> {
                 BlendMode.srcIn,
               ),
               child: Image.asset(
-                'assets/images/info.png',
+                'assets/images/user.png',
+                height: 25,
+                width: 25,
               ),
             ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: ColorFiltered(
-              colorFilter: const ColorFilter.mode(
-                Colors.black,
-                BlendMode.srcIn,
-              ),
-              child: Image.asset(
-                'assets/images/profile.png',
-              ),
-            ),
-            activeIcon: ColorFiltered(
-              colorFilter: const ColorFilter.mode(
-                Color(0xFF7BB442),
-                BlendMode.srcIn,
-              ),
-              child: Image.asset(
-                'assets/images/profile.png',
-              ),
-            ),
-            label: '',
+            label: 'Profile',
           ),
           // BottomNavigationBarItem(
           //   icon: Icon(

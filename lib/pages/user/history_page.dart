@@ -30,7 +30,9 @@ class _HistoryPageState extends State<HistoryPage> {
       body: SafeArea(
         child: Column(
           children: [
-            const Header(),
+            const Header(
+              showLocation: false,
+            ),
             const Center(
               child: Text(
                 'Request History',
