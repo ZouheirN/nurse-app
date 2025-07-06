@@ -23,47 +23,51 @@ class SocialMediaButton extends StatelessWidget {
       onTap: () {
         launchUrl(Uri.parse(url));
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Container(
-          // width: 300,
-          padding: addPadding == true
-              ? const EdgeInsets.symmetric(vertical: 15, horizontal: 15)
-              : null,
-          decoration: BoxDecoration(
-            color: const Color(0xFF7BB442),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (logoPath != null) ...[
-                Image.asset(
-                  logoPath!,
-                  width: 30,
-                  height: 30,
-                ),
-                const SizedBox(width: 10),
-              ],
-              if (icon != null) ...[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: icon!,
-                ),
-              ],
-              if (accountName != null) ...[
-                Text(
-                  accountName!,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
+      child: Container(
+        // width: 300,
+        padding: addPadding == true
+            ? const EdgeInsets.symmetric(vertical: 15, horizontal: 15)
+            : null,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [
+              Color.fromRGBO(19, 27, 10, 1),
+              Color.fromRGBO(101, 148, 54, 1),
             ],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
           ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (logoPath != null) ...[
+              Image.asset(
+                logoPath!,
+                width: 30,
+                height: 30,
+              ),
+              const SizedBox(width: 10),
+            ],
+            if (icon != null) ...[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: icon!,
+              ),
+            ],
+            if (accountName != null) ...[
+              Text(
+                accountName!,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ],
         ),
       ),
     );

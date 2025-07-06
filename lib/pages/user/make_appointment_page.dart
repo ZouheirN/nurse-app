@@ -25,7 +25,8 @@ class MakeAppointmentPage extends StatefulWidget {
 }
 
 class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
-  final nameController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
   String completeNumber = '';
   final problemDescriptionController = TextEditingController();
   final locationController = TextEditingController();
@@ -50,7 +51,8 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
 
   @override
   void dispose() {
-    nameController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
     locationController.dispose();
     problemDescriptionController.dispose();
     super.dispose();
@@ -133,7 +135,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                       ),
                       label: 'First Name',
                       keyboardType: TextInputType.name,
-                      controller: nameController,
+                      controller: firstNameController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your first name.';
@@ -151,7 +153,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                       ),
                       label: 'Last Name',
                       keyboardType: TextInputType.name,
-                      controller: nameController,
+                      controller: lastNameController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your last name.';
@@ -337,7 +339,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                       }
 
                       _requestCubit.createRequest(
-                        name: nameController.text.trim(),
+                        name: '${firstNameController.text.trim()} ${lastNameController.text.trim()}',
                         phoneNumber: completeNumber,
                         location: locationController.text.trim(),
                         problemDescription:

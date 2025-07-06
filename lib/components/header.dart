@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:nurse_app/consts.dart';
 import 'package:nurse_app/main.dart';
@@ -19,10 +20,18 @@ class Header extends StatefulWidget {
 class _HeaderState extends State<Header> {
   // String location = 'Loading...';
 
+  ValueNotifier<bool?> isLocationServiceEnabled = ValueNotifier<bool?>(null);
+
   @override
   void initState() {
     super.initState();
     fetchUserData();
+    checkLocationService();
+  }
+
+  Future<void> checkLocationService() async {
+    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    isLocationServiceEnabled.value = serviceEnabled;
   }
 
   Future<void> fetchUserData() async {
@@ -144,6 +153,43 @@ class _HeaderState extends State<Header> {
                   ),
                 ),
               ),
+            ),
+            ValueListenableBuilder<bool?>(
+              valueListenable: isLocationServiceEnabled,
+              builder: (context, serviceEnabled, child) {
+                if (serviceEnabled == null || serviceEnabled) {
+                  return const SizedBox.shrink();
+                }
+
+                return Container(
+                  width: double.infinity,
+                  color: const Color.fromRGBO(123, 180, 66, 1),
+                  child: Row(
+                    children: [
+                      const Text(
+                        ' Please turn on the location to use the app correctly',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          isLocationServiceEnabled.value = null;
+                        },
+                        child: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
             if (widget.showLocation)
               ListTile(
