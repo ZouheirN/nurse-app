@@ -38,7 +38,7 @@ class _LabeledEditTextfieldState extends State<LabeledEditTextfield> {
     return Container(
       // height: 70,
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      // padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -59,7 +59,7 @@ class _LabeledEditTextfieldState extends State<LabeledEditTextfield> {
               decoration: InputDecoration(
                 enabledBorder: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
-                  borderSide: BorderSide(color: Color(0xFFC2C2C2)),
+                  borderSide: BorderSide(color: Color(0xFF8ABC58)),
                 ),
                 errorBorder: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -71,11 +71,11 @@ class _LabeledEditTextfieldState extends State<LabeledEditTextfield> {
                 ),
                 focusedBorder: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
-                  borderSide: BorderSide(color: Color(0xFFC2C2C2)),
+                  borderSide: BorderSide(color: Color(0xFF8ABC58)),
                 ),
                 fillColor: _isFocused
                     ? const Color.fromARGB(255, 185, 185, 185)
-                    : const Color(0xFFC2C2C2),
+                    : const Color(0xFFE5E5E5),
                 filled: true,
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
