@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:nurse_app/components/button.dart';
 import 'package:nurse_app/components/logout_button.dart';
 import 'package:nurse_app/components/profile_button.dart';
+import 'package:nurse_app/components/second_button.dart';
 import 'package:nurse_app/components/settings_button.dart';
 import 'package:nurse_app/features/authentication/models/user_model.dart';
 
@@ -8,6 +11,143 @@ import '../../services/user.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
+
+  void _showSupportSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      useSafeArea: true,
+      backgroundColor: const Color(0xFFFDFDFD),
+      builder: (context) {
+        return Container(
+          margin: const EdgeInsets.symmetric(
+            vertical: 12.0,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 5.0,
+                width: 50.0,
+                decoration: const BoxDecoration(
+                  color: Color.fromRGBO(142, 142, 142, 0.53),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Need Support?',
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: 5),
+              const Text(
+                'We\'re here to help you',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+              const SizedBox(height: 10),
+              MySecondButton(
+                onTap: () {},
+                buttonText: 'Contact Us',
+                icon: const Icon(
+                  FontAwesomeIcons.whatsapp,
+                  color: Colors.white,
+                  size: 25,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showLanguageSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      useSafeArea: true,
+      backgroundColor: const Color(0xFFFDFDFD),
+      builder: (context) {
+        return Container(
+          margin: const EdgeInsets.symmetric(
+            vertical: 12.0,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 5.0,
+                width: 50.0,
+                decoration: const BoxDecoration(
+                  color: Color.fromRGBO(142, 142, 142, 0.53),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Change Language',
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: 5),
+              ListTile(
+                dense: true,
+                minVerticalPadding: 0,
+                contentPadding: EdgeInsets.zero,
+                leading: Container(
+                  width: 5,
+                  color: Colors.transparent,
+                ),
+                title: const Text(
+                  'العربية',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    // fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ),
+              Container(
+                color: const Color.fromRGBO(216, 253, 180, 1.0),
+                child: ListTile(
+                  dense: true,
+                  minVerticalPadding: 0,
+                  contentPadding: EdgeInsets.zero,
+                  leading: Container(
+                    width: 5,
+                    color: const Color.fromRGBO(122, 179, 65, 1.0),
+                  ),
+                  title: const Text(
+                    'English',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +226,7 @@ class SettingsPage extends StatelessWidget {
                               ),
                               buttonText: 'Support',
                               onTap: () {
-                                Navigator.pushNamed(context, '/editProfile');
+                                _showSupportSheet(context);
                               },
                             ),
                             ProfileButton(
@@ -95,7 +235,7 @@ class SettingsPage extends StatelessWidget {
                               ),
                               buttonText: 'Language',
                               onTap: () {
-                                Navigator.pushNamed(context, '/editProfile');
+                                _showLanguageSheet(context);
                               },
                             ),
                           ],

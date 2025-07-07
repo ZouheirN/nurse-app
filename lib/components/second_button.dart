@@ -18,9 +18,16 @@ class MySecondButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: 50,
-        margin: const EdgeInsets.symmetric(horizontal: 70),
+        margin: const EdgeInsets.symmetric(horizontal: 30),
         decoration: BoxDecoration(
-          color: const Color(0xFF7BB442),
+          gradient: const LinearGradient(
+            colors: [
+              Color.fromRGBO(19, 27, 10, 1),
+              Color.fromRGBO(101, 148, 54, 1),
+            ],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+          ),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
@@ -36,8 +43,9 @@ class MySecondButton extends StatelessWidget {
               buttonText,
               style: const TextStyle(
                 color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                fontSize: 20,
+                fontStyle: FontStyle.italic,
               ),
             ),
             const Spacer(),
