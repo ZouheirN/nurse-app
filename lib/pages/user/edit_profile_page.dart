@@ -8,6 +8,7 @@ import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/consts.dart';
+import 'package:nurse_app/extensions/context_extension.dart';
 import 'package:quickalert/quickalert.dart';
 
 import '../../services/user.dart';
@@ -138,9 +139,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
           },
           child: const Icon(Icons.chevron_left, size: 48, color: Colors.white),
         ),
-        title: const Text(
-          'Profile',
-          style: TextStyle(
+        title: Text(
+          context.localizations.profile,
+          style: const TextStyle(
             fontSize: 36,
             fontWeight: FontWeight.w800,
             color: Colors.white,
@@ -175,25 +176,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           child: Column(
                             children: [
                               LabeledEditTextfield(
-                                label: 'First Name',
+                                label: context.localizations.firstName,
                                 keyboardType: TextInputType.name,
                                 controller: nameController,
                               ),
                               const SizedBox(height: 10),
                               LabeledEditTextfield(
-                                label: 'Last Name',
+                                label: context.localizations.lastName,
                                 keyboardType: TextInputType.name,
                                 controller: nameController,
                               ),
                               const SizedBox(height: 10),
                               LabeledEditTextfield(
-                                label: 'Nickname',
+                                label: context.localizations.nickname,
                                 keyboardType: TextInputType.name,
                                 controller: nameController,
                               ),
                               const SizedBox(height: 10),
                               LabeledEditTextfield(
-                                label: 'Date of Birth',
+                                label: context.localizations.dateOfBirth,
                                 keyboardType: TextInputType.name,
                                 controller: nameController,
                               ),
@@ -203,7 +204,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 onTap: () {
                                   updateProfile();
                                 },
-                                buttonText: 'Save',
+                                buttonText: context.localizations.save,
                               ),
                             ],
                           ),
@@ -221,7 +222,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           child: Column(
                             children: [
                               LabeledEditTextfield(
-                                label: 'Email Address',
+                                label: context.localizations.emailAddress,
                                 keyboardType: TextInputType.name,
                                 controller: emailController,
                               ),
@@ -243,7 +244,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 onTap: () {
                                   updateProfile();
                                 },
-                                buttonText: 'Save',
+                                buttonText: context.localizations.save,
                               ),
                             ],
                           ),

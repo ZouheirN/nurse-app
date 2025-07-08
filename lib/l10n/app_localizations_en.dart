@@ -107,4 +107,25 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get faq3Body =>
       '• Help with booking transportation suited to their mobility needs.\n• Assistance with luggage, boarding, and disembarking.\n• Ensuring they have medications and necessary documents.\n• Providing wheelchair or walking aid support if required.\n• Accompanying them to medical appointments, vacations, or family visits.';
+
+  @override
+  String get firstName => 'First Name';
+
+  @override
+  String get lastName => 'Last Name';
+
+  @override
+  String get nickname => 'Nickname';
+
+  @override
+  String get dateOfBirth => 'Date of Birth';
+
+  @override
+  String get emailAddress => 'Email Address';
+
+  @override
+  String get phoneNumber => 'Phone Number';
+
+  @override
+  String get save => 'Save';
 }

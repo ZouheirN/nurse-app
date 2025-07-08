@@ -112,7 +112,7 @@ class _NavbarState extends State<Navbar> {
               width: 80.27,
             ),
             activeIcon: Image.asset(
-              'assets/images/home2.png',
+              'assets/images/home2s.png',
               height: 40,
               width: 80.27,
             ),

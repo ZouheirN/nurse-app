@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:nurse_app/extensions/context_extension.dart';
 import 'package:nurse_app/main.dart';
 
 class PhoneNumberField extends StatefulWidget {
@@ -64,9 +65,9 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (widget.showLabel!)
-            const Text(
-              'Phone Number',
-              style: TextStyle(
+            Text(
+              context.localizations.phoneNumber,
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),

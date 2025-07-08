@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:nurse_app/components/labeled_edit_textfield.dart';
 import 'package:nurse_app/components/third_button.dart';
+import 'package:nurse_app/extensions/context_extension.dart';
 import 'package:nurse_app/features/location/cubit/location_cubit.dart';
 import 'package:nurse_app/main.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
@@ -240,7 +241,7 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
                         );
                       }
                     },
-                    buttonText: 'Save',
+                    buttonText: context.localizations.save,
                   );
                 },
               ),
