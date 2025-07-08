@@ -4,7 +4,9 @@ import '../../components/filter_button.dart';
 import '../../components/notification_card.dart';
 
 class NotificationsPage extends StatefulWidget {
-  const NotificationsPage({super.key});
+  final bool showLeading;
+
+  const NotificationsPage({super.key, required this.showLeading});
 
   @override
   State<NotificationsPage> createState() => _NotificationsPageState();
@@ -26,6 +28,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: widget.showLeading
+            ? IconButton(
+                icon: const Icon(Icons.chevron_left,
+                    size: 48, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
+              )
+            : null,
         title: const Text(
           'Notifications',
           style: TextStyle(

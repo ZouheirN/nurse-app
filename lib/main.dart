@@ -62,7 +62,7 @@ Future<void> main() async {
       statusBarColor: Colors.white,
     ),
   );
-  
+
   runApp(
     DevicePreview(
       enabled: !kReleaseMode && kIsWeb,
@@ -85,7 +85,7 @@ class _MyAppState extends State<MyApp> {
     if (event is KeyDownEvent) {
       if (key == LogicalKeyboardKey.f9) {
         DevicePreview.screenshot(context).then(
-              (value) async {
+          (value) async {
             await FileSaver.instance.saveFile(
               name: 'screenshot.png',
               bytes: value.bytes,
@@ -119,106 +119,88 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Locale>(
-      stream: GeneralStream.languageStream.stream,
-      builder: (context, snapshot) {
-        return MaterialApp(
-          useInheritedMediaQuery: true,
-          builder: DevicePreview.appBuilder,
-          debugShowCheckedModeBanner: false,
-          home: const SplashScreen(),
-          locale: snapshot.data ?? DevicePreview.locale(context),
-          supportedLocales: L10n.locals,
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            AppLocalizations.delegate,
-          ],
-          theme: Theme.of(context).copyWith(
-            appBarTheme: Theme
-                .of(context)
-                .appBarTheme
-                .copyWith(
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarIconBrightness: Brightness.dark,
-                statusBarColor: Colors.white,
+        stream: GeneralStream.languageStream.stream,
+        builder: (context, snapshot) {
+          return MaterialApp(
+            useInheritedMediaQuery: true,
+            builder: DevicePreview.appBuilder,
+            debugShowCheckedModeBanner: false,
+            home: const SplashScreen(),
+            locale: snapshot.data ?? DevicePreview.locale(context),
+            supportedLocales: L10n.locals,
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              AppLocalizations.delegate,
+            ],
+            theme: Theme.of(context).copyWith(
+              appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                    systemOverlayStyle: const SystemUiOverlayStyle(
+                      statusBarIconBrightness: Brightness.dark,
+                      statusBarColor: Colors.white,
+                    ),
+                  ),
+              textSelectionTheme: const TextSelectionThemeData(
+                cursorColor: Color(0xFF7BB442),
               ),
             ),
-            textSelectionTheme: const TextSelectionThemeData(
-              cursorColor: Color(0xFF7BB442),
-            ),
-          ),
-          routes: {
-            '/login': (context) => LoginPage(),
-            '/signup': (context) => const SignupPage(),
-            '/home': (context) => const Navbar(),
-            '/verifySms': (context) {
-              final args = ModalRoute
-                  .of(context)
-                  ?.settings
-                  .arguments as Map;
-              return VerifySmsPage(
-                phoneNumber: args['phoneNumber'],
-                resend: args['resend'],
-              );
+            routes: {
+              '/login': (context) => LoginPage(),
+              '/signup': (context) => const SignupPage(),
+              '/home': (context) => const Navbar(),
+              '/verifySms': (context) {
+                final args = ModalRoute.of(context)?.settings.arguments as Map;
+                return VerifySmsPage(
+                  phoneNumber: args['phoneNumber'],
+                  resend: args['resend'],
+                );
+              },
+              '/forgotPassword': (context) {
+                final args =
+                    ModalRoute.of(context)?.settings.arguments as String;
+                return ForgotPasswordPage(phoneNumber: args);
+              },
+              '/requestDetails': (context) {
+                final args = ModalRoute.of(context)?.settings.arguments as num;
+                return RequestDetailsPage(requestId: args);
+              },
+              '/editProfile': (context) => const EditProfilePage(),
+              '/updateLocation': (context) => const UpdateLocationPage(),
+              '/adminDashboard': (context) => const AdminDashboardPage(),
+              '/manageNurses': (context) => const ManageNursesPage(),
+              '/addNurse': (context) => const AddNursePage(),
+              '/editNurse': (context) {
+                final args = ModalRoute.of(context)?.settings.arguments as int;
+                return EditNursePage(nurseId: args);
+              },
+              '/manageServices': (context) => const ManageServicesPage(),
+              '/addService': (context) => const AddServicePage(),
+              '/editService': (context) {
+                final args = ModalRoute.of(context)?.settings.arguments as int;
+                return EditServicePage(serviceId: args);
+              },
+              '/manageOrders': (context) => const ManageOrdersPage(),
+              '/orderDetails': (context) {
+                final args = ModalRoute.of(context)?.settings.arguments as int;
+                return OrderDetailsPage(orderId: args);
+              },
+              '/submitOrder': (context) {
+                final args = ModalRoute.of(context)?.settings.arguments
+                    as RequestsHistoryModel;
+                return SubmitOrderPage(order: args);
+              },
+              '/adminSettings': (context) => const AdminSettingsPage(),
+              '/sendNotification': (context) => const SendNotificationPage(),
+              '/notifications': (context) {
+                final args = ModalRoute.of(context)?.settings.arguments as Map?;
+
+                return NotificationsPage(
+                  showLeading: args?['showLeading'],
+                );
+              },
             },
-            '/forgotPassword': (context) {
-              final args = ModalRoute
-                  .of(context)
-                  ?.settings
-                  .arguments as String;
-              return ForgotPasswordPage(phoneNumber: args);
-            },
-            '/requestDetails': (context) {
-              final args = ModalRoute
-                  .of(context)
-                  ?.settings
-                  .arguments as num;
-              return RequestDetailsPage(requestId: args);
-            },
-            '/editProfile': (context) => const EditProfilePage(),
-            '/updateLocation': (context) => const UpdateLocationPage(),
-            '/adminDashboard': (context) => const AdminDashboardPage(),
-            '/manageNurses': (context) => const ManageNursesPage(),
-            '/addNurse': (context) => const AddNursePage(),
-            '/editNurse': (context) {
-              final args = ModalRoute
-                  .of(context)
-                  ?.settings
-                  .arguments as int;
-              return EditNursePage(nurseId: args);
-            },
-            '/manageServices': (context) => const ManageServicesPage(),
-            '/addService': (context) => const AddServicePage(),
-            '/editService': (context) {
-              final args = ModalRoute
-                  .of(context)
-                  ?.settings
-                  .arguments as int;
-              return EditServicePage(serviceId: args);
-            },
-            '/manageOrders': (context) => const ManageOrdersPage(),
-            '/orderDetails': (context) {
-              final args = ModalRoute
-                  .of(context)
-                  ?.settings
-                  .arguments as int;
-              return OrderDetailsPage(orderId: args);
-            },
-            '/submitOrder': (context) {
-              final args = ModalRoute
-                  .of(context)
-                  ?.settings
-                  .arguments
-              as RequestsHistoryModel;
-              return SubmitOrderPage(order: args);
-            },
-            '/adminSettings': (context) => const AdminSettingsPage(),
-            '/sendNotification': (context) => const SendNotificationPage(),
-            '/notifications': (context) => const NotificationsPage(),
-          },
-        );
-      }
-    );
+          );
+        });
   }
 }

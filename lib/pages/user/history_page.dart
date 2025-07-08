@@ -6,6 +6,7 @@ import 'package:nurse_app/components/history_card.dart';
 import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/features/request/cubit/request_cubit.dart';
 import 'package:nurse_app/features/request/models/requests_history_model.dart';
+import 'package:nurse_app/main.dart';
 import 'package:nurse_app/utilities/helper_functions.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -122,6 +123,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 10),
                           child: HistoryCard(
+                            isOngoing: true,
                             services: request.services!,
                             description: 'Check out the details',
                             time: formatDateTimeForCard(request.createdAt!),

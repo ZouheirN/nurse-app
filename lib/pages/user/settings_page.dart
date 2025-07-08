@@ -280,12 +280,9 @@ class SettingsPage extends StatelessWidget {
                       color: const Color.fromRGBO(255, 255, 255, 1),
                       child: Column(
                         children: [
-                          ListTile(
+                          const ListTile(
                             dense: true,
-                            onTap: () {
-                              Navigator.pushNamed(context, '/notifications');
-                            },
-                            title: const Text(
+                            title: Text(
                               'Account Details',
                               style: TextStyle(
                                 fontSize: 13,
@@ -306,6 +303,11 @@ class SettingsPage extends StatelessWidget {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
+                            onTap: () {
+                              Navigator.pushNamed(context, '/notifications', arguments: {
+                                'showLeading': true,
+                              });
+                            },
                           ),
                           const Padding(
                             padding: EdgeInsets.symmetric(

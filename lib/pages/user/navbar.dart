@@ -17,7 +17,9 @@ class _NavbarState extends State<Navbar> {
   int myIndex = 2; // Default to HomePage index
   List<Widget> widgetList = [
     const HistoryPage(),
-    const NotificationsPage(),
+    const NotificationsPage(
+      showLeading: false,
+    ),
     const HomePage(),
     SocialProfilesPage(),
     const SettingsPage(),
