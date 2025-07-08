@@ -53,99 +53,97 @@ class _HistoryPageState extends State<HistoryPage> {
         ),
         backgroundColor: Colors.transparent,
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // const Center(
-            //   child: Text(
-            //     'Request History',
-            //     style: TextStyle(
-            //       fontSize: 20,
-            //       fontWeight: FontWeight.w700,
-            //     ),
-            //     textAlign: TextAlign.center,
-            //   ),
-            // ),
-            const SizedBox(height: 15),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  for (final filter in _filterOptions)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: FilterButton(
-                        filterText: filter,
-                        isSelected: _selectedFilter == filter,
-                        onTap: () {
-                          setState(() {
-                            _selectedFilter = filter;
-                          });
-                        },
-                      ),
+      body: Column(
+        children: [
+          // const Center(
+          //   child: Text(
+          //     'Request History',
+          //     style: TextStyle(
+          //       fontSize: 20,
+          //       fontWeight: FontWeight.w700,
+          //     ),
+          //     textAlign: TextAlign.center,
+          //   ),
+          // ),
+          const SizedBox(height: 15),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                for (final filter in _filterOptions)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: FilterButton(
+                      filterText: filter,
+                      isSelected: _selectedFilter == filter,
+                      onTap: () {
+                        setState(() {
+                          _selectedFilter = filter;
+                        });
+                      },
                     ),
-                ],
-              ),
+                  ),
+              ],
             ),
-            const SizedBox(height: 15),
-            BlocBuilder<RequestCubit, RequestState>(
-              bloc: _requestCubit,
-              builder: (context, state) {
-                if (state is RequestsHistoryLoading) {
-                  return const Expanded(child: Loader());
-                }
+          ),
+          const SizedBox(height: 15),
+          BlocBuilder<RequestCubit, RequestState>(
+            bloc: _requestCubit,
+            builder: (context, state) {
+              if (state is RequestsHistoryLoading) {
+                return const Expanded(child: Loader());
+              }
 
-                if (state is RequestsHistorySuccess) {
-                  final requests = state.requests.reversed.toList();
+              if (state is RequestsHistorySuccess) {
+                final requests = state.requests.reversed.toList();
 
-                  // return HistoryCard(
-                  //   services: [
-                  //     Service(
-                  //       name: 'Basic Nursing Service',
-                  //       price: '15',
-                  //       id: 1,
-                  //       categoryId: 1,
-                  //       createdAt: DateTime.now(),
-                  //       description: 'Basic Nursing Service',
-                  //     )
-                  //   ],
-                  //   description: 'Check out the details',
-                  //   time: formatDateTimeForCard(DateTime.now()),
-                  //   onTap: () {},
-                  // );
+                // return HistoryCard(
+                //   services: [
+                //     Service(
+                //       name: 'Basic Nursing Service',
+                //       price: '15',
+                //       id: 1,
+                //       categoryId: 1,
+                //       createdAt: DateTime.now(),
+                //       description: 'Basic Nursing Service',
+                //     )
+                //   ],
+                //   description: 'Check out the details',
+                //   time: formatDateTimeForCard(DateTime.now()),
+                //   onTap: () {},
+                // );
 
-                  return Expanded(
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: requests.map(
-                        (request) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: HistoryCard(
-                              services: request.services!,
-                              description: 'Check out the details',
-                              time: formatDateTimeForCard(request.createdAt!),
-                              onTap: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  '/requestDetails',
-                                  arguments: request.id,
-                                );
-                              },
-                            ),
-                          );
-                        },
-                      ).toList(),
-                    ),
-                  );
-                }
+                return Expanded(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: requests.map(
+                      (request) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: HistoryCard(
+                            services: request.services!,
+                            description: 'Check out the details',
+                            time: formatDateTimeForCard(request.createdAt!),
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/requestDetails',
+                                arguments: request.id,
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ).toList(),
+                  ),
+                );
+              }
 
-                return const Center(child: Text('Failed to load history.'));
-              },
-            ),
-          ],
-        ),
+              return const Center(child: Text('Failed to load history.'));
+            },
+          ),
+        ],
       ),
     );
   }

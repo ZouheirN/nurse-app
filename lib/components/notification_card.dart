@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 class NotificationCard extends StatelessWidget {
   final String title;
   final String description;
-  final String time;
-  final VoidCallback onTap;
+  final String? time;
+  final VoidCallback? onTap;
 
   const NotificationCard({
     super.key,
     required this.title,
     required this.description,
-    required this.time,
-    required this.onTap,
+    this.time,
+    this.onTap,
   });
 
   @override
@@ -25,23 +25,31 @@ class NotificationCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: Colors.grey,
-              width: 1,
-            ),
+            // border: Border.all(
+            //   color: Colors.grey,
+            //   width: 1,
+            // ),
           ),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  'assets/images/dr.png',
+              const ColorFiltered(
+                colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcATop),
+                child: Image(
+                  image: AssetImage('assets/images/square_logo.png'),
                   width: 60,
                   height: 60,
-                  fit: BoxFit.cover,
                 ),
               ),
+              // ClipRRect(
+              //   borderRadius: BorderRadius.circular(8),
+              //   child: Image.asset(
+              //     'assets/images/dr.png',
+              //     width: 60,
+              //     height: 60,
+              //     fit: BoxFit.cover,
+              //   ),
+              // ),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
@@ -50,8 +58,8 @@ class NotificationCard extends StatelessWidget {
                     Text(
                       title,
                       style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
                         color: Colors.black,
                       ),
                       maxLines: 1,
@@ -61,8 +69,9 @@ class NotificationCard extends StatelessWidget {
                     Text(
                       description,
                       style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
+                        fontSize: 15,
+                        color: Color.fromRGBO(142, 142, 142, 1),
+                        fontWeight: FontWeight.w400,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -70,15 +79,23 @@ class NotificationCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(width: 10),
-              Text(
-                time,
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w300,
-                  color: Colors.black,
+              if (time != null) ...[
+                const SizedBox(width: 10),
+                Text(
+                  time!,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
+              ],
+              const SizedBox(width: 10),
+              const Icon(
+                Icons.chevron_right,
+                size: 20,
+                color: Colors.black,
+              )
             ],
           ),
         ),
