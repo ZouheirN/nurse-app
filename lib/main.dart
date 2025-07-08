@@ -22,6 +22,7 @@ import 'package:nurse_app/pages/user/edit_profile_page.dart';
 import 'package:nurse_app/pages/user/forgot_password_page.dart';
 import 'package:nurse_app/pages/user/login_page.dart';
 import 'package:nurse_app/pages/user/navbar.dart';
+import 'package:nurse_app/pages/user/notifications_page.dart';
 import 'package:nurse_app/pages/user/request_details_page.dart';
 import 'package:nurse_app/pages/user/signup_page.dart';
 import 'package:nurse_app/pages/user/splash_screen.dart';
@@ -198,6 +199,7 @@ class _MyAppState extends State<MyApp> {
         },
         '/adminSettings': (context) => const AdminSettingsPage(),
         '/sendNotification': (context) => const SendNotificationPage(),
+        '/notifications': (context) => const NotificationsPage(),
       },
     );
   }

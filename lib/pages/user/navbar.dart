@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nurse_app/pages/user/history_page.dart';
 import 'package:nurse_app/pages/user/home_page.dart';
+import 'package:nurse_app/pages/user/notifications_page.dart';
 import 'package:nurse_app/pages/user/settings_page.dart';
 import 'package:nurse_app/pages/user/social_profiles_page.dart';
 
@@ -15,7 +16,7 @@ class _NavbarState extends State<Navbar> {
   int myIndex = 2; // Default to HomePage index
   List<Widget> widgetList = [
     const HistoryPage(),
-    const Placeholder(),
+    const NotificationsPage(),
     const HomePage(),
     SocialProfilesPage(),
     const SettingsPage(),
