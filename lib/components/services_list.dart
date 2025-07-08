@@ -116,8 +116,7 @@ class _ServicesListState extends State<ServicesList> {
             padding: const EdgeInsets.symmetric(vertical: 5),
             child: ServiceCard(
               serviceId: service['id'],
-              imagePath:
-                  service['service_pic'] ?? 'assets/images/square_logo.png',
+              imagePath: service['service_pic'] ?? 'assets/images/default.png',
               title: service['name'],
               price: service['price'],
               salePrice: service['discount_price'],
@@ -169,9 +168,9 @@ class _ServicesListState extends State<ServicesList> {
         return Align(
           alignment: Alignment.topCenter,
           child: GridView(
-           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              crossAxisSpacing: 10,
+              crossAxisSpacing: 2,
               mainAxisSpacing: 10,
               mainAxisExtent: subjectSize.height,
             ),
@@ -185,8 +184,8 @@ class _ServicesListState extends State<ServicesList> {
                   child: ServiceCard(
                     height: subjectSize.height,
                     serviceId: service['id'],
-                    imagePath: service['service_pic'] ??
-                        'assets/images/square_logo.png',
+                    imagePath:
+                        service['service_pic'] ?? 'assets/images/default.png',
                     title: service['name'],
                     price: service['price'],
                     isSelected:

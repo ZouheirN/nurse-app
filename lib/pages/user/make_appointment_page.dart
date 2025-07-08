@@ -31,9 +31,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
   final problemDescriptionController = TextEditingController();
   final locationController = TextEditingController();
   final genderController = GenderSelectionController();
-  final timeTypeController = TimeTypeSelectionController();
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now();
+
 
   List<dynamic> services = [];
   List<int> selectedServiceIds = [];
@@ -196,8 +194,8 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
               ),
               const SizedBox(height: 7),
               GenderSelectionField(controller: genderController),
-              const SizedBox(height: 7),
-              TimeTypeSelectionField(controller: timeTypeController),
+              // const SizedBox(height: 7),
+              // TimeTypeSelectionField(controller: timeTypeController),
               const SizedBox(height: 10),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40),
@@ -229,44 +227,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                   },
                 ),
               ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  color: const Color(0xFFE7E7E7),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Column(
-                      children: [
-                        LabeledDateField(
-                          label: 'Start Date',
-                          currentDate: startDate,
-                          currentTime: TimeOfDay.now(),
-                          onPicked: (date) {
-                            setState(() {
-                              startDate = date;
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 7),
-                        LabeledDateField(
-                          label: 'End Date',
-                          currentDate: endDate,
-                          currentTime: TimeOfDay.now(),
-                          onPicked: (date) {
-                            setState(() {
-                              endDate = date;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+
               const SizedBox(height: 20),
               BlocConsumer<RequestCubit, RequestState>(
                 bloc: _requestCubit,
@@ -311,44 +272,14 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                         return;
                       }
 
-                      if (timeTypeController.getTimeType() == null) {
-                        Dialogs.showErrorDialog(
-                          context,
-                          'Error',
-                          'Please select a time type.',
-                        );
-                        return;
-                      }
-
-                      if (selectedServiceIds.isEmpty) {
-                        Dialogs.showErrorDialog(
-                          context,
-                          'Error',
-                          'Please select at least one service.',
-                        );
-                        return;
-                      }
-
-                      if (startDate.isAfter(endDate)) {
-                        Dialogs.showErrorDialog(
-                          context,
-                          'Error',
-                          'End date should be after start date.',
-                        );
-                        return;
-                      }
-
                       _requestCubit.createRequest(
                         name: '${firstNameController.text.trim()} ${lastNameController.text.trim()}',
                         phoneNumber: completeNumber,
                         location: locationController.text.trim(),
                         problemDescription:
-                            problemDescriptionController.text.trim(),
+                        problemDescriptionController.text.trim(),
                         nurseGender: genderController.getGender()!,
                         selectedServices: selectedServiceIds,
-                        timeType: timeTypeController.getTimeType()!,
-                        startDate: startDate,
-                        endDate: endDate,
                       );
                     },
                     buttonText: 'Submit',

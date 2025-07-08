@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../utilities/helper_functions.dart';
 import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
+import 'package:badges/badges.dart' as badges;
 
 class ServiceCard extends StatefulWidget {
   final String imagePath;
@@ -55,97 +56,123 @@ class _ServiceCardState extends State<ServiceCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: _toggleSelection,
-      child: Container(
-        // height: MediaQuery.of(context).size.width * 0.4,
-        height: widget.height,
-        width: MediaQuery.of(context).size.width * 0.24,
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: isSelected ? Colors.green : Colors.transparent,
-            width: 2,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 4,
-              spreadRadius: 2,
-            ),
-          ],
+      child: badges.Badge(
+        showBadge: isSelected,
+        stackFit: StackFit.passthrough,
+        badgeStyle: const badges.BadgeStyle(
+          badgeColor: Color.fromRGBO(123, 180, 66, 1),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(
-              child: Column(
-                children: [
-                  _buildImage(widget.imagePath),
-                  const SizedBox(height: 8),
-                  AutoSizeText(
-                    widget.title,
-                    minFontSize: 8,
-                    // maxLines: 4,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
+        badgeContent: Container(
+          height: 25,
+          width: 25,
+          decoration: const BoxDecoration(
+            color: Color.fromRGBO(123, 180, 66, 1),
+            shape: BoxShape.circle,
+          ),
+          child: const Text(
+            '10% OFF',
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 8,
+              color: Colors.white,
             ),
-            Row(
-              mainAxisAlignment: (widget.salePrice != null)
-                  ? MainAxisAlignment.spaceBetween
-                  : MainAxisAlignment.center,
-              children: [
-                Flexible(
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          '\$${formatPrice(widget.price)}',
-                          style: TextStyle(
-                            color: widget.salePrice != null
-                                ? Colors.grey
-                                : Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        position: badges.BadgePosition.topEnd(
+          top: 0,
+          end: 0,
+        ),
+        child: Container(
+          // height: MediaQuery.of(context).size.width * 0.4,
+          height: widget.height,
+          width: MediaQuery.of(context).size.width * 0.24,
+          padding: const EdgeInsets.all(2),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: isSelected ? Colors.green : Colors.transparent,
+              width: 2,
+            ),
+            // boxShadow: [
+            //   BoxShadow(
+            //     color: Colors.black.withValues(alpha: 0.1),
+            //     blurRadius: 4,
+            //     spreadRadius: 2,
+            //   ),
+            // ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Flexible(
+                child: Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: _buildImage(widget.imagePath),
+                    ),
+                    const SizedBox(height: 8),
+                    AutoSizeText(
+                      widget.title,
+                      minFontSize: 10,
+                      // maxLines: 4,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
                       ),
-                      if (widget.salePrice != null)
-                        Positioned.fill(
-                          child: CustomPaint(
-                            painter: DiagonalLinePainter(),
-                          ),
-                        ),
-                    ],
-                  ),
+                      textAlign: TextAlign.left,
+                    ),
+                  ],
                 ),
-                if (widget.salePrice != null) ...[
-                  const SizedBox(width: 5),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
                   Flexible(
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
-                        '\$${formatPrice(widget.salePrice!)}',
-                        style: const TextStyle(
-                          fontSize: 14,
+                        widget.salePrice != null
+                            ? '\$${formatPrice(widget.salePrice!)}'
+                            : '\$${formatPrice(widget.price)}',
+                        style: TextStyle(
+                          color: widget.salePrice != null
+                              ? const Color.fromRGBO(52, 105, 0, 1)
+                              : Colors.black,
+                          fontSize: 12,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
                   ),
+                  const Flexible(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Icon(Icons.info_outline, size: 14),
+                    ),
+                  ),
+                  // if (widget.salePrice != null) ...[
+                  //   const SizedBox(width: 5),
+                  //   Flexible(
+                  //     child: FittedBox(
+                  //       fit: BoxFit.scaleDown,
+                  //       child: Text(
+                  //         '\$${formatPrice(widget.salePrice!)}',
+                  //         style: const TextStyle(
+                  //           fontSize: 14,
+                  //           fontWeight: FontWeight.w700,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ],
                 ],
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -161,7 +188,7 @@ class _ServiceCardState extends State<ServiceCard> {
         imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
         errorWidget: (context, error, stackTrace) {
           return Image.asset(
-            'assets/images/square_logo.png',
+            'assets/images/default.png',
             height: MediaQuery.of(context).size.width * 0.17,
             width: MediaQuery.of(context).size.width * 0.24,
             fit: BoxFit.cover,

@@ -5,9 +5,12 @@ import 'package:nurse_app/components/logout_button.dart';
 import 'package:nurse_app/components/profile_button.dart';
 import 'package:nurse_app/components/second_button.dart';
 import 'package:nurse_app/components/settings_button.dart';
+import 'package:nurse_app/extensions/context_extension.dart';
 import 'package:nurse_app/features/authentication/models/user_model.dart';
+import 'package:nurse_app/l10n/l10n.dart';
 
 import '../../services/user.dart';
+import '../../streams/general_stream.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -77,6 +80,8 @@ class SettingsPage extends StatelessWidget {
       useSafeArea: true,
       backgroundColor: const Color(0xFFFDFDFD),
       builder: (context) {
+        final currentLocale = Localizations.localeOf(context);
+
         return Container(
           margin: const EdgeInsets.symmetric(
             vertical: 12.0,
@@ -96,41 +101,58 @@ class SettingsPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Change Language',
-                style: TextStyle(
+              Text(
+                context.localizations.changeLanguage,
+                style: const TextStyle(
                   fontStyle: FontStyle.italic,
                   fontSize: 20,
                   fontWeight: FontWeight.w800,
                 ),
               ),
               const SizedBox(height: 5),
-              ListTile(
-                dense: true,
-                minVerticalPadding: 0,
-                contentPadding: EdgeInsets.zero,
-                leading: Container(
-                  width: 5,
-                  color: Colors.transparent,
-                ),
-                title: const Text(
-                  'العربية',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                    // fontStyle: FontStyle.italic,
-                  ),
-                ),
-              ),
               Container(
-                color: const Color.fromRGBO(216, 253, 180, 1.0),
+                color: currentLocale.languageCode == 'ar'
+                    ? const Color.fromRGBO(216, 253, 180, 1.0)
+                    : null,
                 child: ListTile(
                   dense: true,
                   minVerticalPadding: 0,
                   contentPadding: EdgeInsets.zero,
                   leading: Container(
                     width: 5,
-                    color: const Color.fromRGBO(122, 179, 65, 1.0),
+                    color: currentLocale.languageCode == 'ar'
+                        ? const Color.fromRGBO(122, 179, 65, 1.0)
+                        : Colors.transparent,
+                  ),
+                  title: const Text(
+                    'العربية',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                      // fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  onTap: () {
+                    GeneralStream.languageStream.add(L10n.locals.firstWhere(
+                      (locale) => locale.languageCode == 'ar',
+                    ));
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+              Container(
+                color: currentLocale.languageCode == 'en'
+                    ? const Color.fromRGBO(216, 253, 180, 1.0)
+                    : null,
+                child: ListTile(
+                  dense: true,
+                  minVerticalPadding: 0,
+                  contentPadding: EdgeInsets.zero,
+                  leading: Container(
+                    width: 5,
+                    color: currentLocale.languageCode == 'en'
+                        ? const Color.fromRGBO(122, 179, 65, 1.0)
+                        : Colors.transparent,
                   ),
                   title: const Text(
                     'English',
@@ -140,6 +162,12 @@ class SettingsPage extends StatelessWidget {
                       fontStyle: FontStyle.italic,
                     ),
                   ),
+                  onTap: () {
+                    GeneralStream.languageStream.add(L10n.locals.firstWhere(
+                      (locale) => locale.languageCode == 'en',
+                    ));
+                    Navigator.pop(context);
+                  },
                 ),
               ),
             ],
@@ -215,7 +243,7 @@ class SettingsPage extends StatelessWidget {
                               iconImage: const AssetImage(
                                 'assets/images/user2.png',
                               ),
-                              buttonText: 'Profile',
+                              buttonText: context.localizations.profile,
                               onTap: () {
                                 Navigator.pushNamed(context, '/editProfile');
                               },
@@ -224,7 +252,7 @@ class SettingsPage extends StatelessWidget {
                               iconImage: const AssetImage(
                                 'assets/images/support.png',
                               ),
-                              buttonText: 'Support',
+                              buttonText: context.localizations.support,
                               onTap: () {
                                 _showSupportSheet(context);
                               },
@@ -233,7 +261,7 @@ class SettingsPage extends StatelessWidget {
                               iconImage: const AssetImage(
                                 'assets/images/language.png',
                               ),
-                              buttonText: 'Language',
+                              buttonText: context.localizations.languageText,
                               onTap: () {
                                 _showLanguageSheet(context);
                               },

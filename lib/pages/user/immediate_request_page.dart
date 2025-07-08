@@ -11,6 +11,8 @@ import 'package:nurse_app/features/request/cubit/request_cubit.dart';
 import 'package:nurse_app/features/services/cubit/services_cubit.dart';
 import 'package:quickalert/quickalert.dart';
 
+import '../../components/labeled_date.dart';
+import '../../components/time_type_selection_field.dart';
 import '../../utilities/dialogs.dart';
 
 class ImmediateRequestPage extends StatefulWidget {
@@ -29,6 +31,8 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
   final problemDescriptionController = TextEditingController();
   final locationController = TextEditingController();
   final genderController = GenderSelectionController();
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
 
   List<int> selectedServiceIds = [];
 
@@ -222,6 +226,44 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
                 ),
               ),
               const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  color: const Color(0xFFE7E7E7),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Column(
+                      children: [
+                        LabeledDateField(
+                          label: 'Start Date',
+                          currentDate: startDate,
+                          currentTime: TimeOfDay.now(),
+                          onPicked: (date) {
+                            setState(() {
+                              startDate = date;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 7),
+                        LabeledDateField(
+                          label: 'End Date',
+                          currentDate: endDate,
+                          currentTime: TimeOfDay.now(),
+                          onPicked: (date) {
+                            setState(() {
+                              endDate = date;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               BlocConsumer<RequestCubit, RequestState>(
                 bloc: _requestCubit,
                 listener: (context, state) {
@@ -274,14 +316,45 @@ class _ImmediateRequestPageState extends State<ImmediateRequestPage> {
                         return;
                       }
 
+                      // if (timeTypeController.getTimeType() == null) {
+                      //   Dialogs.showErrorDialog(
+                      //     context,
+                      //     'Error',
+                      //     'Please select a time type.',
+                      //   );
+                      //   return;
+                      // }
+
+                      if (selectedServiceIds.isEmpty) {
+                        Dialogs.showErrorDialog(
+                          context,
+                          'Error',
+                          'Please select at least one service.',
+                        );
+                        return;
+                      }
+
+                      if (startDate.isAfter(endDate)) {
+                        Dialogs.showErrorDialog(
+                          context,
+                          'Error',
+                          'End date should be after start date.',
+                        );
+                        return;
+                      }
+
+
                       _requestCubit.createRequest(
                         name: '${firstNameController.text.trim()} ${lastNameController.text.trim()}',
                         phoneNumber: completeNumber,
                         location: locationController.text.trim(),
                         problemDescription:
-                            problemDescriptionController.text.trim(),
+                        problemDescriptionController.text.trim(),
                         nurseGender: genderController.getGender()!,
                         selectedServices: selectedServiceIds,
+                        // timeType: timeTypeController.getTimeType()!,
+                        startDate: startDate,
+                        endDate: endDate,
                       );
                     },
                     buttonText: 'Submit',

@@ -1,0 +1,14 @@
+{
+    "@@locale": "en",
+    "language": "English",
+    "@language": {
+        "description": "Selected Language"
+    },
+    "requests": "Requests",
+    "notifications": "Notifications",
+    "contact": "Contact",
+    "profile": "Profile",
+    "changeLanguage": "Change Language",
+    "languageText": "Language",
+    "support": "Support"
+}

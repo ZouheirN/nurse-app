@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nurse_app/extensions/context_extension.dart';
 import 'package:nurse_app/pages/user/history_page.dart';
 import 'package:nurse_app/pages/user/home_page.dart';
 import 'package:nurse_app/pages/user/notifications_page.dart';
@@ -75,7 +76,7 @@ class _NavbarState extends State<Navbar> {
                 width: 25,
               ),
             ),
-            label: 'Requests',
+            label: context.localizations.requests,
           ),
           BottomNavigationBarItem(
             icon: ColorFiltered(
@@ -100,7 +101,7 @@ class _NavbarState extends State<Navbar> {
                 width: 25,
               ),
             ),
-            label: 'Notifications',
+            label: context.localizations.notifications,
           ),
           BottomNavigationBarItem(
             icon: Image.asset(
@@ -138,7 +139,7 @@ class _NavbarState extends State<Navbar> {
                 width: 25,
               ),
             ),
-            label: 'Contact',
+            label: context.localizations.contact,
           ),
           BottomNavigationBarItem(
             icon: ColorFiltered(
@@ -163,7 +164,7 @@ class _NavbarState extends State<Navbar> {
                 width: 25,
               ),
             ),
-            label: 'Profile',
+            label: context.localizations.profile,
           ),
           // BottomNavigationBarItem(
           //   icon: Icon(

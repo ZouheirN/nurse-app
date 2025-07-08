@@ -1,0 +1,14 @@
+{
+    "@@locale": "ar",
+    "language": "العربية",
+    "@language": {
+        "description": "اللغة المختارة"
+    },
+    "requests": "طلبات",
+    "notifications": "الإشعارات",
+    "contact": "اتصال",
+    "profile": "الملف الشخصي",
+    "changeLanguage": "تغيير اللغة",
+    "languageText": "اللغة",
+    "support": "الدعم"
+}
