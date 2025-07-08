@@ -145,6 +145,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Support'**
   String get support;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @thisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week'**
+  String get thisWeek;
+
+  /// No description provided for @lastMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Month'**
+  String get lastMonth;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @requestHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Request History'**
+  String get requestHistory;
+
+  /// No description provided for @officeLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Office Location'**
+  String get officeLocation;
+
+  /// No description provided for @contactForm.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Form'**
+  String get contactForm;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @reachUsAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach Us At'**
+  String get reachUsAt;
+
+  /// No description provided for @ourSocials.
+  ///
+  /// In en, this message translates to:
+  /// **'Our Socials'**
+  String get ourSocials;
+
+  /// No description provided for @accountDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Details'**
+  String get accountDetails;
+
+  /// No description provided for @location.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get location;
+
+  /// No description provided for @helpCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Help Center'**
+  String get helpCenter;
+
+  /// No description provided for @applyForAJob.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply for a Job'**
+  String get applyForAJob;
+
+  /// No description provided for @fAQs.
+  ///
+  /// In en, this message translates to:
+  /// **'FAQs'**
+  String get fAQs;
+
+  /// No description provided for @welcomeBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome Back,'**
+  String get welcomeBack;
+
+  /// No description provided for @ourCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Our Categories'**
+  String get ourCategories;
+
+  /// No description provided for @trustedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Trusted By'**
+  String get trustedBy;
+
+  /// No description provided for @faq1.
+  ///
+  /// In en, this message translates to:
+  /// **'How should I safely shower an elderly person?'**
+  String get faq1;
+
+  /// No description provided for @faq1Body.
+  ///
+  /// In en, this message translates to:
+  /// **'• Ensure the bathroom is warm and slip-resistant mats are in place.\n• Use a shower chair for extra support if needed.\n• Check the water temperature to prevent burns.\n• Use a handheld showerhead for better control.\n• Gently wash the person, paying attention to hygiene and comfort.\n• Dry them completely to prevent skin irritation.'**
+  String get faq1Body;
+
+  /// No description provided for @faq2.
+  ///
+  /// In en, this message translates to:
+  /// **'How often should I change an elderly person\'s diaper?'**
+  String get faq2;
+
+  /// No description provided for @faq2Body.
+  ///
+  /// In en, this message translates to:
+  /// **'• Diapers should be changed every 3-4 hours or whenever soiled.\n• Wash your hands and wear gloves before starting.\n• Gently roll the person to their side and remove the soiled diaper.\n• Clean the area with mild soap or wipes, ensuring it’s dry before putting on a new diaper.\n• Apply barrier cream to prevent rashes.\n• Secure the new diaper snugly but not too tight to allow comfort.'**
+  String get faq2Body;
+
+  /// No description provided for @faq3.
+  ///
+  /// In en, this message translates to:
+  /// **'What does travel assistance for elderly individuals include?'**
+  String get faq3;
+
+  /// No description provided for @faq3Body.
+  ///
+  /// In en, this message translates to:
+  /// **'• Help with booking transportation suited to their mobility needs.\n• Assistance with luggage, boarding, and disembarking.\n• Ensuring they have medications and necessary documents.\n• Providing wheelchair or walking aid support if required.\n• Accompanying them to medical appointments, vacations, or family visits.'**
+  String get faq3Body;
 }
 
 class _AppLocalizationsDelegate

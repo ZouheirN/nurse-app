@@ -4,6 +4,7 @@ import 'package:nurse_app/components/filter_button.dart';
 import 'package:nurse_app/components/header.dart';
 import 'package:nurse_app/components/history_card.dart';
 import 'package:nurse_app/components/loader.dart';
+import 'package:nurse_app/extensions/context_extension.dart';
 import 'package:nurse_app/features/request/cubit/request_cubit.dart';
 import 'package:nurse_app/features/request/models/requests_history_model.dart';
 import 'package:nurse_app/main.dart';
@@ -19,18 +20,25 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   final _requestCubit = RequestCubit();
 
-  final List<String> _filterOptions = [
-    'Today',
-    'This Week',
-    'Last Month',
-    'All',
-  ];
-  String _selectedFilter = 'Today';
+  late List<String> _filterOptions;
+  late String _selectedFilter;
 
   @override
-  initState() {
+  void initState() {
     super.initState();
     _requestCubit.getRequestsHistory();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _filterOptions = [
+      context.localizations.today,
+      context.localizations.thisWeek,
+      context.localizations.lastMonth,
+      context.localizations.all,
+    ];
+    _selectedFilter = context.localizations.today;
   }
 
   @override
@@ -38,9 +46,9 @@ class _HistoryPageState extends State<HistoryPage> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 243, 253, 233),
       appBar: AppBar(
-        title: const Text(
-          'Request History',
-          style: TextStyle(
+        title: Text(
+          context.localizations.requestHistory,
+          style: const TextStyle(
             fontSize: 36,
             fontWeight: FontWeight.w800,
             color: Colors.white,

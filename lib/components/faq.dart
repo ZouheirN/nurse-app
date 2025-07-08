@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nurse_app/extensions/context_extension.dart';
 
 class Faq extends StatelessWidget {
   const Faq({super.key});
@@ -7,35 +8,17 @@ class Faq extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text(
-          'FAQS',
-          style: TextStyle(
+        Text(
+          context.localizations.fAQs,
+          style: const TextStyle(
             fontWeight: FontWeight.w800,
             fontStyle: FontStyle.italic,
             fontSize: 20,
           ),
         ),
-        _buildTile('How should I safely shower an elderly person?',
-            '''• Ensure the bathroom is warm and slip-resistant mats are in place.
-• Use a shower chair for extra support if needed.
-• Check the water temperature to prevent burns.
-• Use a handheld showerhead for better control.
-• Gently wash the person, paying attention to hygiene and comfort.
-• Dry them completely to prevent skin irritation.'''),
-        _buildTile('How often should I change an elderly person\'s diaper?',
-            '''• Diapers should be changed every 3-4 hours or whenever soiled.
-• Wash your hands and wear gloves before starting.
-• Gently roll the person to their side and remove the soiled diaper.
-• Clean the area with mild soap or wipes, ensuring it’s dry before putting on a new diaper.
-• Apply barrier cream to prevent rashes.
-• Secure the new diaper snugly but not too tight to allow comfort.'''),
-        _buildTile(
-            'What does travel assistance for elderly individuals include?',
-            '''• Help with booking transportation suited to their mobility needs.
-• Assistance with luggage, boarding, and disembarking.
-• Ensuring they have medications and necessary documents.
-• Providing wheelchair or walking aid support if required.
-• Accompanying them to medical appointments, vacations, or family visits.'''),
+        _buildTile(context.localizations.faq1, context.localizations.faq1Body),
+        _buildTile(context.localizations.faq2, context.localizations.faq2Body),
+        _buildTile(context.localizations.faq3, context.localizations.faq3Body),
       ],
     );
   }

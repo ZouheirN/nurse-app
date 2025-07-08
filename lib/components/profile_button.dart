@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:nurse_app/extensions/context_extension.dart';
 
 class ProfileButton extends StatelessWidget {
   final ImageProvider iconImage;
   final String buttonText;
   final Function? onTap;
 
-  const ProfileButton(
-      {super.key,
-      required this.iconImage,
-      required this.buttonText,
-      this.onTap});
+  const ProfileButton({
+    super.key,
+    required this.iconImage,
+    required this.buttonText,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +45,13 @@ class ProfileButton extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                right: 8.0,
-              ),
+              padding: context.localizations.localeName == 'en'
+                  ? const EdgeInsets.only(
+                      right: 8.0,
+                    )
+                  : const EdgeInsets.only(
+                      left: 4.0,
+                    ),
               child: Text(
                 buttonText,
                 style: const TextStyle(
@@ -53,6 +59,7 @@ class ProfileButton extends StatelessWidget {
                   fontSize: 13,
                   fontWeight: FontWeight.w400,
                 ),
+                textAlign: TextAlign.left,
               ),
             ),
           ],

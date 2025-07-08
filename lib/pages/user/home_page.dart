@@ -2,6 +2,7 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:nurse_app/components/header.dart';
+import 'package:nurse_app/extensions/context_extension.dart';
 import 'package:nurse_app/pages/user/immediate_request_page.dart';
 import 'package:nurse_app/pages/user/pending_page.dart';
 
@@ -101,9 +102,9 @@ class _HomePageState extends State<HomePage> {
 
                             return Column(
                               children: [
-                                const Text(
-                                  'Our Categories',
-                                  style: TextStyle(
+                                Text(
+                                  context.localizations.ourCategories,
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w800,
                                     fontStyle: FontStyle.italic,
@@ -150,9 +151,9 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 const SizedBox(height: 16),
-                                const Text(
-                                  'Trusted By',
-                                  style: TextStyle(
+                                Text(
+                                  context.localizations.trustedBy,
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w800,
                                     fontStyle: FontStyle.italic,

@@ -280,11 +280,11 @@ class SettingsPage extends StatelessWidget {
                       color: const Color.fromRGBO(255, 255, 255, 1),
                       child: Column(
                         children: [
-                          const ListTile(
+                          ListTile(
                             dense: true,
                             title: Text(
-                              'Account Details',
-                              style: TextStyle(
+                              context.localizations.accountDetails,
+                              style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -296,9 +296,9 @@ class SettingsPage extends StatelessWidget {
                               height: 25,
                               width: 25,
                             ),
-                            title: const Text(
-                              'Notifications',
-                              style: TextStyle(
+                            title: Text(
+                              context.localizations.notifications,
+                              style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -323,9 +323,9 @@ class SettingsPage extends StatelessWidget {
                               Navigator.pushNamed(context, '/updateLocation');
                             },
                             leading: const Icon(Icons.location_on_outlined),
-                            title: const Text(
-                              'Location',
-                              style: TextStyle(
+                            title: Text(
+                              context.localizations.location,
+                              style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -353,11 +353,11 @@ class SettingsPage extends StatelessWidget {
                       color: const Color.fromRGBO(255, 255, 255, 1),
                       child: Column(
                         children: [
-                          const ListTile(
+                          ListTile(
                             dense: true,
                             title: Text(
-                              'Help Center',
-                              style: TextStyle(
+                              context.localizations.helpCenter,
+                              style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -369,9 +369,9 @@ class SettingsPage extends StatelessWidget {
                               height: 25,
                               width: 25,
                             ),
-                            title: const Text(
-                              'Apply for a Job',
-                              style: TextStyle(
+                            title: Text(
+                              context.localizations.applyForAJob,
+                              style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -398,8 +398,8 @@ class SettingsPage extends StatelessWidget {
                               height: 25,
                               width: 25,
                             ),
-                            title: const Text(
-                              'FAQs',
+                            title: Text(
+                              context.localizations.fAQs,
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nurse_app/extensions/context_extension.dart';
 
 import '../../components/filter_button.dart';
 import '../../components/notification_card.dart';
@@ -15,14 +16,20 @@ class NotificationsPage extends StatefulWidget {
 class _NotificationsPageState extends State<NotificationsPage> {
   final bool show = true;
 
-  final List<String> _filterOptions = [
-    'Today',
-    'This Week',
-    'Last Month',
-    'All',
-  ];
+  late List<String> _filterOptions;
+  late String _selectedFilter;
 
-  String _selectedFilter = 'Today';
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _filterOptions = [
+      context.localizations.today,
+      context.localizations.thisWeek,
+      context.localizations.lastMonth,
+      context.localizations.all,
+    ];
+    _selectedFilter = context.localizations.today;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +42,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 onPressed: () => Navigator.pop(context),
               )
             : null,
-        title: const Text(
-          'Notifications',
-          style: TextStyle(
+        title: Text(
+          context.localizations.notifications,
+          style: const TextStyle(
             fontSize: 36,
             fontWeight: FontWeight.w800,
             color: Colors.white,

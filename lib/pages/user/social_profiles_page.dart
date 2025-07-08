@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart' as latLng;
 import 'package:nurse_app/components/header.dart';
 import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/components/social_media_button.dart';
+import 'package:nurse_app/extensions/context_extension.dart';
 import 'package:nurse_app/features/about_us/cubit/about_us_cubit.dart';
 import 'package:nurse_app/main.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -57,10 +58,10 @@ class SocialProfilesPage extends StatelessWidget {
                               bottomRight: Radius.circular(30),
                             ),
                           ),
-                          child: const Center(
+                          child: Center(
                             child: Text(
-                              'Reach Us At',
-                              style: TextStyle(
+                              context.localizations.reachUsAt,
+                              style: const TextStyle(
                                 fontSize: 36,
                                 fontWeight: FontWeight.w800,
                                 color: Colors.white,
@@ -95,9 +96,9 @@ class SocialProfilesPage extends StatelessWidget {
                         //   ),
                         // ),
                         const SizedBox(height: 15),
-                        const Text(
-                          'Office Location',
-                          style: TextStyle(
+                         Text(
+                          context.localizations.officeLocation,
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
                             fontStyle: FontStyle.italic,
@@ -141,10 +142,10 @@ class SocialProfilesPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const Center(
+                        Center(
                           child: Text(
-                            'Our Socials',
-                            style: TextStyle(
+                            context.localizations.ourSocials,
+                            style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
                               fontStyle: FontStyle.italic,
@@ -230,9 +231,9 @@ class SocialProfilesPage extends StatelessWidget {
                         //   const SizedBox(height: 10),
                         // ],
                         const SizedBox(height: 15),
-                        const Text(
-                          'Contact Form',
-                          style: TextStyle(
+                         Text(
+                          context.localizations.contactForm,
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
                             fontStyle: FontStyle.italic,
@@ -248,9 +249,9 @@ class SocialProfilesPage extends StatelessWidget {
 
                               launchUrl(privacyPolicyUrl);
                             },
-                            child: const Text(
-                              'Privacy Policy',
-                              style: TextStyle(
+                            child: Text(
+                              context.localizations.privacyPolicy,
+                              style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w700,
                                 color: Color(0xFF7BB442),

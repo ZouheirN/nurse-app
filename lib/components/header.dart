@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:nurse_app/consts.dart';
+import 'package:nurse_app/extensions/context_extension.dart';
 import 'package:nurse_app/main.dart';
 import 'package:nurse_app/services/user.dart';
 import 'package:nurse_app/services/user_token.dart';
@@ -128,7 +129,7 @@ class _HeaderState extends State<Header> {
                       ),
                       Expanded(
                         child: Text(
-                          'Welcome Back,\n${user?.name ?? ''}',
+                          '${context.localizations.welcomeBack}\n${user?.name ?? ''}',
                           style: const TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 20,
