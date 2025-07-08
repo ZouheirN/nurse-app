@@ -32,7 +32,7 @@ import 'package:nurse_app/pages/user/splash_screen.dart';
 import 'package:nurse_app/pages/user/update_location_page.dart';
 import 'package:nurse_app/pages/user/verify_sms_page.dart';
 import 'package:nurse_app/services/user.dart';
-import 'package:nurse_app/streams/general_stream.dart';
+import 'package:nurse_app/utilities/localization_box.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:device_preview/device_preview.dart';
 import 'pages/admin/send_notification_page.dart';
@@ -45,6 +45,7 @@ Future<void> main() async {
   Hive.registerAdapter(UserModelAdapter());
 
   await Hive.openBox('userBox');
+  await Hive.openBox('localizationBox');
 
   if (!kIsWeb) {
     OneSignal.initialize(ONE_SIGNAL_APP_ID);
@@ -100,7 +101,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    GeneralStream.languageStream.add(const Locale('en'));
+    // GeneralStream.languageStream.add(const Locale('en'));
     if (kDebugMode) {
       ServicesBinding.instance.keyboard.addHandler(_onKey);
     }
@@ -109,7 +110,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    GeneralStream.languageStream.close();
+    // GeneralStream.languageStream.close();
     if (kDebugMode) {
       ServicesBinding.instance.keyboard.removeHandler(_onKey);
     }
@@ -118,15 +119,18 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Locale>(
-        stream: GeneralStream.languageStream.stream,
-        builder: (context, snapshot) {
+    return ValueListenableBuilder(
+        // stream: GeneralStream.languageStream.stream,
+        valueListenable: LocalizationBox.getLocaleNotifier(),
+        builder: (context, value, child) {
+          final locale = LocalizationBox.getLocale();
+
           return MaterialApp(
             useInheritedMediaQuery: true,
             builder: DevicePreview.appBuilder,
             debugShowCheckedModeBanner: false,
             home: const SplashScreen(),
-            locale: snapshot.data ?? DevicePreview.locale(context),
+            locale: locale ?? DevicePreview.locale(context),
             supportedLocales: L10n.locals,
             localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,

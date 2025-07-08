@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:nurse_app/components/button.dart';
-import 'package:nurse_app/components/logout_button.dart';
 import 'package:nurse_app/components/profile_button.dart';
 import 'package:nurse_app/components/second_button.dart';
-import 'package:nurse_app/components/settings_button.dart';
 import 'package:nurse_app/extensions/context_extension.dart';
 import 'package:nurse_app/features/authentication/models/user_model.dart';
-import 'package:nurse_app/l10n/l10n.dart';
+import 'package:nurse_app/utilities/localization_box.dart';
 
 import '../../services/user.dart';
-import '../../streams/general_stream.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -133,9 +129,10 @@ class SettingsPage extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    GeneralStream.languageStream.add(L10n.locals.firstWhere(
-                      (locale) => locale.languageCode == 'ar',
-                    ));
+                    LocalizationBox.saveLocale('ar');
+                    // GeneralStream.languageStream.add(L10n.locals.firstWhere(
+                    //   (locale) => locale.languageCode == 'ar',
+                    // ));
                     Navigator.pop(context);
                   },
                 ),
@@ -163,9 +160,10 @@ class SettingsPage extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    GeneralStream.languageStream.add(L10n.locals.firstWhere(
-                      (locale) => locale.languageCode == 'en',
-                    ));
+                    LocalizationBox.saveLocale('en');
+                    // GeneralStream.languageStream.add(L10n.locals.firstWhere(
+                    //   (locale) => locale.languageCode == 'en',
+                    // ));
                     Navigator.pop(context);
                   },
                 ),
