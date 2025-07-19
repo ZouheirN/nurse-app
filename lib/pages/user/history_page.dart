@@ -104,6 +104,14 @@ class _HistoryPageState extends State<HistoryPage> {
                 return const Expanded(child: Loader());
               }
 
+              if (state is RequestsHistoryFailure) {
+                return Center(
+                  child: Text(
+                    state.message,
+                  ),
+                );
+              }
+
               if (state is RequestsHistorySuccess) {
                 final requests = state.requests.reversed.toList();
 
@@ -131,10 +139,10 @@ class _HistoryPageState extends State<HistoryPage> {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 10),
                           child: HistoryCard(
-                            isOngoing: true,
-                            services: request.services!,
+                            isOngoing: request.status == 'pending',
+                            services: request.services,
                             description: 'Check out the details',
-                            time: formatDateTimeForCard(request.createdAt!),
+                            time: formatDateTimeForCard(request.scheduledTime!),
                             onTap: () {
                               Navigator.pushNamed(
                                 context,

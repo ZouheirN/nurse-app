@@ -126,69 +126,69 @@ class _SubmitOrderPageState extends State<SubmitOrderPage> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  if (widget.order.endingTime == null)
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: LabeledTextfield(
-                            label: 'Time to arrive',
-                            keyboardType: TextInputType.number,
-                            controller: _timeToArriveController,
-                            padding: const EdgeInsets.only(left: 40),
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                        Expanded(
-                          child: ValueListenableBuilder(
-                            valueListenable: _timeSelection,
-                            builder: (context, value, child) {
-                              return LabeledTextfield(
-                                label: '',
-                                enabled: false,
-                                hintText: value == 'min' ? 'min' : 'hour',
-                                centerHintText: true,
-                                padding: const EdgeInsets.only(right: 40),
-                                onTap: () {
-                                  _timeSelection.value =
-                                      _timeSelection.value == 'min'
-                                          ? 'hour'
-                                          : 'min';
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    )
-                  else
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE7E7E7),
-                          border: Border.all(
-                            color: const Color(0xFFE7E7E7),
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Column(
-                          children: [
-                            UneditableLabeledDate(
-                              label: 'Start Date',
-                              date: widget.order.scheduledTime!,
-                            ),
-                            const SizedBox(height: 7),
-                            UneditableLabeledDate(
-                              label: 'End Date',
-                              date: widget.order.endingTime!,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  // if (widget.order.endingTime == null)
+                  //   Row(
+                  //     children: [
+                  //       Expanded(
+                  //         flex: 2,
+                  //         child: LabeledTextfield(
+                  //           label: 'Time to arrive',
+                  //           keyboardType: TextInputType.number,
+                  //           controller: _timeToArriveController,
+                  //           padding: const EdgeInsets.only(left: 40),
+                  //         ),
+                  //       ),
+                  //       const SizedBox(width: 20),
+                  //       Expanded(
+                  //         child: ValueListenableBuilder(
+                  //           valueListenable: _timeSelection,
+                  //           builder: (context, value, child) {
+                  //             return LabeledTextfield(
+                  //               label: '',
+                  //               enabled: false,
+                  //               hintText: value == 'min' ? 'min' : 'hour',
+                  //               centerHintText: true,
+                  //               padding: const EdgeInsets.only(right: 40),
+                  //               onTap: () {
+                  //                 _timeSelection.value =
+                  //                     _timeSelection.value == 'min'
+                  //                         ? 'hour'
+                  //                         : 'min';
+                  //               },
+                  //             );
+                  //           },
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   )
+                  // else
+                  //   Padding(
+                  //     padding: const EdgeInsets.symmetric(horizontal: 40),
+                  //     child: Container(
+                  //       decoration: BoxDecoration(
+                  //         color: const Color(0xFFE7E7E7),
+                  //         border: Border.all(
+                  //           color: const Color(0xFFE7E7E7),
+                  //           width: 2,
+                  //         ),
+                  //         borderRadius: BorderRadius.circular(10),
+                  //       ),
+                  //       padding: const EdgeInsets.symmetric(vertical: 10),
+                  //       child: Column(
+                  //         children: [
+                  //           UneditableLabeledDate(
+                  //             label: 'Start Date',
+                  //             date: widget.order.scheduledTime!,
+                  //           ),
+                  //           const SizedBox(height: 7),
+                  //           UneditableLabeledDate(
+                  //             label: 'End Date',
+                  //             date: widget.order.endingTime!,
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ),
                   const SizedBox(height: 20),
                   BlocConsumer<RequestCubit, RequestState>(
                     bloc: _requestCubit,
@@ -239,38 +239,40 @@ class _SubmitOrderPageState extends State<SubmitOrderPage> {
                             return;
                           }
 
-                          if (widget.order.endingTime == null &&
-                              _timeToArriveController.text.trim().isEmpty) {
-                            Dialogs.showErrorDialog(
-                              context,
-                              'Time to arrive',
-                              'Please enter the time to arrive.',
-                            );
-                            return;
-                          }
+                          // if (widget.order.endingTime == null &&
+                          //     _timeToArriveController.text.trim().isEmpty) {
+                          //   Dialogs.showErrorDialog(
+                          //     context,
+                          //     'Time to arrive',
+                          //     'Please enter the time to arrive.',
+                          //   );
+                          //   return;
+                          // }
 
-                          if (widget.order.endingTime == null &&
-                              int.parse(_timeToArriveController.text.trim()) <=
-                                  0) {
-                            Dialogs.showErrorDialog(
-                              context,
-                              'Invalid time',
-                              'Time to arrive must be greater than 0.',
-                            );
-                            return;
-                          }
+                          // if (widget.order.endingTime == null &&
+                          //     int.parse(_timeToArriveController.text.trim()) <=
+                          //         0) {
+                          //   Dialogs.showErrorDialog(
+                          //     context,
+                          //     'Invalid time',
+                          //     'Time to arrive must be greater than 0.',
+                          //   );
+                          //   return;
+                          // }
 
                           _requestCubit.submitRequest(
                             id: widget.order.id!,
                             status: 'approved',
                             scheduledTime: widget.order.scheduledTime!,
-                            timeNeededToArrive: widget.order.endingTime != null
-                                ? null
-                                : _timeSelection.value == 'min'
-                                    ? int.parse(_timeToArriveController.text)
-                                    : int.parse(_timeToArriveController.text) *
-                                        60,
-                            endingTime: widget.order.endingTime,
+                            // timeNeededToArrive: widget.order.endingTime != null
+                            //     ? null
+                            //     : _timeSelection.value == 'min'
+                            //         ? int.parse(_timeToArriveController.text)
+                            //         : int.parse(_timeToArriveController.text) *
+                            //             60,
+                            timeNeededToArrive: 60,
+                            // endingTime: widget.order.endingTime,
+                            endingTime: DateTime.now(),
                             location: widget.order.location!,
                             nurseId: int.parse(selectedNurseId!),
                             serviceIds: selectedServiceIds,

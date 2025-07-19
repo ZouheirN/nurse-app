@@ -122,7 +122,7 @@ class HistoryCard extends StatelessWidget {
                                         ),
                                         child: Center(
                                           child: Text(
-                                            '\$${formatPrice(service.price!)}',
+                                            '\$${formatPrice(service.price)}',
                                             style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 8,

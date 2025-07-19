@@ -13,6 +13,7 @@ import 'package:nurse_app/features/request/models/requests_history_model.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
 
 import '../../components/service_card.dart';
+import '../../features/request/models/request_details_model.dart';
 import '../../utilities/helper_functions.dart';
 
 class OrderDetailsPage extends StatefulWidget {
@@ -90,7 +91,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     );
   }
 
-  Widget _buildRequestDetails(RequestsHistoryModel request) {
+  Widget _buildRequestDetails(RequestDetailsModel request) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -131,20 +132,20 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                     color: Colors.black,
                   ),
                   onTap: () {
-                    final initialPosition = LatLng(
-                      request.user!.latitude as double,
-                      request.user!.longitude as double,
-                    );
-
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return OrderMap(
-                          patientLocation: initialPosition,
-                          patientName: request.fullName!,
-                        );
-                      },
-                    );
+                    // final initialPosition = LatLng(
+                    //   request.user!.latitude as double,
+                    //   request.user!.longitude as double,
+                    // );
+                    //
+                    // showModalBottomSheet(
+                    //   context: context,
+                    //   builder: (context) {
+                    //     return OrderMap(
+                    //       patientLocation: initialPosition,
+                    //       patientName: request.fullName!,
+                    //     );
+                    //   },
+                    // );
                   },
                 ),
                 const SizedBox(height: 10),
@@ -222,29 +223,29 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                           fontWeight: FontWeight.w400,
                                         ),
                                       ),
-                                      if (request.services![i].discountPrice !=
-                                          null)
-                                        Positioned.fill(
-                                          child: CustomPaint(
-                                            painter: DiagonalLinePainter(),
-                                          ),
-                                        ),
+                                      // if (request.services![i].discountPrice !=
+                                      //     null)
+                                      //   Positioned.fill(
+                                      //     child: CustomPaint(
+                                      //       painter: DiagonalLinePainter(),
+                                      //     ),
+                                      //   ),
                                     ],
                                   ),
-                                  if (request.services![i].discountPrice !=
-                                      null) ...[
-                                    const SizedBox(width: 5),
-                                    FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        '\$${formatPrice(request.services![i].discountPrice!)}',
-                                        style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  // if (request.services![i].discountPrice !=
+                                  //     null) ...[
+                                  //   const SizedBox(width: 5),
+                                  //   FittedBox(
+                                  //     fit: BoxFit.scaleDown,
+                                  //     child: Text(
+                                  //       '\$${formatPrice(request.services![i].discountPrice!)}',
+                                  //       style: const TextStyle(
+                                  //         color: Colors.grey,
+                                  //         fontWeight: FontWeight.w400,
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ],
                                 ],
                               ),
                             ),

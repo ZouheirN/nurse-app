@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 import 'package:nurse_app/consts.dart';
+import 'package:nurse_app/features/request/models/request_details_model.dart';
 import 'package:nurse_app/features/request/models/requests_history_model.dart';
 import 'package:nurse_app/main.dart';
 import 'package:nurse_app/services/user_token.dart';
@@ -87,10 +88,11 @@ class RequestCubit extends Cubit<RequestState> {
         ),
       );
 
-      final List<RequestsHistoryModel> requests = response.data['requests']
-          .map<RequestsHistoryModel>(
-              (request) => RequestsHistoryModel.fromJson(request))
+      final List<RequestsHistoryModel> requests = (List.from(response.data))
+          .map((request) => RequestsHistoryModel.fromJson(request))
           .toList();
+
+      logger.i(requests.first.toJson());
 
       emit(RequestsHistorySuccess(requests: requests));
     } on DioException catch (e) {
@@ -98,7 +100,7 @@ class RequestCubit extends Cubit<RequestState> {
       emit(RequestsHistoryFailure(message: e.response!.data['error']));
     } catch (e) {
       logger.e(e);
-      emit(RequestsHistoryFailure(message: 'Failed to create request.'));
+      emit(RequestsHistoryFailure(message: 'Failed to get request.'));
     }
   }
 
@@ -119,9 +121,8 @@ class RequestCubit extends Cubit<RequestState> {
           },
         ),
       );
-      logger.i(response.data);
 
-      final request = RequestsHistoryModel.fromJson(response.data);
+      final request = RequestDetailsModel.fromJson(response.data);
 
       emit(RequestDetailsSuccess(request: request));
     } on DioException catch (e) {
@@ -129,7 +130,7 @@ class RequestCubit extends Cubit<RequestState> {
       emit(RequestDetailsFailure(message: e.response!.data['error']));
     } catch (e) {
       logger.e(e);
-      emit(RequestDetailsFailure(message: 'Failed to create request.'));
+      emit(RequestDetailsFailure(message: 'Failed to get request details.'));
     }
   }
 
@@ -190,7 +191,7 @@ class RequestCubit extends Cubit<RequestState> {
   }
 
   Future<void> setStatus({
-    required RequestsHistoryModel order,
+    required RequestDetailsModel order,
     required String status,
   }) async {
     emit(RequestSetStatusLoading());
@@ -224,17 +225,17 @@ class RequestCubit extends Cubit<RequestState> {
   }
 
   Future<void> emitRequestDetailsSuccess({
-    required RequestsHistoryModel order,
+    required RequestDetailsModel order,
     required String status,
   }) async {
     final updatedOrder =
-        RequestsHistoryModel.fromJson(order.toJson()..['status'] = status);
+        RequestDetailsModel.fromJson(order.toJson()..['status'] = status);
 
     emit(RequestDetailsSuccess(request: updatedOrder));
   }
 
   Future<void> deleteOrder({
-    required RequestsHistoryModel order,
+    required RequestDetailsModel order,
   }) async {
     emit(RequestDeleteLoading());
 

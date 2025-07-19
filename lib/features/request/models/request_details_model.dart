@@ -1,5 +1,5 @@
-class RequestsHistoryModel {
-  RequestsHistoryModel({
+class RequestDetailsModel {
+  RequestDetailsModel({
     required this.id,
     required this.userId,
     required this.fullName,
@@ -16,6 +16,7 @@ class RequestsHistoryModel {
     required this.createdAt,
     required this.updatedAt,
     required this.services,
+    required this.user,
   });
 
   final int id;
@@ -34,8 +35,9 @@ class RequestsHistoryModel {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final List<Service> services;
+  final User? user;
 
-  RequestsHistoryModel copyWith({
+  RequestDetailsModel copyWith({
     int? id,
     int? userId,
     String? fullName,
@@ -52,8 +54,9 @@ class RequestsHistoryModel {
     DateTime? createdAt,
     DateTime? updatedAt,
     List<Service>? services,
+    User? user,
   }) {
-    return RequestsHistoryModel(
+    return RequestDetailsModel(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       fullName: fullName ?? this.fullName,
@@ -70,11 +73,12 @@ class RequestsHistoryModel {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       services: services ?? this.services,
+      user: user ?? this.user,
     );
   }
 
-  factory RequestsHistoryModel.fromJson(Map<String, dynamic> json){
-    return RequestsHistoryModel(
+  factory RequestDetailsModel.fromJson(Map<String, dynamic> json){
+    return RequestDetailsModel(
       id: json["id"] ?? 0,
       userId: json["user_id"] ?? 0,
       fullName: json["full_name"] ?? "",
@@ -91,6 +95,7 @@ class RequestsHistoryModel {
       createdAt: DateTime.tryParse(json["created_at"] ?? ""),
       updatedAt: DateTime.tryParse(json["updated_at"] ?? ""),
       services: json["services"] == null ? [] : List<Service>.from(json["services"]!.map((x) => Service.fromJson(x))),
+      user: json["user"] == null ? null : User.fromJson(json["user"]),
     );
   }
 
@@ -111,6 +116,7 @@ class RequestsHistoryModel {
     "created_at": createdAt?.toIso8601String(),
     "updated_at": updatedAt?.toIso8601String(),
     "services": services.map((x) => x?.toJson()).toList(),
+    "user": user?.toJson(),
   };
 
 }
@@ -150,6 +156,45 @@ class Service {
     "id": id,
     "name": name,
     "price": price,
+  };
+
+}
+
+class User {
+  User({
+    required this.id,
+    required this.name,
+    required this.email,
+  });
+
+  final int id;
+  final String name;
+  final String email;
+
+  User copyWith({
+    int? id,
+    String? name,
+    String? email,
+  }) {
+    return User(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+    );
+  }
+
+  factory User.fromJson(Map<String, dynamic> json){
+    return User(
+      id: json["id"] ?? 0,
+      name: json["name"] ?? "",
+      email: json["email"] ?? "",
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name": name,
+    "email": email,
   };
 
 }

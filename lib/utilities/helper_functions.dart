@@ -21,12 +21,20 @@ String formateDateTimeForRequestDetails(DateTime dateTime) {
 //   }
 // }
 
-String formatPrice(String price) {
-  double priceValue = double.parse(price);
+// String formatPrice(String price) {
+//   double priceValue = double.parse(price);
+//
+//   if (priceValue == priceValue.roundToDouble()) {
+//     return priceValue.toInt().toString();
+//   } else {
+//     return priceValue.toStringAsFixed(2);
+//   }
+// }
 
-  if (priceValue == priceValue.roundToDouble()) {
-    return priceValue.toInt().toString();
+String formatPrice(num price) {
+  if (price == price.roundToDouble()) {
+    return price.toInt().toString();
   } else {
-    return priceValue.toStringAsFixed(2);
+    return price.toStringAsFixed(2);
   }
 }

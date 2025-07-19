@@ -32,7 +32,7 @@ final class RequestsHistoryFailure extends RequestState {
 final class RequestDetailsLoading extends RequestState {}
 
 final class RequestDetailsSuccess extends RequestState {
-  final RequestsHistoryModel request;
+  final RequestDetailsModel request;
 
   RequestDetailsSuccess({required this.request});
 }

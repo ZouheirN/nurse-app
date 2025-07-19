@@ -9,8 +9,8 @@ import 'package:badges/badges.dart' as badges;
 class ServiceCard extends StatefulWidget {
   final String imagePath;
   final String title;
-  final String price;
-  final String? salePrice;
+  final num price;
+  final num? salePrice;
   final int serviceId;
   final ValueChanged<bool> onSelectionChanged;
   final bool isSelected;
