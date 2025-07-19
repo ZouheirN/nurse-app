@@ -14,3 +14,17 @@ final class NotificationSendFailure extends NotificationState {
 
   NotificationSendFailure({required this.message});
 }
+
+final class GetNotificationsLoading extends NotificationState {}
+
+final class GetNotificationsSuccess extends NotificationState {
+  final GetNotificationsModel notifications;
+
+  GetNotificationsSuccess({required this.notifications});
+}
+
+final class GetNotificationsFailure extends NotificationState {
+  final String message;
+
+  GetNotificationsFailure({required this.message});
+}

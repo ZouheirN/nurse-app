@@ -128,4 +128,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get save => 'Save';
+
+  @override
+  String get address => 'Address';
+
+  @override
+  String get describeYourProblem => 'Describe Your Problem';
+
+  @override
+  String get submit => 'Submit';
 }

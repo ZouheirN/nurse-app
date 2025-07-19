@@ -41,5 +41,8 @@
     "dateOfBirth": "Date of Birth",
     "emailAddress": "Email Address",
     "phoneNumber": "Phone Number",
-    "save": "Save"
+    "save": "Save",
+    "address": "Address",
+    "describeYourProblem": "Describe Your Problem",
+    "submit": "Submit"
 }

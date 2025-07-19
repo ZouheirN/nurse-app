@@ -11,6 +11,10 @@ import 'package:nurse_app/features/about_us/cubit/about_us_cubit.dart';
 import 'package:nurse_app/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../components/labeled_edit_textfield.dart';
+import '../../components/phone_number_field.dart';
+import '../../components/third_button.dart';
+
 class SocialProfilesPage extends StatelessWidget {
   SocialProfilesPage({super.key});
 
@@ -96,7 +100,7 @@ class SocialProfilesPage extends StatelessWidget {
                         //   ),
                         // ),
                         const SizedBox(height: 15),
-                         Text(
+                        Text(
                           context.localizations.officeLocation,
                           style: const TextStyle(
                             fontSize: 20,
@@ -122,6 +126,7 @@ class SocialProfilesPage extends StatelessWidget {
                                   urlTemplate:
                                       'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                                   subdomains: const ['a', 'b', 'c'],
+                                  userAgentPackageName: "com.devzur.alahmad",
                                 ),
                                 // MarkerLayer(
                                 //   markers: [
@@ -190,7 +195,7 @@ class SocialProfilesPage extends StatelessWidget {
                                 color: Colors.white,
                                 size: 40,
                               ),
-                              url: aboutUs['tiktok_url'],
+                              url: aboutUs['tiktok_url'], // todo fix this
                               addPadding: false,
                             ),
                             SocialMediaButton(
@@ -231,7 +236,7 @@ class SocialProfilesPage extends StatelessWidget {
                         //   const SizedBox(height: 10),
                         // ],
                         const SizedBox(height: 15),
-                         Text(
+                        Text(
                           context.localizations.contactForm,
                           style: const TextStyle(
                             fontSize: 20,
@@ -240,6 +245,7 @@ class SocialProfilesPage extends StatelessWidget {
                           ),
                           textAlign: TextAlign.center,
                         ),
+                        _buildContactFormButton(context),
                         const SizedBox(height: 15),
                         Center(
                           child: GestureDetector(
@@ -270,6 +276,55 @@ class SocialProfilesPage extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildContactFormButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: LabeledEditTextfield(
+                  label: context.localizations.firstName,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: LabeledEditTextfield(
+                  label: context.localizations.lastName,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          const PhoneNumberField(
+            // controller: phoneController,
+            padding: EdgeInsets.zero,
+            fillColor: Color(0xFFC2C2C2),
+            outlineColor: Color(0xFFC2C2C2),
+            focusedColor: Color.fromARGB(255, 185, 185, 185),
+            // setCompleteNumber: (number) {
+            //   completeNumber = number;
+            // },
+          ),
+          LabeledEditTextfield(
+            label: context.localizations.address,
+          ),
+          const SizedBox(height: 10),
+          LabeledEditTextfield(
+            label: context.localizations.describeYourProblem,
+          ),
+          const SizedBox(height: 10),
+          MyThirdButton(
+            margin: EdgeInsets.zero,
+            onTap: () {},
+            buttonText: context.localizations.submit,
+          ),
+        ],
       ),
     );
   }

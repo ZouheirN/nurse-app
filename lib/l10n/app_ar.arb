@@ -41,5 +41,8 @@
     "dateOfBirth": "تاريخ الميلاد",
     "emailAddress": "البريد الإلكتروني",
     "phoneNumber": "رقم الهاتف",
-    "save": "حفظ"
+    "save": "حفظ",
+    "address": "العنوان",
+    "describeYourProblem": "صف مشكلتك",
+    "submit": "إرسال"
 }

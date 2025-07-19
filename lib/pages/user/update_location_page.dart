@@ -142,8 +142,9 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
                   children: [
                     TileLayer(
                       urlTemplate:
-                          "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                      // subdomains: ['a', 'b', 'c'],
+                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      // subdomains: const ['a', 'b', 'c'],
+                      userAgentPackageName: "com.devzur.alahmad",
                     ),
                     MarkerLayer(
                       markers: [

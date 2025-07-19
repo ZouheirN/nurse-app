@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/extensions/context_extension.dart';
+import 'package:nurse_app/features/notification/cubit/notification_cubit.dart';
 
 import '../../components/filter_button.dart';
 import '../../components/notification_card.dart';
@@ -14,10 +17,18 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
+  final _notificationCubit = NotificationCubit();
+
   final bool show = true;
 
   late List<String> _filterOptions;
   late String _selectedFilter;
+
+  @override
+  void initState() {
+    _notificationCubit.getNotifications();
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
@@ -106,17 +117,47 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 ),
                 const SizedBox(height: 15),
                 Expanded(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 10),
-                        child: NotificationCard(
-                          title: 'Notification Title',
-                          description: 'Notification Details',
-                        ),
-                      ),
-                    ],
+                  child: BlocBuilder<NotificationCubit, NotificationState>(
+                    bloc: _notificationCubit,
+                    builder: (context, state) {
+                      if (state is GetNotificationsLoading) {
+                        return const Loader();
+                      } else if (state is GetNotificationsFailure) {
+                        return Center(
+                          child: Text(
+                            state.message,
+                          ),
+                        );
+                      } else if (state is GetNotificationsSuccess) {
+                        final notifications = state.notifications.notifications;
+                        if (notifications.isEmpty) {
+                          return const Center(
+                            child: Text(
+                              'No notifications available',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          );
+                        }
+
+                        return ListView.builder(
+                          itemCount: notifications.length,
+                          itemBuilder: (context, index) {
+                            final notification = notifications[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: NotificationCard(
+                                title: notification.type,
+                                description: '${notification.createdAt}',
+                              ),
+                            );
+                          },
+                        );
+                      }
+
+                      return const Center(
+                        child: Text('An unexpected error occurred'),
+                      );
+                    },
                   ),
                 )
               ],

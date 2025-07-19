@@ -63,7 +63,10 @@ class _OrderMapState extends State<OrderMap> {
             ),
             children: [
               TileLayer(
-                urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                urlTemplate:
+                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                // subdomains: const ['a', 'b', 'c'],
+                userAgentPackageName: "com.devzur.alahmad",
               ),
               MarkerLayer(
                 markers: [

@@ -127,4 +127,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get save => 'حفظ';
+
+  @override
+  String get address => 'العنوان';
+
+  @override
+  String get describeYourProblem => 'صف مشكلتك';
+
+  @override
+  String get submit => 'إرسال';
 }
