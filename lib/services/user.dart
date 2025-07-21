@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:nurse_app/features/authentication/models/user_model.dart';
 import 'package:nurse_app/services/user_token.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -59,6 +60,29 @@ class UserBox {
     final user = _box.get('user') as UserModel;
     user.location = location;
     _box.put('user', user);
+  }
+
+  static void setUserCoordinates(num latitude, num longitude) {
+    final user = _box.get('user') as UserModel;
+    user.latitude = latitude;
+    user.longitude = longitude;
+    _box.put('user', user);
+  }
+
+  static LatLng getUserCoordinates() {
+    final user = _box.get('user') as UserModel?;
+
+    if (user != null) {
+      if (user.latitude == null || user.longitude == null) {
+        return const LatLng(
+            0, 0); // Default coordinates if latitude or longitude is null
+      }
+
+      return LatLng(double.parse(user.latitude.toString()),
+          double.parse(user.longitude.toString()));
+    }
+
+    return const LatLng(0, 0); // Default coordinates if user is not found
   }
 
   static ValueListenable<Box> listenToUser() {

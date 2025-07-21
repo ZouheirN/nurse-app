@@ -1,10 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:meta/meta.dart';
 import 'package:nurse_app/consts.dart';
 import 'package:nurse_app/features/request/models/request_details_model.dart';
 import 'package:nurse_app/features/request/models/requests_history_model.dart';
 import 'package:nurse_app/main.dart';
+import 'package:nurse_app/services/user.dart';
 import 'package:nurse_app/services/user_token.dart';
 
 part 'request_state.dart';
@@ -30,6 +32,8 @@ class RequestCubit extends Cubit<RequestState> {
     try {
       final token = await UserToken.getToken();
 
+      final LatLng location = UserBox.getUserCoordinates();
+
       final data = {
         "service_ids": selectedServices,
         "location": location,
@@ -38,6 +42,8 @@ class RequestCubit extends Cubit<RequestState> {
         "full_name": name,
         "phone_number": phoneNumber,
         "scheduled_time": DateTime.now().toIso8601String(),
+        "latitude": location.latitude,
+        "longitude": location.longitude,
       };
 
       if (startDate != null) {
@@ -46,8 +52,10 @@ class RequestCubit extends Cubit<RequestState> {
 
       if (endDate != null) {
         data['ending_time'] = endDate.toIso8601String();
-        data['time_type'] = timeType!;
+        // data['time_type'] = timeType!;
       }
+
+      data['time_type'] = 'full-time';
 
       await dio.post(
         '$HOST/requests',
@@ -62,6 +70,8 @@ class RequestCubit extends Cubit<RequestState> {
       emit(RequestCreateSuccess());
     } on DioException catch (e) {
       logger.e(e.response!.data);
+      logger.e(e.response!.statusCode);
+      logger.e(e.error);
       emit(RequestCreateFailure(
           message: e.response!.data['error'] ?? 'Failed to create request.'));
     } catch (e) {

@@ -5,23 +5,32 @@ class SocialMediaButton extends StatelessWidget {
   final String? logoPath;
   final Icon? icon;
   final String? accountName;
-  final String url;
+  final String? url;
+  final List<String>? urls;
   final bool? addPadding;
+  final VoidCallback? onTap;
 
   const SocialMediaButton({
     super.key,
     this.logoPath,
     this.accountName,
-    required this.url,
+    this.url,
+    this.urls,
     this.icon,
     this.addPadding = true,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        launchUrl(Uri.parse(url));
+        if (onTap != null) {
+          onTap!();
+          return;
+        }
+
+        launchUrl(Uri.parse(url!));
       },
       child: Container(
         // width: 300,

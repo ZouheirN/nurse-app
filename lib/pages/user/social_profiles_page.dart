@@ -13,12 +13,70 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../components/labeled_edit_textfield.dart';
 import '../../components/phone_number_field.dart';
+import '../../components/second_button.dart';
 import '../../components/third_button.dart';
 
 class SocialProfilesPage extends StatelessWidget {
   SocialProfilesPage({super.key});
 
   final _aboutUsCubit = AboutUsCubit();
+
+  void _showWhatsappNumbersSheet(BuildContext context, List<String> numbers) {
+    showModalBottomSheet(
+      context: context,
+      useSafeArea: true,
+      backgroundColor: const Color(0xFFFDFDFD),
+      builder: (context) {
+        return Container(
+          margin: const EdgeInsets.symmetric(
+            vertical: 12.0,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 5.0,
+                width: 50.0,
+                decoration: const BoxDecoration(
+                  color: Color.fromRGBO(142, 142, 142, 0.53),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'WhatsApp Numbers',
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: 10),
+              for (final number in numbers)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: MySecondButton(
+                    onTap: () {
+                      final whatsappUrl = Uri.parse('https://wa.me/$number');
+                      launchUrl(whatsappUrl);
+                    },
+                    buttonText: number,
+                    icon: const Icon(
+                      FontAwesomeIcons.whatsapp,
+                      color: Colors.white,
+                      size: 25,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -189,15 +247,33 @@ class SocialProfilesPage extends StatelessWidget {
                               url: aboutUs['tiktok_url'],
                               addPadding: false,
                             ),
-                            SocialMediaButton(
-                              icon: const Icon(
-                                FontAwesomeIcons.whatsapp,
-                                color: Colors.white,
-                                size: 40,
+                            if (aboutUs['whatsapp_numbers'].length == 1)
+                              SocialMediaButton(
+                                icon: const Icon(
+                                  FontAwesomeIcons.whatsapp,
+                                  color: Colors.white,
+                                  size: 40,
+                                ),
+                                url: aboutUs['whatsapp_numbers'][0],
+                                addPadding: false,
+                              )
+                            else
+                              SocialMediaButton(
+                                icon: const Icon(
+                                  FontAwesomeIcons.whatsapp,
+                                  color: Colors.white,
+                                  size: 40,
+                                ),
+                                urls: List<String>.from(
+                                  aboutUs['whatsapp_numbers'],
+                                ),
+                                addPadding: false,
+                                onTap: () => _showWhatsappNumbersSheet(
+                                  context,
+                                  List<String>.from(
+                                      aboutUs['whatsapp_numbers']),
+                                ),
                               ),
-                              url: aboutUs['tiktok_url'], // todo fix this
-                              addPadding: false,
-                            ),
                             SocialMediaButton(
                               icon: const Icon(
                                 Icons.shopping_bag,

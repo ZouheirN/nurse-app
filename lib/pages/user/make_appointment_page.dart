@@ -95,9 +95,9 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                       widget.setValue('home');
                     },
                   ),
-                  const Text(
-                    'SERVICE REQUEST',
-                    style: TextStyle(
+                  Text(
+                    widget.category.toUpperCase(),
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w800,
                       fontStyle: FontStyle.italic,

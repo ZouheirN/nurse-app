@@ -29,7 +29,7 @@ class ServicesCubit extends Cubit<ServicesState> {
         ),
       );
 
-      logger.i(response.data);
+      // logger.i(response.data);
 
       final services = GetServicesModel.fromJson(response.data);
 
