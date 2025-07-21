@@ -2,9 +2,10 @@ import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intrinsic_size_builder/intrinsic_size_builder.dart';
 import 'package:nurse_app/components/service_card.dart';
+import 'package:nurse_app/features/services/models/get_services_model.dart';
 
 class ServicesList extends StatefulWidget {
-  final List<dynamic> services;
+  final GetServicesModel services;
   final List<num> selectedServiceIds;
   final EdgeInsets padding;
 
@@ -31,6 +32,8 @@ class _ServicesListState extends State<ServicesList> {
 
   @override
   Widget build(BuildContext context) {
+    final services = widget.services.services;
+
     return Column(
       children: [
         ExpandablePageView(
@@ -38,16 +41,16 @@ class _ServicesListState extends State<ServicesList> {
           // physics: const NeverScrollableScrollPhysics(),
           // group each 9 services into a page, and create a new page if the services exceed 9, and handle index out of range
           children: List.generate(
-            (widget.services.length / 9).ceil(),
+            (services.length / 9).ceil(),
             (index) {
               final startIndex = index * 9;
               final endIndex = startIndex + 9;
 
               return _buildServicesPage(
-                widget.services.sublist(
+                  services.sublist(
                   startIndex,
-                  endIndex > widget.services.length
-                      ? widget.services.length
+                  endIndex > services.length
+                      ? services.length
                       : endIndex,
                 ),
               );
@@ -59,13 +62,13 @@ class _ServicesListState extends State<ServicesList> {
             });
           },
         ),
-        if (widget.services.length > 9)
+        if (services.length > 9)
           // add numbered buttons to navigate between pages
           Wrap(
             crossAxisAlignment: WrapCrossAlignment.center,
             runSpacing: 5,
             children: List.generate(
-              (widget.services.length / 9).ceil(),
+              (services.length / 9).ceil(),
               (index) {
                 return Padding(
                   padding:
@@ -108,18 +111,19 @@ class _ServicesListState extends State<ServicesList> {
     );
   }
 
-  Widget _buildServicesPage(List<dynamic> services) {
+  Widget _buildServicesPage(List<Service> services) {
     return IntrinsicSizeBuilder(
       subject: Row(
         children: services.map((service) {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 5),
             child: ServiceCard(
-              serviceId: service['id'],
-              imagePath: service['service_pic'] ?? 'assets/images/default.png',
-              title: service['name'],
-              price: service['price'],
-              salePrice: service['discount_price'],
+              serviceId: service.id!,
+              imagePath: service.servicePic ?? 'assets/images/default.png',
+              title: service.name.toString(),
+              price: num.parse(service.price.toString()),
+              salePrice: num.tryParse(service.discountPrice.toString()),
+              description: service.description,
               onSelectionChanged: (isSelected) {},
             ),
           );
@@ -178,25 +182,26 @@ class _ServicesListState extends State<ServicesList> {
             shrinkWrap: true,
             padding: widget.padding,
             children: services.map(
-              (service) {
+              (Service service) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: ServiceCard(
                     height: subjectSize.height,
-                    serviceId: service['id'],
+                    serviceId: service.id!,
                     imagePath:
-                        service['service_pic'] ?? 'assets/images/default.png',
-                    title: service['name'],
-                    price: service['price'],
+                        service.servicePic ?? 'assets/images/default.png',
+                    title: service.name.toString(),
+                    price: num.parse(service.price.toString()),
                     isSelected:
-                        widget.selectedServiceIds.contains(service['id']),
-                    salePrice: service['discount_price'],
+                        widget.selectedServiceIds.contains(service.id),
+                    salePrice: num.tryParse(service.discountPrice.toString()),
+                    description: service.description,
                     onSelectionChanged: (isSelected) {
                       setState(() {
                         if (isSelected) {
-                          widget.selectedServiceIds.add(service['id']);
+                          widget.selectedServiceIds.add(service.id!);
                         } else {
-                          widget.selectedServiceIds.remove(service['id']);
+                          widget.selectedServiceIds.remove(service.id!);
                         }
                       });
                     },

@@ -81,13 +81,15 @@ class _HomePageState extends State<HomePage> {
                         Builder(
                           builder: (context) {
                             if (value == 'immediate') {
-                              return ImmediateRequestPage(
+                              return MakeAppointmentPage(
+                                category: 'guard',
                                 setValue: (value) {
                                   _selectedOption.value = value;
                                 },
                               );
                             } else if (value == 'appointment') {
                               return MakeAppointmentPage(
+                                category: 'nursing',
                                 setValue: (value) {
                                   _selectedOption.value = value;
                                 },

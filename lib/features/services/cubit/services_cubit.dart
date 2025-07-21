@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
+import 'package:nurse_app/features/services/models/get_services_model.dart';
 import 'package:nurse_app/main.dart';
 import 'package:nurse_app/services/user_token.dart';
 
@@ -28,7 +29,11 @@ class ServicesCubit extends Cubit<ServicesState> {
         ),
       );
 
-      emit(ServicesFetchSuccess(services: response.data['services']));
+      logger.i(response.data);
+
+      final services = GetServicesModel.fromJson(response.data);
+
+      emit(ServicesFetchSuccess(services: services));
     } on DioException catch (e) {
       logger.e(e.response!.data);
       emit(ServicesFetchFailure(message: 'Failed to fetch services.'));

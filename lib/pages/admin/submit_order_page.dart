@@ -103,8 +103,8 @@ class _SubmitOrderPageState extends State<SubmitOrderPage> {
                                   } else if (state is ServicesFetchSuccess) {
                                     final services = state.services;
 
-                                    selectedServiceIds = widget.order.services!
-                                        .map((e) => e.id!)
+                                    selectedServiceIds = widget.order.services
+                                        .map((e) => e.id)
                                         .toList();
 
                                     return ServicesList(

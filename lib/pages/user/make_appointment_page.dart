@@ -16,9 +16,14 @@ import '../../features/request/cubit/request_cubit.dart';
 import '../../features/services/cubit/services_cubit.dart';
 
 class MakeAppointmentPage extends StatefulWidget {
+  final String category;
   final Function(String) setValue;
 
-  const MakeAppointmentPage({super.key, required this.setValue});
+  const MakeAppointmentPage({
+    super.key,
+    required this.setValue,
+    required this.category,
+  });
 
   @override
   State<MakeAppointmentPage> createState() => _MakeAppointmentPageState();
@@ -31,7 +36,8 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
   final problemDescriptionController = TextEditingController();
   final locationController = TextEditingController();
   final genderController = GenderSelectionController();
-
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
 
   List<dynamic> services = [];
   List<int> selectedServiceIds = [];
@@ -227,7 +233,44 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                   },
                 ),
               ),
-
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  color: const Color(0xFFE7E7E7),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Column(
+                      children: [
+                        LabeledDateField(
+                          label: 'Start Date',
+                          currentDate: startDate,
+                          currentTime: TimeOfDay.now(),
+                          onPicked: (date) {
+                            setState(() {
+                              startDate = date;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 7),
+                        LabeledDateField(
+                          label: 'End Date',
+                          currentDate: endDate,
+                          currentTime: TimeOfDay.now(),
+                          onPicked: (date) {
+                            setState(() {
+                              endDate = date;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(height: 20),
               BlocConsumer<RequestCubit, RequestState>(
                 bloc: _requestCubit,
@@ -272,14 +315,26 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                         return;
                       }
 
+                      if (startDate.isAfter(endDate)) {
+                        Dialogs.showErrorDialog(
+                          context,
+                          'Error',
+                          'End date should be after start date.',
+                        );
+                        return;
+                      }
+
                       _requestCubit.createRequest(
-                        name: '${firstNameController.text.trim()} ${lastNameController.text.trim()}',
+                        name:
+                            '${firstNameController.text.trim()} ${lastNameController.text.trim()}',
                         phoneNumber: completeNumber,
                         location: locationController.text.trim(),
                         problemDescription:
-                        problemDescriptionController.text.trim(),
+                            problemDescriptionController.text.trim(),
                         nurseGender: genderController.getGender()!,
                         selectedServices: selectedServiceIds,
+                        startDate: startDate,
+                        endDate: endDate,
                       );
                     },
                     buttonText: 'Submit',

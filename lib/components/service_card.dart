@@ -16,6 +16,7 @@ class ServiceCard extends StatefulWidget {
   final bool isSelected;
   final bool enableTap;
   final double? height;
+  final String? description;
 
   const ServiceCard({
     super.key,
@@ -28,6 +29,7 @@ class ServiceCard extends StatefulWidget {
     this.isSelected = false,
     this.enableTap = true,
     this.height,
+    required this.description,
   });
 
   @override
@@ -52,12 +54,34 @@ class _ServiceCardState extends State<ServiceCard> {
     });
   }
 
+  void _showDescription() {
+    final description = widget.description;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Service Description'),
+          content: SingleChildScrollView(
+            child: Text(description ?? 'No description available.'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: _toggleSelection,
       child: badges.Badge(
-        showBadge: isSelected,
+        showBadge: widget.salePrice != null,
         stackFit: StackFit.passthrough,
         badgeStyle: const badges.BadgeStyle(
           badgeColor: Color.fromRGBO(123, 180, 66, 1),
@@ -148,12 +172,16 @@ class _ServiceCardState extends State<ServiceCard> {
                       ),
                     ),
                   ),
-                  const Flexible(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Icon(Icons.info_outline, size: 14),
+                  if (widget.description != null)
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: GestureDetector(
+                          onTap: _showDescription,
+                          child: const Icon(Icons.info_outline, size: 14),
+                        ),
+                      ),
                     ),
-                  ),
                   // if (widget.salePrice != null) ...[
                   //   const SizedBox(width: 5),
                   //   Flexible(

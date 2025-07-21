@@ -75,21 +75,21 @@ class _ManageServicesPageState extends State<ManageServicesPage> {
                             ),
                             const SizedBox(height: 10),
                             Column(
-                              children: services.map((service) {
+                              children: services.services.map((service) {
                                 return Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 5),
                                   child: ServiceCardAdmin(
-                                    imagePath: service['service_pic'] ??
+                                    imagePath: service.servicePic ??
                                         'assets/images/square_logo.png',
-                                    title: service['name'],
-                                    price: service['price'],
-                                    salePrice: service['discount_price'],
+                                    title: service.name.toString(),
+                                    price: service.price.toString(),
+                                    salePrice: service.discountPrice.toString(),
                                     onTap: () {
                                       Navigator.pushNamed(
                                         context,
                                         '/editService',
-                                        arguments: service['id'],
+                                        arguments: service.id,
                                       );
                                     },
                                   ),
