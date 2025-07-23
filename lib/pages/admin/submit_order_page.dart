@@ -104,7 +104,7 @@ class _SubmitOrderPageState extends State<SubmitOrderPage> {
                                     final services = state.services;
 
                                     selectedServiceIds = widget.order.services
-                                        .map((e) => e.id)
+                                        .map((e) => num.parse(e.id.toString()))
                                         .toList();
 
                                     return ServicesList(

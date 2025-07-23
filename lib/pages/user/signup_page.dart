@@ -20,6 +20,7 @@ class _SignupPageState extends State<SignupPage> {
   final phoneNumberController = TextEditingController();
   final passwordController = TextEditingController();
   final passwordConfirmationController = TextEditingController();
+  final dobController = TextEditingController();
   String completeNumber = '';
 
   final _formKey = GlobalKey<FormState>();
@@ -33,6 +34,7 @@ class _SignupPageState extends State<SignupPage> {
     phoneNumberController.dispose();
     passwordController.dispose();
     passwordConfirmationController.dispose();
+    dobController.dispose();
     super.dispose();
   }
 
@@ -46,6 +48,7 @@ class _SignupPageState extends State<SignupPage> {
         email: emailController.text.trim(),
         password: passwordController.text,
         passwordConfirmation: passwordConfirmationController.text,
+        // todo add dob and cities in lebanon
       );
     }
   }
@@ -137,6 +140,37 @@ class _SignupPageState extends State<SignupPage> {
                       setCompleteNumber: (number) {
                         completeNumber = number;
                       },
+                    ),
+                    const SizedBox(height: 14),
+                    GestureDetector(
+                      onTap: () {
+                        showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(1900),
+                          lastDate: DateTime.now(),
+                        ).then((selectedDate) {
+                          if (selectedDate != null) {
+                            dobController.text =
+                                selectedDate.toLocal().toString().split(' ')[0];
+                          }
+                        });
+                      },
+                      child: MyTextField(
+                        controller: dobController,
+                        icon: const Icon(Icons.calendar_today_outlined),
+                        hintText: 'Date of Birth',
+                        inputType: TextInputType.datetime,
+                        enabled: false,
+                        obscureText: false,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your date of birth';
+                          }
+
+                          return null;
+                        },
+                      ),
                     ),
                     const SizedBox(height: 14),
                     MyTextField(

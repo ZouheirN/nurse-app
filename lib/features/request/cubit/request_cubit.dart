@@ -32,7 +32,7 @@ class RequestCubit extends Cubit<RequestState> {
     try {
       final token = await UserToken.getToken();
 
-      final LatLng location = UserBox.getUserCoordinates();
+      final LatLng coordinates = UserBox.getUserCoordinates();
 
       final data = {
         "service_ids": selectedServices,
@@ -42,20 +42,22 @@ class RequestCubit extends Cubit<RequestState> {
         "full_name": name,
         "phone_number": phoneNumber,
         "scheduled_time": DateTime.now().toIso8601String(),
-        "latitude": location.latitude,
-        "longitude": location.longitude,
+        "latitude": coordinates.latitude,
+        "longitude": coordinates.longitude,
       };
 
       if (startDate != null) {
         data['scheduled_time'] = startDate.toIso8601String();
       }
 
-      if (endDate != null) {
-        data['ending_time'] = endDate.toIso8601String();
-        // data['time_type'] = timeType!;
-      }
+      // if (endDate != null) {
+      //   data['ending_time'] = endDate.toIso8601String();
+      //   // data['time_type'] = timeType!;
+      // }
 
       data['time_type'] = 'full-time';
+
+      logger.i(data);
 
       await dio.post(
         '$HOST/requests',
@@ -101,8 +103,6 @@ class RequestCubit extends Cubit<RequestState> {
       final List<RequestsHistoryModel> requests = (List.from(response.data))
           .map((request) => RequestsHistoryModel.fromJson(request))
           .toList();
-
-      logger.i(requests.first.toJson());
 
       emit(RequestsHistorySuccess(requests: requests));
     } on DioException catch (e) {

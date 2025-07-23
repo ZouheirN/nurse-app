@@ -7,6 +7,7 @@ class MyTextField extends StatefulWidget {
   final bool obscureText;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
+  final bool? enabled;
 
   const MyTextField({
     super.key,
@@ -16,6 +17,7 @@ class MyTextField extends StatefulWidget {
     required this.obscureText,
     this.controller,
     this.validator,
+    this.enabled = true,
   });
 
   @override
@@ -43,6 +45,7 @@ class _MyTextFieldState extends State<MyTextField> {
       // height: 50,
       padding: const EdgeInsets.symmetric(horizontal: 27),
       child: TextFormField(
+        enabled: widget.enabled,
         controller: widget.controller,
         keyboardType: widget.inputType,
         obscureText: _obscureText,
@@ -64,6 +67,10 @@ class _MyTextFieldState extends State<MyTextField> {
                 )
               : null,
           enabledBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderSide: BorderSide(color: Color(0xFF7BB442)),
+          ),
+          disabledBorder: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10)),
             borderSide: BorderSide(color: Color(0xFF7BB442)),
           ),

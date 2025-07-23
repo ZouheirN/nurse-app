@@ -36,8 +36,10 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
   final problemDescriptionController = TextEditingController();
   final locationController = TextEditingController();
   final genderController = GenderSelectionController();
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now();
+  DateTime? startDate;
+  DateTime? endDate;
+
+  final ValueNotifier<bool> _isImmediate = ValueNotifier<bool>(false);
 
   List<dynamic> services = [];
   List<int> selectedServiceIds = [];
@@ -236,40 +238,83 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  color: const Color(0xFFE7E7E7),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Column(
-                      children: [
-                        LabeledDateField(
-                          label: 'Start Date',
-                          currentDate: startDate,
-                          currentTime: TimeOfDay.now(),
-                          onPicked: (date) {
-                            setState(() {
-                              startDate = date;
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 7),
-                        LabeledDateField(
-                          label: 'End Date',
-                          currentDate: endDate,
-                          currentTime: TimeOfDay.now(),
-                          onPicked: (date) {
-                            setState(() {
-                              endDate = date;
-                            });
-                          },
-                        ),
-                      ],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Schedule Appointment',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
+                    ValueListenableBuilder(
+                        valueListenable: _isImmediate,
+                        builder: (context, isImmediate, child) {
+                          return Switch(
+                            value: isImmediate,
+                            onChanged: (value) {
+                              _isImmediate.value = value;
+                              if (value) {
+                                startDate = DateTime.now();
+                                endDate = DateTime.now();
+                              }
+                            },
+                            activeTrackColor: const Color(0xFF4CAF50),
+                            activeColor: Colors.white,
+                            inactiveTrackColor: const Color(0xFFBDBDBD),
+                            inactiveThumbColor: Colors.white,
+                          );
+                        }),
+                  ],
                 ),
+              ),
+              const SizedBox(height: 20),
+              ValueListenableBuilder(
+                valueListenable: _isImmediate,
+                builder: (context, value, child) {
+                  if (value) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        color: const Color(0xFFE7E7E7),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Column(
+                            children: [
+                              LabeledDateField(
+                                label: 'Start Date',
+                                currentDate: startDate ?? DateTime.now(),
+                                currentTime: TimeOfDay.now(),
+                                onPicked: (date) {
+                                  setState(() {
+                                    startDate = date;
+                                  });
+                                },
+                              ),
+                              const SizedBox(height: 7),
+                              LabeledDateField(
+                                label: 'End Date',
+                                currentDate: endDate ?? DateTime.now(),
+                                currentTime: TimeOfDay.now(),
+                                onPicked: (date) {
+                                  setState(() {
+                                    endDate = date;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
               ),
               const SizedBox(height: 20),
               BlocConsumer<RequestCubit, RequestState>(
@@ -315,7 +360,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                         return;
                       }
 
-                      if (startDate.isAfter(endDate)) {
+                      if (startDate != null && startDate!.isAfter(endDate!)) {
                         Dialogs.showErrorDialog(
                           context,
                           'Error',

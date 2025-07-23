@@ -139,10 +139,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 10),
                           child: HistoryCard(
-                            isOngoing: request.status == 'pending',
-                            services: request.services,
-                            description: 'Check out the details',
-                            time: formatDateTimeForCard(request.scheduledTime!),
+                            request: request,
                             onTap: () {
                               Navigator.pushNamed(
                                 context,
