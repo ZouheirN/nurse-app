@@ -28,3 +28,31 @@ final class GetNotificationsFailure extends NotificationState {
 
   GetNotificationsFailure({required this.message});
 }
+
+final class MarkNotificationAsReadLoading extends NotificationState {}
+
+final class MarkNotificationAsReadSuccess extends NotificationState {
+  final String message;
+
+  MarkNotificationAsReadSuccess({required this.message});
+}
+
+final class MarkNotificationAsReadFailure extends NotificationState {
+  final String message;
+
+  MarkNotificationAsReadFailure({required this.message});
+}
+
+final class DeleteNotificationLoading extends NotificationState {}
+
+final class DeleteNotificationSuccess extends NotificationState {
+  final String message;
+
+  DeleteNotificationSuccess({required this.message});
+}
+
+final class DeleteNotificationFailure extends NotificationState {
+  final String message;
+
+  DeleteNotificationFailure({required this.message});
+}

@@ -139,4 +139,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get updateLocation => 'تحديث الموقع';
+
+  @override
+  String get whatsAppNumbers => 'أرقام واتساب';
 }

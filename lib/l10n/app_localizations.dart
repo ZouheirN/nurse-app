@@ -355,6 +355,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Update Location'**
   String get updateLocation;
+
+  /// No description provided for @whatsAppNumbers.
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp Numbers'**
+  String get whatsAppNumbers;
 }
 
 class _AppLocalizationsDelegate

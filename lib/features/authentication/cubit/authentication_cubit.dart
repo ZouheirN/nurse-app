@@ -219,4 +219,21 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
       emit(AuthenticationGetAreasFailure(message: 'Failed to get areas.'));
     }
   }
+
+  Future<void> signOut() async {
+    try {
+      final token = await UserToken.getToken();
+
+      await dio.post(
+        '$HOST/logout',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          }
+        ),
+      );
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
 }

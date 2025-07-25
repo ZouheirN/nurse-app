@@ -140,4 +140,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updateLocation => 'Update Location';
+
+  @override
+  String get whatsAppNumbers => 'WhatsApp Numbers';
 }

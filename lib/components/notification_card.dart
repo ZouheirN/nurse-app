@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:nurse_app/utilities/helper_functions.dart';
 
 class NotificationCard extends StatelessWidget {
   final String title;
   final String description;
-  final String? time;
+  final DateTime? time;
+  final bool isRead;
   final VoidCallback? onTap;
 
   const NotificationCard({
@@ -12,6 +14,7 @@ class NotificationCard extends StatelessWidget {
     required this.description,
     this.time,
     this.onTap,
+    required this.isRead,
   });
 
   @override
@@ -25,10 +28,10 @@ class NotificationCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
-            // border: Border.all(
-            //   color: Colors.grey,
-            //   width: 1,
-            // ),
+            border: Border.all(
+              color: isRead ? Colors.transparent : const Color(0xFF7BB442),
+              width: 1,
+            ),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -82,7 +85,8 @@ class NotificationCard extends StatelessWidget {
               if (time != null) ...[
                 const SizedBox(width: 10),
                 Text(
-                  time!,
+                  formatDateTimeForCard(time!),
+                  textAlign: TextAlign.right,
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w300,
@@ -90,12 +94,12 @@ class NotificationCard extends StatelessWidget {
                   ),
                 ),
               ],
-              const SizedBox(width: 10),
-              const Icon(
-                Icons.chevron_right,
-                size: 20,
-                color: Colors.black,
-              )
+              // const SizedBox(width: 10),
+              // const Icon(
+              //   Icons.chevron_right,
+              //   size: 20,
+              //   color: Colors.black,
+              // )
             ],
           ),
         ),

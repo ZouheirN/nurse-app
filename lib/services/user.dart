@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:nurse_app/features/authentication/cubit/authentication_cubit.dart';
 import 'package:nurse_app/features/authentication/models/user_model.dart';
 import 'package:nurse_app/services/user_token.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -44,6 +45,8 @@ void logoutUser() {
   // } catch (e) {
   //   logger.e(e);
   // }
+
+  AuthenticationCubit().signOut();
 
   UserToken.deleteToken();
   UserBox.deleteUser();

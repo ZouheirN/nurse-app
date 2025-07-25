@@ -29,35 +29,35 @@ class Notification {
   Notification({
     required this.id,
     required this.userId,
+    required this.message,
     required this.type,
-    required this.data,
     required this.readAt,
     required this.createdAt,
     required this.updatedAt,
   });
 
-  final int id;
-  final int userId;
-  final String type;
-  final Data? data;
-  final DateTime? readAt;
+  final int? id;
+  final int? userId;
+  final String? message;
+  final String? type;
+  final dynamic readAt;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
   Notification copyWith({
     int? id,
     int? userId,
+    String? message,
     String? type,
-    Data? data,
-    DateTime? readAt,
+    dynamic? readAt,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
     return Notification(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      message: message ?? this.message,
       type: type ?? this.type,
-      data: data ?? this.data,
       readAt: readAt ?? this.readAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -66,11 +66,11 @@ class Notification {
 
   factory Notification.fromJson(Map<String, dynamic> json){
     return Notification(
-      id: json["id"] ?? 0,
-      userId: json["user_id"] ?? 0,
-      type: json["type"] ?? "",
-      data: json["data"] == null ? null : Data.fromJson(json["data"]),
-      readAt: DateTime.tryParse(json["read_at"] ?? ""),
+      id: json["id"],
+      userId: json["user_id"],
+      message: json["message"],
+      type: json["type"],
+      readAt: json["read_at"],
       createdAt: DateTime.tryParse(json["created_at"] ?? ""),
       updatedAt: DateTime.tryParse(json["updated_at"] ?? ""),
     );
@@ -79,44 +79,11 @@ class Notification {
   Map<String, dynamic> toJson() => {
     "id": id,
     "user_id": userId,
+    "message": message,
     "type": type,
-    "data": data?.toJson(),
-    "read_at": readAt?.toIso8601String(),
+    "read_at": readAt,
     "created_at": createdAt?.toIso8601String(),
     "updated_at": updatedAt?.toIso8601String(),
-  };
-
-}
-
-class Data {
-  Data({
-    required this.requestId,
-    required this.status,
-  });
-
-  final int requestId;
-  final String status;
-
-  Data copyWith({
-    int? requestId,
-    String? status,
-  }) {
-    return Data(
-      requestId: requestId ?? this.requestId,
-      status: status ?? this.status,
-    );
-  }
-
-  factory Data.fromJson(Map<String, dynamic> json){
-    return Data(
-      requestId: json["request_id"] ?? 0,
-      status: json["status"] ?? "",
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    "request_id": requestId,
-    "status": status,
   };
 
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/extensions/context_extension.dart';
 import 'package:nurse_app/features/notification/cubit/notification_cubit.dart';
@@ -130,6 +131,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         );
                       } else if (state is GetNotificationsSuccess) {
                         final notifications = state.notifications.notifications;
+
                         if (notifications.isEmpty) {
                           return const Center(
                             child: Text(
@@ -143,11 +145,84 @@ class _NotificationsPageState extends State<NotificationsPage> {
                           itemCount: notifications.length,
                           itemBuilder: (context, index) {
                             final notification = notifications[index];
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: NotificationCard(
-                                title: notification.type,
-                                description: '${notification.createdAt}',
+
+                            return BlocProvider(
+                              create: (context) => NotificationCubit(),
+                              child: BlocListener<NotificationCubit,
+                                  NotificationState>(
+                                listener: (context, state) {
+                                  if (state is MarkNotificationAsReadSuccess) {
+                                    _notificationCubit
+                                        .markNotificationAsReadFromList(
+                                            notifications, notification.id!);
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(state.message),
+                                      ),
+                                    );
+                                  } else if (state
+                                      is DeleteNotificationSuccess) {
+                                    _notificationCubit
+                                        .deleteNotificationFromList(
+                                            notifications, notification.id!);
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(state.message),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  child: Slidable(
+                                    key: ValueKey(notification.id),
+                                    endActionPane: ActionPane(
+                                      motion: const DrawerMotion(),
+                                      children: [
+                                        if (notification.readAt == null)
+                                          SlidableAction(
+                                            onPressed: (context) {
+                                              context
+                                                  .read<NotificationCubit>()
+                                                  .markNotificationAsRead(
+                                                      notification.id!);
+                                            },
+                                            backgroundColor: Colors.green,
+                                            foregroundColor: Colors.white,
+                                            icon: Icons.check,
+                                            label: 'Mark as Read',
+                                            padding: EdgeInsets.zero,
+                                            flex: 2,
+                                          ),
+                                        SlidableAction(
+                                          onPressed: (context) {
+                                            context
+                                                .read<NotificationCubit>()
+                                                .deleteNotification(
+                                                    notification.id!);
+                                          },
+                                          backgroundColor: Colors.red,
+                                          foregroundColor: Colors.white,
+                                          icon: Icons.delete,
+                                          label: 'Delete',
+                                          padding: EdgeInsets.zero,
+                                        ),
+                                      ],
+                                    ),
+                                    child: NotificationCard(
+                                      title: notification.type != null &&
+                                              notification.type!.isNotEmpty
+                                          ? '${notification.type![0].toUpperCase()}${notification.type!.substring(1)}'
+                                          : '',
+                                      description:
+                                          notification.message.toString(),
+                                      time: notification.createdAt,
+                                      isRead: notification.readAt != null,
+                                    ),
+                                  ),
+                                ),
                               ),
                             );
                           },

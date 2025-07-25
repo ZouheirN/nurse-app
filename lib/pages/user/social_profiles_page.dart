@@ -46,9 +46,9 @@ class SocialProfilesPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
-                'WhatsApp Numbers',
-                style: TextStyle(
+              Text(
+                context.localizations.whatsAppNumbers,
+                style: const TextStyle(
                   fontStyle: FontStyle.italic,
                   fontSize: 20,
                   fontWeight: FontWeight.w800,
