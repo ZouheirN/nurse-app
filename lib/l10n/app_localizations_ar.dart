@@ -136,4 +136,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get submit => 'إرسال';
+
+  @override
+  String get updateLocation => 'تحديث الموقع';
 }

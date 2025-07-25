@@ -23,7 +23,7 @@ class PendingPage extends StatelessWidget {
               onTap: () {
                 setValue('home');
               },
-              buttonText: 'Pending',
+              buttonText: 'Go Back', // todo localize
               icon: const Icon(
                 Icons.arrow_back,
                 color: Colors.white,

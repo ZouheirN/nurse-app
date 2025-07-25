@@ -50,8 +50,9 @@ class _HistoryCardState extends State<HistoryCard>
 
     final isOngoing = widget.request.status == 'ongoing';
     final name = widget.request.name.toString();
-    final problemDescription = widget.request.problemDescription.toString();
-    final time = formatDateTimeForCard(widget.request.scheduledTime!);
+    // final problemDescription = widget.request.problemDescription.toString();
+    const problemDescription = 'Check out the details';
+    final time = formatDateTimeForCard(widget.request.scheduledTime ?? widget.request.createdAt!);
 
     final sumOfPrices = widget.request.services
         .map((service) => num.parse(service.price.toString()))

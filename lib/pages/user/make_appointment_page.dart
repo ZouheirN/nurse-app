@@ -6,6 +6,7 @@ import 'package:nurse_app/components/labeled_textfield.dart';
 import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/second_button.dart';
 import 'package:nurse_app/components/third_button.dart';
+import 'package:nurse_app/main.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
 import 'package:quickalert/quickalert.dart';
 
@@ -39,7 +40,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
   DateTime? startDate;
   DateTime? endDate;
 
-  final ValueNotifier<bool> _isImmediate = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _isScheduled = ValueNotifier<bool>(false);
 
   List<dynamic> services = [];
   List<int> selectedServiceIds = [];
@@ -249,16 +250,16 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                       ),
                     ),
                     ValueListenableBuilder(
-                        valueListenable: _isImmediate,
-                        builder: (context, isImmediate, child) {
+                        valueListenable: _isScheduled,
+                        builder: (context, isScheduled, child) {
                           return Switch(
-                            value: isImmediate,
+                            value: isScheduled,
                             onChanged: (value) {
-                              _isImmediate.value = value;
-                              if (value) {
-                                startDate = DateTime.now();
-                                endDate = DateTime.now();
-                              }
+                              _isScheduled.value = value;
+                              // if (value) {
+                              //   startDate = DateTime.now();
+                              //   endDate = DateTime.now();
+                              // }
                             },
                             activeTrackColor: const Color(0xFF4CAF50),
                             activeColor: Colors.white,
@@ -271,7 +272,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
               ),
               const SizedBox(height: 20),
               ValueListenableBuilder(
-                valueListenable: _isImmediate,
+                valueListenable: _isScheduled,
                 builder: (context, value, child) {
                   if (value) {
                     return Padding(
@@ -360,7 +361,25 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                         return;
                       }
 
-                      if (startDate != null && startDate!.isAfter(endDate!)) {
+                      if (selectedServiceIds.isEmpty) {
+                        Dialogs.showErrorDialog(
+                          context,
+                          'Error',
+                          'Please select at least one service.',
+                        );
+                        return;
+                      }
+
+                      if (_isScheduled.value == true &&
+                          (startDate == null || endDate == null)) {
+                        Dialogs.showErrorDialog(
+                          context,
+                          'Error',
+                          'Please enter a date for the scheduled appointment.',
+                        );
+                        return;
+                      } else if (startDate != null &&
+                          startDate!.isAfter(endDate!)) {
                         Dialogs.showErrorDialog(
                           context,
                           'Error',
@@ -378,8 +397,8 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                             problemDescriptionController.text.trim(),
                         nurseGender: genderController.getGender()!,
                         selectedServices: selectedServiceIds,
-                        startDate: startDate,
-                        endDate: endDate,
+                        startDate: _isScheduled.value ? startDate : null,
+                        endDate: _isScheduled.value ? endDate : null,
                       );
                     },
                     buttonText: 'Submit',

@@ -1,9 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:nurse_app/components/header.dart';
+import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/extensions/context_extension.dart';
-import 'package:nurse_app/pages/user/immediate_request_page.dart';
+import 'package:nurse_app/features/home/cubit/home_cubit.dart';
 import 'package:nurse_app/pages/user/pending_page.dart';
 
 import '../../components/faq.dart';
@@ -18,9 +21,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final ValueNotifier<String> _selectedOption = ValueNotifier('home');
-
-  int _dotIndex = 0;
-  final int _pageLength = 10;
 
   @override
   Widget build(BuildContext context) {
@@ -40,44 +40,7 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (value == 'home') ...[
-                          ExpandableCarousel(
-                            items: [
-                              for (int i = 0; i <= _pageLength - 1; i++)
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(15),
-                                  child: Image(
-                                    image: AssetImage('assets/images/$i.png'),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                            ],
-                            options: ExpandableCarouselOptions(
-                              autoPlay: true,
-                              autoPlayInterval: const Duration(seconds: 5),
-                              enlargeCenterPage: true,
-                              enableInfiniteScroll: true,
-                              pauseAutoPlayOnTouch: true,
-                              showIndicator: false,
-                              onPageChanged: (index, reason) {
-                                setState(() {
-                                  _dotIndex = index;
-                                });
-                              },
-                            ),
-                          ),
-                          Center(
-                            child: DotsIndicator(
-                              dotsCount: _pageLength,
-                              position: _dotIndex.toDouble(),
-                              decorator: const DotsDecorator(
-                                activeColor: Color(0xFF7BB442),
-                                color: Color.fromRGBO(217, 217, 217, 1),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                        ],
+                        if (value == 'home') _buildCarousel(),
                         Builder(
                           builder: (context) {
                             if (value == 'immediate') {
@@ -255,6 +218,86 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
+    );
+  }
+
+  Widget _buildCarousel() {
+    int dotIndex = 0;
+
+    return BlocBuilder<HomeCubit, HomeState>(
+      bloc: HomeCubit()..getSliders(),
+      builder: (context, state) {
+        if (state is GetSlidersLoading) {
+          return const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Loader(),
+          );
+        }
+
+        if (state is GetSlidersFailure) {
+          return Center(
+            child: Text(
+              state.message,
+            ),
+          );
+        }
+
+        if (state is GetSlidersSuccess) {
+          final items = state.sliders.sliders;
+
+          if (items.isEmpty) {
+            return const SizedBox.shrink();
+          }
+
+          return Column(
+            children: [
+              ExpandableCarousel(
+                items: [
+                  for (var item in items)
+                    CachedNetworkImage(
+                      imageUrl: item.image!,
+                      imageBuilder: (context, imageProvider) {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      },
+                    ),
+                ],
+                options: ExpandableCarouselOptions(
+                  autoPlay: true,
+                  autoPlayInterval: const Duration(seconds: 5),
+                  enlargeCenterPage: true,
+                  enableInfiniteScroll: true,
+                  pauseAutoPlayOnTouch: true,
+                  showIndicator: false,
+                  onPageChanged: (index, reason) {
+                    setState(() {
+                      dotIndex = index;
+                    });
+                  },
+                ),
+              ),
+              Center(
+                child: DotsIndicator(
+                  dotsCount: items.length,
+                  position: dotIndex.toDouble(),
+                  decorator: const DotsDecorator(
+                    activeColor: Color(0xFF7BB442),
+                    color: Color.fromRGBO(217, 217, 217, 1),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+          );
+        }
+
+        return const Center(child: Text('Failed to get images.'));
+      },
     );
   }
 }

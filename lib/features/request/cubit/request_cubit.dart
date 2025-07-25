@@ -41,13 +41,13 @@ class RequestCubit extends Cubit<RequestState> {
         "nurse_gender": nurseGender,
         "full_name": name,
         "phone_number": phoneNumber,
-        "scheduled_time": DateTime.now().toIso8601String(),
+        // "scheduled_time": DateTime.now().toIso8601String(),
         "latitude": coordinates.latitude,
         "longitude": coordinates.longitude,
       };
 
       if (startDate != null) {
-        data['scheduled_time'] = startDate.toIso8601String();
+        // data['scheduled_time'] = startDate.toIso8601String();
       }
 
       // if (endDate != null) {
@@ -64,6 +64,7 @@ class RequestCubit extends Cubit<RequestState> {
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
           },
         ),
         data: data,
@@ -72,10 +73,8 @@ class RequestCubit extends Cubit<RequestState> {
       emit(RequestCreateSuccess());
     } on DioException catch (e) {
       logger.e(e.response!.data);
-      logger.e(e.response!.statusCode);
-      logger.e(e.error);
       emit(RequestCreateFailure(
-          message: e.response!.data['error'] ?? 'Failed to create request.'));
+          message: e.response!.data['message'] ?? 'Failed to create request.'));
     } catch (e) {
       logger.e(e);
       emit(RequestCreateFailure(message: 'Failed to create request.'));

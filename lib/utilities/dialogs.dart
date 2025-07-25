@@ -4,6 +4,46 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class Dialogs {
+  static void showPopup({
+    required BuildContext context,
+    required String? image,
+    required String? title,
+    required String? content,
+    required String? type,
+  }) {
+    if (image != null) {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.custom,
+        customAsset: image,
+        title: title ?? '',
+        text: content ?? '',
+        confirmBtnText: 'OK',
+      );
+    }
+
+    switch (type) {
+      case 'info':
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.info,
+          title: title ?? '',
+          text: content ?? '',
+          confirmBtnText: 'OK',
+        );
+        break;
+      default:
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.info,
+          title: title ?? '',
+          text: content ?? '',
+          confirmBtnText: 'OK',
+        );
+        break;
+    }
+  }
+
   static void showErrorDialog(
       BuildContext context, String title, String message) {
     QuickAlert.show(

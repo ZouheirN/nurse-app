@@ -44,5 +44,6 @@
     "save": "Save",
     "address": "Address",
     "describeYourProblem": "Describe Your Problem",
-    "submit": "Submit"
+    "submit": "Submit",
+    "updateLocation": "Update Location"
 }

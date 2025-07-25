@@ -44,5 +44,6 @@
     "save": "حفظ",
     "address": "العنوان",
     "describeYourProblem": "صف مشكلتك",
-    "submit": "إرسال"
+    "submit": "إرسال",
+    "updateLocation": "تحديث الموقع"
 }

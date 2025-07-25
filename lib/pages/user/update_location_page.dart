@@ -91,35 +91,27 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Row(
-          children: [
-            const Text(
-              'Update Location',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w700,
-                fontSize: 23,
-              ),
-            ),
-            const Spacer(),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text(
-                'Cancel',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ],
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: const Icon(Icons.chevron_left, size: 48, color: Colors.white),
         ),
+        title: Text(
+          context.localizations.updateLocation,
+          style: const TextStyle(
+            fontSize: 36,
+            fontWeight: FontWeight.w800,
+            color: Colors.white,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+        centerTitle: true,
+        flexibleSpace: const Image(
+          image: AssetImage('assets/images/header_background.png'),
+          fit: BoxFit.cover,
+        ),
+        backgroundColor: Colors.transparent,
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -142,7 +134,7 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
                   children: [
                     TileLayer(
                       urlTemplate:
-                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                       // subdomains: const ['a', 'b', 'c'],
                       userAgentPackageName: "com.devzur.alahmad",
                     ),
@@ -197,17 +189,20 @@ class _UpdateLocationPageState extends State<UpdateLocationPage> {
                 margin: const EdgeInsets.symmetric(horizontal: 110),
               ),
               const SizedBox(height: 20),
-              LabeledEditTextfield(
-                label: 'Enter Your Location Details',
-                keyboardType: TextInputType.text,
-                controller: _locationController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your location details';
-                  }
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: LabeledEditTextfield(
+                  label: 'Enter Your Location Details',
+                  keyboardType: TextInputType.text,
+                  controller: _locationController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your location details';
+                    }
 
-                  return null;
-                },
+                    return null;
+                  },
+                ),
               ),
               const SizedBox(height: 20),
               BlocConsumer<LocationCubit, LocationState>(
