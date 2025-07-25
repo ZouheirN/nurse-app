@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/button.dart';
+import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/textfield.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
@@ -22,6 +23,8 @@ class _SignupPageState extends State<SignupPage> {
   final passwordConfirmationController = TextEditingController();
   final dobController = TextEditingController();
   String completeNumber = '';
+
+  int? selectedAreaId;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -48,7 +51,8 @@ class _SignupPageState extends State<SignupPage> {
         email: emailController.text.trim(),
         password: passwordController.text,
         passwordConfirmation: passwordConfirmationController.text,
-        // todo add dob and cities in lebanon
+        dateOfBirth: dobController.text.trim(),
+        areaId: selectedAreaId!,
       );
     }
   }
@@ -171,6 +175,90 @@ class _SignupPageState extends State<SignupPage> {
                           return null;
                         },
                       ),
+                    ),
+                    const SizedBox(height: 14),
+                    BlocBuilder<AuthenticationCubit, AuthenticationState>(
+                      bloc: AuthenticationCubit()..getAreas(),
+                      builder: (context, state) {
+                        if (state is AuthenticationGetAreasLoading) {
+                          return const Loader();
+                        }
+
+                        if (state is AuthenticationGetAreasFailure) {
+                          return Text(
+                            'Failed to load areas: ${state.message}',
+                            style: const TextStyle(color: Colors.red),
+                          );
+                        }
+
+                        if (state is AuthenticationGetAreasSuccess) {
+                          final areas = state.areas.areas;
+
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 27),
+                            child: DropdownButtonFormField<int>(
+                              decoration: InputDecoration(
+                                labelText: 'Select Area',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                enabledBorder: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  borderSide:
+                                      BorderSide(color: Color(0xFF7BB442)),
+                                ),
+                                disabledBorder: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  borderSide:
+                                      BorderSide(color: Color(0xFF7BB442)),
+                                ),
+                                focusedBorder: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  borderSide:
+                                      BorderSide(color: Color(0xFF7BB442)),
+                                ),
+                                errorBorder: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  borderSide: BorderSide(color: Colors.red),
+                                ),
+                                focusedErrorBorder: const OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  borderSide: BorderSide(color: Colors.red),
+                                ),
+                                fillColor: const Color(0xFFE8FFD1),
+                                filled: true,
+                              ),
+                              items: areas.map((area) {
+                                return DropdownMenuItem<int>(
+                                  value: area.id,
+                                  child: Text(area.name.toString()),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedAreaId = value;
+                                });
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Please select an area';
+                                }
+                                return null;
+                              },
+                            ),
+                          );
+                        }
+
+                        return const Text(
+                          'No areas available',
+                          style: TextStyle(color: Colors.red),
+                        );
+                      },
                     ),
                     const SizedBox(height: 14),
                     MyTextField(

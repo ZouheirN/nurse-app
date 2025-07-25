@@ -56,3 +56,16 @@ final class AuthenticationForgotPasswordOtpFailure extends AuthenticationState {
 
   AuthenticationForgotPasswordOtpFailure({required this.message});
 }
+
+// Get areas
+final class AuthenticationGetAreasLoading extends AuthenticationState {}
+final class AuthenticationGetAreasSuccess extends AuthenticationState {
+  final GetAreasModel areas;
+
+  AuthenticationGetAreasSuccess({required this.areas});
+}
+final class AuthenticationGetAreasFailure extends AuthenticationState {
+  final String message;
+
+  AuthenticationGetAreasFailure({required this.message});
+}
