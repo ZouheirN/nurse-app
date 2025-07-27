@@ -7,7 +7,6 @@ import 'package:nurse_app/services/user_token.dart';
 
 part 'about_us_state.dart';
 
-final dio = Dio();
 
 class AboutUsCubit extends Cubit<AboutUsState> {
   AboutUsCubit() : super(AboutUsInitial());

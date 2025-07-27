@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/button.dart';
@@ -15,11 +16,16 @@ class LoginPage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
 
   final _authenticationCubit = AuthenticationCubit();
+  final _adminAuthenticationCubit = AuthenticationCubit();
 
-  void login(BuildContext context) async {
+  void login(BuildContext context, bool isAdmin) async {
     FocusManager.instance.primaryFocus?.unfocus();
 
-    if (_formKey.currentState!.validate()) {
+    if (isAdmin) {
+      _adminAuthenticationCubit.signIn(
+          email: 'admin2@alahmadnursecare.com',
+          password: r'NuUr278)Se_CaRE_C3nT9er$$$&9');
+    } else if (_formKey.currentState!.validate()) {
       _authenticationCubit.signIn(
         email: emailController.text.trim(),
         password: passwordController.text,
@@ -150,12 +156,51 @@ class LoginPage extends StatelessWidget {
                         return MyButton(
                           isLoading: isLoading,
                           onTap: () {
-                            login(context);
+                            login(context, false);
                           },
                           buttonText: 'Login',
                         );
                       },
                     ),
+                    if (kDebugMode) ...[
+                      const SizedBox(height: 10),
+                      BlocConsumer<AuthenticationCubit, AuthenticationState>(
+                        bloc: _adminAuthenticationCubit,
+                        listener: (context, state) {
+                          if (state is AuthenticationSignInSuccess) {
+                            if (state.userModel.roleId == 1) {
+                              Navigator.pushReplacementNamed(
+                                  context, '/adminDashboard');
+                            } else if (state.userModel.roleId == 2) {
+                              Navigator.pushReplacementNamed(context, '/home');
+                            }
+                          } else if (state is AuthenticationSignInFailure) {
+                            if (state.message ==
+                                "Your phone number is not verified.") {
+                              Dialogs.showVerifySmsDialog(context);
+                            } else {
+                              Dialogs.showErrorDialog(
+                                context,
+                                'Error Logging In',
+                                state.message,
+                              );
+                            }
+                          }
+                        },
+                        builder: (context, state) {
+                          final isLoading =
+                              state is AuthenticationSignInLoading;
+
+                          return MyButton(
+                            isLoading: isLoading,
+                            onTap: () {
+                              login(context, true);
+                            },
+                            buttonText: 'Login as Admin',
+                          );
+                        },
+                      ),
+                    ],
                     const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

@@ -17,53 +17,55 @@ class SettingsPage extends StatelessWidget {
       useSafeArea: true,
       backgroundColor: const Color(0xFFFDFDFD),
       builder: (context) {
-        return Container(
-          margin: const EdgeInsets.symmetric(
-            vertical: 12.0,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                height: 5.0,
-                width: 50.0,
-                decoration: const BoxDecoration(
-                  color: Color.fromRGBO(142, 142, 142, 0.53),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
+        return SafeArea(
+          child: Container(
+            margin: const EdgeInsets.symmetric(
+              vertical: 12.0,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 5.0,
+                  width: 50.0,
+                  decoration: const BoxDecoration(
+                    color: Color.fromRGBO(142, 142, 142, 0.53),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Need Support?',
-                style: TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
+                const SizedBox(height: 20),
+                const Text(
+                  'Need Support?',
+                  style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 5),
-              const Text(
-                'We\'re here to help you',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                  fontStyle: FontStyle.italic,
+                const SizedBox(height: 5),
+                const Text(
+                  'We\'re here to help you',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                    fontStyle: FontStyle.italic,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              MySecondButton(
-                onTap: () {},
-                buttonText: 'Contact Us',
-                icon: const Icon(
-                  FontAwesomeIcons.whatsapp,
-                  color: Colors.white,
-                  size: 25,
+                const SizedBox(height: 10),
+                MySecondButton(
+                  onTap: () {},
+                  buttonText: 'Contact Us',
+                  icon: const Icon(
+                    FontAwesomeIcons.whatsapp,
+                    color: Colors.white,
+                    size: 25,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
@@ -78,97 +80,99 @@ class SettingsPage extends StatelessWidget {
       builder: (context) {
         final currentLocale = Localizations.localeOf(context);
 
-        return Container(
-          margin: const EdgeInsets.symmetric(
-            vertical: 12.0,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                height: 5.0,
-                width: 50.0,
-                decoration: const BoxDecoration(
-                  color: Color.fromRGBO(142, 142, 142, 0.53),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                context.localizations.changeLanguage,
-                style: const TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const SizedBox(height: 5),
-              Container(
-                color: currentLocale.languageCode == 'ar'
-                    ? const Color.fromRGBO(216, 253, 180, 1.0)
-                    : null,
-                child: ListTile(
-                  dense: true,
-                  minVerticalPadding: 0,
-                  contentPadding: EdgeInsets.zero,
-                  leading: Container(
-                    width: 5,
-                    color: currentLocale.languageCode == 'ar'
-                        ? const Color.fromRGBO(122, 179, 65, 1.0)
-                        : Colors.transparent,
-                  ),
-                  title: const Text(
-                    'العربية',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800,
-                      // fontStyle: FontStyle.italic,
+        return SafeArea(
+          child: Container(
+            margin: const EdgeInsets.symmetric(
+              vertical: 12.0,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 5.0,
+                  width: 50.0,
+                  decoration: const BoxDecoration(
+                    color: Color.fromRGBO(142, 142, 142, 0.53),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
                     ),
                   ),
-                  onTap: () {
-                    LocalizationBox.saveLocale('ar');
-                    // GeneralStream.languageStream.add(L10n.locals.firstWhere(
-                    //   (locale) => locale.languageCode == 'ar',
-                    // ));
-                    Navigator.pop(context);
-                  },
                 ),
-              ),
-              Container(
-                color: currentLocale.languageCode == 'en'
-                    ? const Color.fromRGBO(216, 253, 180, 1.0)
-                    : null,
-                child: ListTile(
-                  dense: true,
-                  minVerticalPadding: 0,
-                  contentPadding: EdgeInsets.zero,
-                  leading: Container(
-                    width: 5,
-                    color: currentLocale.languageCode == 'en'
-                        ? const Color.fromRGBO(122, 179, 65, 1.0)
-                        : Colors.transparent,
+                const SizedBox(height: 20),
+                Text(
+                  context.localizations.changeLanguage,
+                  style: const TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
                   ),
-                  title: const Text(
-                    'English',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800,
-                      fontStyle: FontStyle.italic,
+                ),
+                const SizedBox(height: 5),
+                Container(
+                  color: currentLocale.languageCode == 'ar'
+                      ? const Color.fromRGBO(216, 253, 180, 1.0)
+                      : null,
+                  child: ListTile(
+                    dense: true,
+                    minVerticalPadding: 0,
+                    contentPadding: EdgeInsets.zero,
+                    leading: Container(
+                      width: 5,
+                      color: currentLocale.languageCode == 'ar'
+                          ? const Color.fromRGBO(122, 179, 65, 1.0)
+                          : Colors.transparent,
                     ),
+                    title: const Text(
+                      'العربية',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        // fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                    onTap: () {
+                      LocalizationBox.saveLocale('ar');
+                      // GeneralStream.languageStream.add(L10n.locals.firstWhere(
+                      //   (locale) => locale.languageCode == 'ar',
+                      // ));
+                      Navigator.pop(context);
+                    },
                   ),
-                  onTap: () {
-                    LocalizationBox.saveLocale('en');
-                    // GeneralStream.languageStream.add(L10n.locals.firstWhere(
-                    //   (locale) => locale.languageCode == 'en',
-                    // ));
-                    Navigator.pop(context);
-                  },
                 ),
-              ),
-            ],
+                Container(
+                  color: currentLocale.languageCode == 'en'
+                      ? const Color.fromRGBO(216, 253, 180, 1.0)
+                      : null,
+                  child: ListTile(
+                    dense: true,
+                    minVerticalPadding: 0,
+                    contentPadding: EdgeInsets.zero,
+                    leading: Container(
+                      width: 5,
+                      color: currentLocale.languageCode == 'en'
+                          ? const Color.fromRGBO(122, 179, 65, 1.0)
+                          : Colors.transparent,
+                    ),
+                    title: const Text(
+                      'English',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                    onTap: () {
+                      LocalizationBox.saveLocale('en');
+                      // GeneralStream.languageStream.add(L10n.locals.firstWhere(
+                      //   (locale) => locale.languageCode == 'en',
+                      // ));
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

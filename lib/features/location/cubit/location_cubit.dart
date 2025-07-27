@@ -8,7 +8,6 @@ import 'package:nurse_app/services/user_token.dart';
 
 part 'location_state.dart';
 
-final dio = Dio();
 
 class LocationCubit extends Cubit<LocationState> {
   LocationCubit() : super(LocationInitial());

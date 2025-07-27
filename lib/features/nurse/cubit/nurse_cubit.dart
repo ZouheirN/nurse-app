@@ -10,7 +10,6 @@ import '../models/nurse_model.dart';
 
 part 'nurse_state.dart';
 
-final dio = Dio();
 
 class NurseCubit extends Cubit<NurseState> {
   NurseCubit() : super(NurseInitial());

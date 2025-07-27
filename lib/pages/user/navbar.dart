@@ -39,7 +39,7 @@ class _NavbarState extends State<Navbar> {
         if (state is GetPopupsSuccess) {
           final popup = state.popups.popup;
 
-          if (popup == null) return;
+          if (popup == null || popup.isActive == false) return;
 
           Dialogs.showPopup(
             context: context,

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,7 @@ import 'package:device_preview/device_preview.dart';
 import 'pages/admin/send_notification_page.dart';
 
 final logger = Logger();
+final dio = Dio();
 
 Future<void> main() async {
   await Hive.initFlutter();
@@ -105,6 +107,30 @@ class _MyAppState extends State<MyApp> {
     if (kDebugMode) {
       ServicesBinding.instance.keyboard.addHandler(_onKey);
     }
+
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        // onRequest: (options, handler) {
+        //   options.headers['Accept'] = 'application/json';
+        //
+        //   return handler.next(options);
+        // },
+        onError: (error, handler) {
+          if (error.response?.statusCode == 401) {
+            logger.w('Unauthorized access detected: ${error.response?.data}');
+            // Handle unauthorized access, e.g., redirect to login
+            logoutUser();
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/login',
+              (route) => false,
+            );
+          }
+
+          return handler.next(error);
+        },
+      ),
+    );
     super.initState();
   }
 

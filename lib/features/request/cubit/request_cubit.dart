@@ -11,7 +11,6 @@ import 'package:nurse_app/services/user_token.dart';
 
 part 'request_state.dart';
 
-final dio = Dio();
 
 class RequestCubit extends Cubit<RequestState> {
   RequestCubit() : super(RequestInitial());

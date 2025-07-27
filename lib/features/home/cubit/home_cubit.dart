@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 import 'package:nurse_app/consts.dart';
 import 'package:nurse_app/features/home/models/get_popups_model.dart';
@@ -9,8 +10,6 @@ import '../../../services/user_token.dart';
 import '../models/get_sliders_model.dart';
 
 part 'home_state.dart';
-
-final dio = Dio();
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
@@ -36,7 +35,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(GetPopupsSuccess(popups: popups));
     } on DioException catch (e) {
       logger.e(e.response!.data);
-      emit(GetPopupsFailure(message: e.response!.data['error']));
+      emit(GetPopupsFailure(message: e.response!.data['message']));
     } catch (e) {
       logger.e(e);
       emit(GetPopupsFailure(message: 'Failed to get popups.'));
@@ -54,7 +53,7 @@ class HomeCubit extends Cubit<HomeState> {
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
-            'Accept' : 'application/json',
+            'Accept': 'application/json',
           },
         ),
       );
@@ -65,7 +64,7 @@ class HomeCubit extends Cubit<HomeState> {
     } on DioException catch (e) {
       logger.e(e.response!.data);
       logger.e(e.response!.statusCode);
-      emit(GetSlidersFailure(message: e.response!.data['error']));
+      emit(GetSlidersFailure(message: e.response!.data['message']));
     } catch (e) {
       logger.e(e);
       emit(GetSlidersFailure(message: 'Failed to get popups.'));

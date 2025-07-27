@@ -1,25 +1,59 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
+import '../main.dart';
+import 'package:path_provider/path_provider.dart';
+
 class Dialogs {
-  static void showPopup({
+  static Future<void> showPopup({
     required BuildContext context,
     required String? image,
     required String? title,
     required String? content,
     required String? type,
-  }) {
+  }) async {
     if (image != null) {
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.custom,
-        customAsset: image,
-        title: title ?? '',
-        text: content ?? '',
-        confirmBtnText: 'OK',
-      );
+      try {
+        final path = '${(await getTemporaryDirectory()).path}/${image.split('/').last}';
+
+        final response = await dio.download(
+          image,
+          path,
+        );
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(title ?? ''),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.file(File(path)),
+                  const SizedBox(height: 16),
+                  Text(content ?? ''),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+        return;
+      } on DioException catch (e) {
+        logger.e('Failed to download image: ${e.message}');
+      }
     }
 
     switch (type) {

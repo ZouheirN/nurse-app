@@ -9,8 +9,6 @@ import '../../../consts.dart';
 
 part 'services_state.dart';
 
-final dio = Dio();
-
 class ServicesCubit extends Cubit<ServicesState> {
   ServicesCubit() : super(ServicesInitial());
 

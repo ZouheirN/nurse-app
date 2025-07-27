@@ -9,8 +9,6 @@ import '../../../services/user_token.dart';
 
 part 'notification_state.dart';
 
-final dio = Dio();
-
 class NotificationCubit extends Cubit<NotificationState> {
   NotificationCubit() : super(NotificationInitial());
 

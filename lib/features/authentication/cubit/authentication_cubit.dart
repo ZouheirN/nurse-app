@@ -11,7 +11,6 @@ import '../models/get_areas_model.dart';
 
 part 'authentication_state.dart';
 
-final dio = Dio();
 
 class AuthenticationCubit extends Cubit<AuthenticationState> {
   AuthenticationCubit() : super(AuthenticationInitial());
@@ -64,7 +63,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     emit(AuthenticationSignInLoading());
 
     try {
-      final response = await dio.post(
+      final response = await Dio().post(
         '$HOST/login',
         data: {
           'email': email,
@@ -81,6 +80,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
       emit(AuthenticationSignInSuccess(userModel: userModel));
     } on DioException catch (e) {
+      logger.e(e.message);
       emit(AuthenticationSignInFailure(message: e.response!.data['message']));
     } catch (e) {
       logger.e(e.toString());
@@ -232,8 +232,8 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
           }
         ),
       );
-    } catch (e) {
-      logger.e(e.toString());
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
     }
   }
 }
