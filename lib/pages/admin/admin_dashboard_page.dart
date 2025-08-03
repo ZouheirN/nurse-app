@@ -80,6 +80,14 @@ class AdminDashboardPage extends StatelessWidget {
                         },
                       ),
                       const SizedBox(height: 20),
+                      AdminCard(
+                        imagePath: 'assets/images/notification.png',
+                        text: 'Areas',
+                        onTap: () {
+                          Navigator.pushNamed(context, '/manageAreas');
+                        },
+                      ),
+                      const SizedBox(height: 20),
                       LogoutButton(
                         icon: const Icon(Icons.logout),
                         buttonText: 'Logout',
@@ -94,12 +102,6 @@ class AdminDashboardPage extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                Navigator.pushNamed(context, '/manageAreas');
-              },
-              child: const Text('Go to Areas Page'),
             ),
             ElevatedButton(
               onPressed: () async {

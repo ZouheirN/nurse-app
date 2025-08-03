@@ -5,12 +5,15 @@ class LabeledTextFieldAdmin extends StatefulWidget {
   final TextInputType keyboardType;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
+  final bool? hasPadding;
 
   const LabeledTextFieldAdmin({
     super.key,
     required this.label,
     this.keyboardType = TextInputType.text,
-    this.controller, this.validator,
+    this.controller,
+    this.validator,
+    this.hasPadding = true,
   });
 
   @override
@@ -37,7 +40,9 @@ class _LabeledTextFieldAdminState extends State<LabeledTextFieldAdmin> {
     return Container(
       // height: 70,
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 40),
+      padding: widget.hasPadding == true
+          ? const EdgeInsets.symmetric(horizontal: 40)
+          : EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -76,7 +81,7 @@ class _LabeledTextFieldAdminState extends State<LabeledTextFieldAdmin> {
                     : const Color(0xFFE8FFD1),
                 filled: true,
                 contentPadding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               ),
               validator: widget.validator,
             ),

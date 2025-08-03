@@ -6,6 +6,7 @@ import 'package:nurse_app/features/areas/models/get_service_area_prices_model.da
 import '../../../consts.dart';
 import '../../../main.dart';
 import '../../../services/user_token.dart';
+import '../models/get_areas_admin_model.dart';
 import '../models/get_areas_model.dart';
 
 part 'areas_state.dart';
@@ -93,6 +94,75 @@ class AreasCubit extends Cubit<AreasState> {
       logger.e(e);
       emit(AddServiceAreaPriceFailure(
           message: 'Failed to add service area price.'));
+    }
+  }
+
+  Future<void> getAreasAdmin() async {
+    emit(GetAreasAdminLoading());
+
+    try {
+      final response = await dio.get(
+        '$HOST/admin/areas',
+        options: Options(headers: {
+          'Authorization': 'Bearer ${await UserToken.getToken()}',
+        }),
+      );
+
+      final areas = GetAreasAdminModel.fromJson(response.data);
+
+      emit(GetAreasAdminSuccess(areas: areas));
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(GetAreasAdminFailure(
+          message: e.response?.data['message'] ?? 'Failed to get areas.'));
+    } catch (e) {
+      logger.e(e);
+      emit(GetAreasAdminFailure(message: 'Failed to get areas.'));
+    }
+  }
+
+  Future<void> addArea(String text) async {
+    emit(AddAreaLoading());
+
+    try {
+      await dio.post(
+        '$HOST/admin/areas',
+        options: Options(headers: {
+          'Authorization': 'Bearer ${await UserToken.getToken()}',
+        }),
+        data: {'name': text},
+      );
+
+      emit(AddAreaSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(AddAreaFailure(message: e.response!.data['message']));
+    } catch (e) {
+      logger.e(e);
+      emit(AddAreaFailure(message: 'Failed to add area.'));
+    }
+  }
+
+  Future<void> editArea(String text, int areaId) async {
+    emit(EditAreaLoading());
+
+    try {
+      await dio.put(
+        '$HOST/admin/areas/$areaId',
+        options: Options(headers: {
+          'Authorization': 'Bearer ${await UserToken.getToken()}',
+        }),
+        data: {'name': text},
+      );
+
+      emit(EditAreaSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(EditAreaFailure(
+          message: e.response?.data['message'] ?? 'Failed to edit area.'));
+    } catch (e) {
+      logger.e(e);
+      emit(EditAreaFailure(message: 'Failed to edit area.'));
     }
   }
 }

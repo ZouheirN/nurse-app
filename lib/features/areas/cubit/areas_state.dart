@@ -39,3 +39,34 @@ final class AddServiceAreaPriceFailure extends AreasState {
 
   AddServiceAreaPriceFailure({required this.message});
 }
+
+// Get Areas Admin
+final class GetAreasAdminLoading extends AreasState {}
+final class GetAreasAdminSuccess extends AreasState {
+  final GetAreasAdminModel areas;
+
+  GetAreasAdminSuccess({required this.areas});
+}
+final class GetAreasAdminFailure extends AreasState {
+  final String message;
+
+  GetAreasAdminFailure({required this.message});
+}
+
+// Add area
+final class AddAreaLoading extends AreasState {}
+final class AddAreaSuccess extends AreasState {}
+final class AddAreaFailure extends AreasState {
+  final String message;
+
+  AddAreaFailure({required this.message});
+}
+
+// Edit area
+final class EditAreaLoading extends AreasState {}
+final class EditAreaSuccess extends AreasState {}
+final class EditAreaFailure extends AreasState {
+  final String message;
+
+  EditAreaFailure({required this.message});
+}

@@ -15,6 +15,7 @@ import 'package:nurse_app/pages/admin/add_nurse_page.dart';
 import 'package:nurse_app/pages/admin/add_service_page.dart';
 import 'package:nurse_app/pages/admin/admin_dashboard_page.dart';
 import 'package:nurse_app/pages/admin/admin_settings_page.dart';
+import 'package:nurse_app/pages/admin/areas_page.dart';
 import 'package:nurse_app/pages/admin/edit_nurse_page.dart';
 import 'package:nurse_app/pages/admin/edit_service_page.dart';
 import 'package:nurse_app/pages/admin/manage_nurses_page.dart';
@@ -147,94 +148,94 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-        // stream: GeneralStream.languageStream.stream,
-        valueListenable: LocalizationBox.getLocaleNotifier(),
-        builder: (context, value, child) {
-          final locale = LocalizationBox.getLocale();
+      // stream: GeneralStream.languageStream.stream,
+      valueListenable: LocalizationBox.getLocaleNotifier(),
+      builder: (context, value, child) {
+        final locale = LocalizationBox.getLocale();
 
-          return MaterialApp(
-            useInheritedMediaQuery: true,
-            builder: DevicePreview.appBuilder,
-            debugShowCheckedModeBanner: false,
-            home: const SplashScreen(),
-            locale: locale ?? DevicePreview.locale(context),
-            supportedLocales: L10n.locals,
-            localizationsDelegates: const [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-              AppLocalizations.delegate,
-            ],
-            theme: Theme.of(context).copyWith(
-              appBarTheme: Theme.of(context).appBarTheme.copyWith(
-                    systemOverlayStyle: const SystemUiOverlayStyle(
-                      statusBarIconBrightness: Brightness.dark,
-                      statusBarColor: Colors.white,
-                    ),
+        return MaterialApp(
+          useInheritedMediaQuery: true,
+          builder: DevicePreview.appBuilder,
+          debugShowCheckedModeBanner: false,
+          home: const SplashScreen(),
+          locale: locale ?? DevicePreview.locale(context),
+          supportedLocales: L10n.locals,
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            AppLocalizations.delegate,
+          ],
+          theme: Theme.of(context).copyWith(
+            appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                  systemOverlayStyle: const SystemUiOverlayStyle(
+                    statusBarIconBrightness: Brightness.dark,
+                    statusBarColor: Colors.white,
                   ),
-              textSelectionTheme: const TextSelectionThemeData(
-                cursorColor: Color(0xFF7BB442),
-              ),
+                ),
+            textSelectionTheme: const TextSelectionThemeData(
+              cursorColor: Color(0xFF7BB442),
             ),
-            routes: {
-              '/login': (context) => LoginPage(),
-              '/signup': (context) => const SignupPage(),
-              '/home': (context) => const Navbar(),
-              '/verifySms': (context) {
-                final args = ModalRoute.of(context)?.settings.arguments as Map;
-                return VerifySmsPage(
-                  phoneNumber: args['phoneNumber'],
-                  resend: args['resend'],
-                );
-              },
-              '/forgotPassword': (context) {
-                final args =
-                    ModalRoute.of(context)?.settings.arguments as String;
-                return ForgotPasswordPage(phoneNumber: args);
-              },
-              '/requestDetails': (context) {
-                final args = ModalRoute.of(context)?.settings.arguments as num;
-                return RequestDetailsPage(requestId: args);
-              },
-              '/editProfile': (context) => const EditProfilePage(),
-              '/updateLocation': (context) => const UpdateLocationPage(),
-              '/adminDashboard': (context) => const AdminDashboardPage(),
-              '/manageNurses': (context) => const ManageNursesPage(),
-              '/addNurse': (context) => const AddNursePage(),
-              '/editNurse': (context) {
-                final args = ModalRoute.of(context)?.settings.arguments as int;
-                return EditNursePage(nurseId: args);
-              },
-              '/manageServices': (context) => const ManageServicesPage(),
-              '/addService': (context) => const AddServicePage(),
-              '/editService': (context) {
-                final args = ModalRoute.of(context)?.settings.arguments as int;
-                return EditServicePage(serviceId: args);
-              },
-              '/manageOrders': (context) => const ManageOrdersPage(),
-              '/orderDetails': (context) {
-                final args = ModalRoute.of(context)?.settings.arguments as int;
-                return OrderDetailsPage(orderId: args);
-              },
-              '/submitOrder': (context) {
-                final args = ModalRoute.of(context)?.settings.arguments
-                    as RequestsHistoryModel;
-                return SubmitOrderPage(order: args);
-              },
-              '/adminSettings': (context) => const AdminSettingsPage(),
-              '/sendNotification': (context) => const SendNotificationPage(),
-              '/notifications': (context) {
-                final args = ModalRoute.of(context)?.settings.arguments as Map?;
-
-                return NotificationsPage(
-                  showLeading: args?['showLeading'],
-                );
-              },
-              '/manageAreas': (context) {
-                return const RegionPricingPage();
-              },
+          ),
+          routes: {
+            '/login': (context) => LoginPage(),
+            '/signup': (context) => const SignupPage(),
+            '/home': (context) => const Navbar(),
+            '/verifySms': (context) {
+              final args = ModalRoute.of(context)?.settings.arguments as Map;
+              return VerifySmsPage(
+                phoneNumber: args['phoneNumber'],
+                resend: args['resend'],
+              );
             },
-          );
-        });
+            '/forgotPassword': (context) {
+              final args = ModalRoute.of(context)?.settings.arguments as String;
+              return ForgotPasswordPage(phoneNumber: args);
+            },
+            '/requestDetails': (context) {
+              final args = ModalRoute.of(context)?.settings.arguments as num;
+              return RequestDetailsPage(requestId: args);
+            },
+            '/editProfile': (context) => const EditProfilePage(),
+            '/updateLocation': (context) => const UpdateLocationPage(),
+            '/adminDashboard': (context) => const AdminDashboardPage(),
+            '/manageNurses': (context) => const ManageNursesPage(),
+            '/addNurse': (context) => const AddNursePage(),
+            '/editNurse': (context) {
+              final args = ModalRoute.of(context)?.settings.arguments as int;
+              return EditNursePage(nurseId: args);
+            },
+            '/manageServices': (context) => const ManageServicesPage(),
+            '/addService': (context) => const AddServicePage(),
+            '/editService': (context) {
+              final args = ModalRoute.of(context)?.settings.arguments as int;
+              return EditServicePage(serviceId: args);
+            },
+            '/manageOrders': (context) => const ManageOrdersPage(),
+            '/orderDetails': (context) {
+              final args = ModalRoute.of(context)?.settings.arguments as int;
+              return OrderDetailsPage(orderId: args);
+            },
+            '/submitOrder': (context) {
+              final args = ModalRoute.of(context)?.settings.arguments
+                  as RequestsHistoryModel;
+              return SubmitOrderPage(order: args);
+            },
+            '/adminSettings': (context) => const AdminSettingsPage(),
+            '/sendNotification': (context) => const SendNotificationPage(),
+            '/notifications': (context) {
+              final args = ModalRoute.of(context)?.settings.arguments as Map?;
+
+              return NotificationsPage(
+                showLeading: args?['showLeading'],
+              );
+            },
+            '/manageAreas': (context) {
+              return const AreasPage();
+            },
+          },
+        );
+      },
+    );
   }
 }
