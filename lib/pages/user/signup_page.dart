@@ -31,6 +31,14 @@ class _SignupPageState extends State<SignupPage> {
 
   final _authenticationCubit = AuthenticationCubit();
 
+  final _areasCubit = AreasCubit();
+
+  @override
+  void initState() {
+    _areasCubit.getAreas();
+    super.initState();
+  }
+
   @override
   void dispose() {
     nameController.dispose();
@@ -179,7 +187,7 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     const SizedBox(height: 14),
                     BlocBuilder<AreasCubit, AreasState>(
-                      bloc: AreasCubit()..getAreas(),
+                      bloc: _areasCubit,
                       builder: (context, state) {
                         if (state is GetAreasLoading) {
                           return const Loader();
