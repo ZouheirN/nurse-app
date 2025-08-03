@@ -74,7 +74,7 @@ class AdminDashboardPage extends StatelessWidget {
                       const SizedBox(height: 20),
                       AdminCard(
                         imagePath: 'assets/images/notification.png',
-                        text: 'Send Notification',
+                        text: 'Notifications',
                         onTap: () {
                           Navigator.pushNamed(context, '/sendNotification');
                         },

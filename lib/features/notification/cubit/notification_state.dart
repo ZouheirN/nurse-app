@@ -56,3 +56,31 @@ final class DeleteNotificationFailure extends NotificationState {
 
   DeleteNotificationFailure({required this.message});
 }
+
+final class GetNotificationUsersLoading extends NotificationState {}
+
+final class GetNotificationUsersSuccess extends NotificationState {
+  final GetNotificationUsersModel users;
+
+  GetNotificationUsersSuccess({required this.users});
+}
+
+final class GetNotificationUsersFailure extends NotificationState {
+  final String message;
+
+  GetNotificationUsersFailure({required this.message});
+}
+
+final class GetCustomNotificationsLoading extends NotificationState {}
+
+final class GetCustomNotificationsSuccess extends NotificationState {
+  final custom.GetCustomNotificationsModel notifications;
+
+  GetCustomNotificationsSuccess({required this.notifications});
+}
+
+final class GetCustomNotificationsFailure extends NotificationState {
+  final String message;
+
+  GetCustomNotificationsFailure({required this.message});
+}

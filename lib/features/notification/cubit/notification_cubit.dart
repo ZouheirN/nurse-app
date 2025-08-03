@@ -2,7 +2,10 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 import 'package:nurse_app/consts.dart';
+import 'package:nurse_app/features/notification/models/get_custom_notifcations_model.dart'
+    as custom;
 import 'package:nurse_app/features/notification/models/get_notification_model.dart';
+import 'package:nurse_app/features/notification/models/get_notification_users_model.dart';
 import 'package:nurse_app/main.dart';
 
 import '../../../services/user_token.dart';
@@ -113,25 +116,40 @@ class NotificationCubit extends Cubit<NotificationState> {
   Future<void> sendNotification({
     required String title,
     required String content,
+    String? userId,
   }) async {
     emit(NotificationSendLoading());
 
     try {
+      // final response = await dio.post(
+      //   'https://api.onesignal.com/notifications',
+      //   options: Options(headers: {
+      //     'Authorization': 'Basic $ONE_SIGNAL_API_KEY',
+      //   }),
+      //   data: {
+      //     "app_id": ONE_SIGNAL_APP_ID,
+      //     "target_channel": "push",
+      //     "included_segments": ["Total Subscriptions"],
+      //     "headings": {
+      //       "en": title,
+      //     },
+      //     "contents": {
+      //       "en": content,
+      //     },
+      //   },
+      // );
+
       final response = await dio.post(
-        'https://api.onesignal.com/notifications',
-        options: Options(headers: {
-          'Authorization': 'Basic $ONE_SIGNAL_API_KEY',
-        }),
+        '$HOST/admin/notifications/custom',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer ${await UserToken.getToken()}',
+          },
+        ),
         data: {
-          "app_id": ONE_SIGNAL_APP_ID,
-          "target_channel": "push",
-          "included_segments": ["Total Subscriptions"],
-          "headings": {
-            "en": title,
-          },
-          "contents": {
-            "en": content,
-          },
+          "user_id": userId,
+          "title": title,
+          "message": content,
         },
       );
 
@@ -143,6 +161,64 @@ class NotificationCubit extends Cubit<NotificationState> {
       emit(NotificationSendFailure(message: 'Failed to send notification'));
     } catch (e) {
       emit(NotificationSendFailure(message: e.toString()));
+    }
+  }
+
+  Future<void> getNotificationUsers() async {
+    emit(GetNotificationUsersLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      final response = await dio.get(
+        '$HOST/admin/notifications/users',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      final users = GetNotificationUsersModel.fromJson(response.data);
+
+      emit(GetNotificationUsersSuccess(users: users));
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(GetNotificationUsersFailure(
+          message: e.response!.data['message'] ?? 'Failed to fetch users'));
+    } catch (e) {
+      emit(GetNotificationUsersFailure(message: 'Failed to fetch users'));
+    }
+  }
+
+  Future<void> getCustomNotifications() async {
+    emit(GetCustomNotificationsLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      final response = await dio.get(
+        '$HOST/admin/notifications/custom',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      emit(GetCustomNotificationsSuccess(
+        notifications:
+            custom.GetCustomNotificationsModel.fromJson(response.data),
+      ));
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(GetCustomNotificationsFailure(
+          message:
+              e.response!.data['message'] ?? 'Failed to fetch notifications'));
+    } catch (e) {
+      emit(GetCustomNotificationsFailure(
+          message: 'Failed to fetch notifications'));
     }
   }
 }
