@@ -7,7 +7,7 @@ import 'package:nurse_app/services/user.dart';
 import 'package:nurse_app/services/user_token.dart';
 
 import '../../../consts.dart';
-import '../models/get_areas_model.dart';
+import '../../areas/models/get_areas_model.dart';
 
 part 'authentication_state.dart';
 
@@ -198,26 +198,6 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     }
 
     return false;
-  }
-
-  Future<void> getAreas() async {
-    emit(AuthenticationGetAreasLoading());
-
-    try {
-      final response = await dio.get(
-        '$HOST/areas',
-      );
-
-      final areas = GetAreasModel.fromJson(response.data);
-
-      emit(AuthenticationGetAreasSuccess(areas: areas));
-    } on DioException catch (e) {
-      logger.e(e.response!.data);
-      emit(AuthenticationGetAreasFailure(message: e.response!.data['error']));
-    } catch (e) {
-      logger.e(e);
-      emit(AuthenticationGetAreasFailure(message: 'Failed to get areas.'));
-    }
   }
 
   Future<void> signOut() async {

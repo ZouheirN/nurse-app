@@ -21,6 +21,7 @@ import 'package:nurse_app/pages/admin/manage_nurses_page.dart';
 import 'package:nurse_app/pages/admin/manage_orders_page.dart';
 import 'package:nurse_app/pages/admin/manage_services_page.dart';
 import 'package:nurse_app/pages/admin/order_details_page.dart';
+import 'package:nurse_app/pages/admin/region_pricing_page.dart';
 import 'package:nurse_app/pages/admin/submit_order_page.dart';
 import 'package:nurse_app/pages/user/edit_profile_page.dart';
 import 'package:nurse_app/pages/user/forgot_password_page.dart';
@@ -228,6 +229,9 @@ class _MyAppState extends State<MyApp> {
                 return NotificationsPage(
                   showLeading: args?['showLeading'],
                 );
+              },
+              '/manageAreas': (context) {
+                return const RegionPricingPage();
               },
             },
           );

@@ -105,7 +105,7 @@ class RequestCubit extends Cubit<RequestState> {
       emit(RequestsHistorySuccess(requests: requests));
     } on DioException catch (e) {
       logger.e(e.response!.data);
-      emit(RequestsHistoryFailure(message: e.response!.data['error']));
+      emit(RequestsHistoryFailure(message: e.response!.data['message']));
     } catch (e) {
       logger.e(e);
       emit(RequestsHistoryFailure(message: 'Failed to get request.'));
@@ -135,7 +135,7 @@ class RequestCubit extends Cubit<RequestState> {
       emit(RequestDetailsSuccess(request: request));
     } on DioException catch (e) {
       logger.e(e.response!.statusCode);
-      emit(RequestDetailsFailure(message: e.response!.data['error']));
+      emit(RequestDetailsFailure(message: e.response!.data['message']));
     } catch (e) {
       logger.e(e);
       emit(RequestDetailsFailure(message: 'Failed to get request details.'));

@@ -4,6 +4,7 @@ import 'package:nurse_app/components/button.dart';
 import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/textfield.dart';
+import 'package:nurse_app/features/areas/cubit/areas_cubit.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
 
 import '../../features/authentication/cubit/authentication_cubit.dart';
@@ -177,21 +178,21 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                     ),
                     const SizedBox(height: 14),
-                    BlocBuilder<AuthenticationCubit, AuthenticationState>(
-                      bloc: AuthenticationCubit()..getAreas(),
+                    BlocBuilder<AreasCubit, AreasState>(
+                      bloc: AreasCubit()..getAreas(),
                       builder: (context, state) {
-                        if (state is AuthenticationGetAreasLoading) {
+                        if (state is GetAreasLoading) {
                           return const Loader();
                         }
 
-                        if (state is AuthenticationGetAreasFailure) {
+                        if (state is GetAreasFailure) {
                           return Text(
                             'Failed to load areas: ${state.message}',
                             style: const TextStyle(color: Colors.red),
                           );
                         }
 
-                        if (state is AuthenticationGetAreasSuccess) {
+                        if (state is GetAreasSuccess) {
                           final areas = state.areas.areas;
 
                           return Padding(

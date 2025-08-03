@@ -31,10 +31,18 @@ class _NavbarState extends State<Navbar> {
     const SettingsPage(),
   ];
 
+  final _homeCubit = HomeCubit();
+
+  @override
+  void initState() {
+    _homeCubit.getPopups();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<HomeCubit, HomeState>(
-      bloc: HomeCubit()..getPopups(),
+      bloc: _homeCubit,
       listener: (context, state) {
         if (state is GetPopupsSuccess) {
           final popup = state.popups.popup;

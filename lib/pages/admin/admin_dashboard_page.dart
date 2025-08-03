@@ -97,6 +97,12 @@ class AdminDashboardPage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () async {
+                Navigator.pushNamed(context, '/manageAreas');
+              },
+              child: const Text('Go to Areas Page'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
                 // open image picker
                 final imagePicker = ImagePicker();
 
