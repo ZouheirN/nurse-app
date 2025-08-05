@@ -29,7 +29,7 @@ class _AreasPageState extends State<AreasPage> {
     final TextEditingController areaNameController = TextEditingController(
       text: areaName ?? '',
     );
-    final areaCubit2 = AreasCubit();
+    final areaCubit = AreasCubit();
 
     showDialog(
       context: context,
@@ -52,7 +52,7 @@ class _AreasPageState extends State<AreasPage> {
               child: const Text('Close'),
             ),
             BlocConsumer<AreasCubit, AreasState>(
-              bloc: areaCubit2,
+              bloc: areaCubit,
               listener: (context, state) {
                 if (state is AddAreaSuccess) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -91,14 +91,13 @@ class _AreasPageState extends State<AreasPage> {
                           if (areaNameController.text.isNotEmpty) {
                             if (areaName != null) {
                               // Edit existing area
-                              areaCubit2.editArea(
+                              areaCubit.editArea(
                                 areaNameController.text.trim(),
                                 areaId!,
                               );
                             } else {
                               // Add new area
-                              areaCubit2
-                                  .addArea(areaNameController.text.trim());
+                              areaCubit.addArea(areaNameController.text.trim());
                             }
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -114,6 +113,57 @@ class _AreasPageState extends State<AreasPage> {
                           : areaName != null
                               ? const Text('Edit Area')
                               : const Text('Add Area'),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void deleteArea(int areaId) {
+    final areaCubit3 = AreasCubit();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete Area'),
+          content: const Text('Are you sure you want to delete this area?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            BlocConsumer<AreasCubit, AreasState>(
+              bloc: areaCubit3,
+              listener: (context, state) {
+                if (state is DeleteAreaSuccess) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Area deleted successfully')),
+                  );
+                  _areasCubit.getAreasAdmin();
+                  Navigator.of(context).pop();
+                } else if (state is DeleteAreaFailure) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error: ${state.message}')),
+                  );
+                  Navigator.of(context).pop();
+                }
+              },
+              builder: (context, state) {
+                final isDeleting = state is DeleteAreaLoading;
+
+                return TextButton(
+                  onPressed: isDeleting
+                      ? null
+                      : () {
+                          areaCubit3.deleteArea(areaId);
+                        },
+                  child: isDeleting
+                      ? const Text('Deleting Area...')
+                      : const Text('Delete Area'),
                 );
               },
             ),
@@ -175,10 +225,7 @@ class _AreasPageState extends State<AreasPage> {
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.delete),
-                                    onPressed: () {
-                                      // Handle delete area
-                                      // _areasCubit.deleteArea(area.id!);
-                                    },
+                                    onPressed: () => deleteArea(area.id!),
                                   ),
                                 ],
                               ),

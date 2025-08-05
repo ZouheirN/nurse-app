@@ -165,4 +165,26 @@ class AreasCubit extends Cubit<AreasState> {
       emit(EditAreaFailure(message: 'Failed to edit area.'));
     }
   }
+
+  Future<void> deleteArea(int areaId) async {
+    emit(DeleteAreaLoading());
+
+    try {
+      await dio.delete(
+        '$HOST/admin/areas/$areaId',
+        options: Options(headers: {
+          'Authorization': 'Bearer ${await UserToken.getToken()}',
+        }),
+      );
+
+      emit(DeleteAreaSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(DeleteAreaFailure(
+          message: e.response?.data['message'] ?? 'Failed to edit area.'));
+    } catch (e) {
+      logger.e(e);
+      emit(DeleteAreaFailure(message: 'Failed to edit area.'));
+    }
+  }
 }

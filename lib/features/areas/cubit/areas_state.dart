@@ -7,11 +7,13 @@ final class AreasInitial extends AreasState {}
 
 // Get areas
 final class GetAreasLoading extends AreasState {}
+
 final class GetAreasSuccess extends AreasState {
   final GetAreasModel areas;
 
   GetAreasSuccess({required this.areas});
 }
+
 final class GetAreasFailure extends AreasState {
   final String message;
 
@@ -20,11 +22,13 @@ final class GetAreasFailure extends AreasState {
 
 // Get service area prices
 final class GetServiceAreaPricesLoading extends AreasState {}
+
 final class GetServiceAreaPricesSuccess extends AreasState {
   final GetServiceAreaPricesModel serviceAreaPrices;
 
   GetServiceAreaPricesSuccess({required this.serviceAreaPrices});
 }
+
 final class GetServiceAreaPricesFailure extends AreasState {
   final String message;
 
@@ -33,7 +37,9 @@ final class GetServiceAreaPricesFailure extends AreasState {
 
 // Add service area price
 final class AddServiceAreaPriceLoading extends AreasState {}
+
 final class AddServiceAreaPriceSuccess extends AreasState {}
+
 final class AddServiceAreaPriceFailure extends AreasState {
   final String message;
 
@@ -42,11 +48,13 @@ final class AddServiceAreaPriceFailure extends AreasState {
 
 // Get Areas Admin
 final class GetAreasAdminLoading extends AreasState {}
+
 final class GetAreasAdminSuccess extends AreasState {
   final GetAreasAdminModel areas;
 
   GetAreasAdminSuccess({required this.areas});
 }
+
 final class GetAreasAdminFailure extends AreasState {
   final String message;
 
@@ -55,7 +63,9 @@ final class GetAreasAdminFailure extends AreasState {
 
 // Add area
 final class AddAreaLoading extends AreasState {}
+
 final class AddAreaSuccess extends AreasState {}
+
 final class AddAreaFailure extends AreasState {
   final String message;
 
@@ -64,9 +74,22 @@ final class AddAreaFailure extends AreasState {
 
 // Edit area
 final class EditAreaLoading extends AreasState {}
+
 final class EditAreaSuccess extends AreasState {}
+
 final class EditAreaFailure extends AreasState {
   final String message;
 
   EditAreaFailure({required this.message});
+}
+
+// Delete area
+final class DeleteAreaLoading extends AreasState {}
+
+final class DeleteAreaSuccess extends AreasState {}
+
+final class DeleteAreaFailure extends AreasState {
+  final String message;
+
+  DeleteAreaFailure({required this.message});
 }

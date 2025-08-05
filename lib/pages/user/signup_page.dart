@@ -263,9 +263,10 @@ class _SignupPageState extends State<SignupPage> {
                           );
                         }
 
-                        return const Text(
-                          'No areas available',
-                          style: TextStyle(color: Colors.red),
+                        return const Center(
+                          child: Text(
+                            'No areas available',
+                          ),
                         );
                       },
                     ),
