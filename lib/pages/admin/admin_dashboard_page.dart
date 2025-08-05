@@ -96,6 +96,14 @@ class AdminDashboardPage extends StatelessWidget {
                         },
                       ),
                       const SizedBox(height: 20),
+                      AdminCard(
+                        imagePath: 'assets/images/notification.png',
+                        text: 'Sliders',
+                        onTap: () {
+                          Navigator.pushNamed(context, '/sliders');
+                        },
+                      ),
+                      const SizedBox(height: 20),
                       LogoutButton(
                         icon: const Icon(Icons.logout),
                         buttonText: 'Logout',
@@ -114,43 +122,7 @@ class AdminDashboardPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 // open image picker
-                final imagePicker = ImagePicker();
 
-                final pickedFile = await imagePicker.pickImage(
-                  source: ImageSource.gallery,
-                );
-
-                final formData = FormData.fromMap({
-                  'image': await MultipartFile.fromFile(
-                    pickedFile!.path,
-                    filename: pickedFile.name,
-                  ),
-                  'title': 'Test Popup',
-                  'content': 'This is a test popup content.',
-                  'type': 'info',
-                });
-
-                final token = await UserToken.getToken();
-
-                try {
-                  final response = await dio.post(
-                    '$HOST/admin/popups',
-                    data: formData,
-                    options: Options(
-                      headers: {
-                        'Authorization': 'Bearer $token',
-                        'Accept': 'application/json',
-                      },
-                    ),
-                  );
-
-                  logger.i('Popup created: ${response.data}');
-                } on DioException catch (e) {
-                  logger.e(e.response?.statusCode);
-                  logger.e('Failed to create popup: ${e.response?.data}');
-                } catch (e) {
-                  logger.e('Error creating popup: $e');
-                }
               },
               child: const Text('Test Popup'),
             ),

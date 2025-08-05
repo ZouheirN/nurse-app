@@ -42,14 +42,16 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  Future<void> getSliders() async {
+  Future<void> getSliders({
+    bool isAdmin = false,
+  }) async {
     emit(GetSlidersLoading());
 
     try {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/sliders',
+        isAdmin ? '$HOST/admin/sliders' : '$HOST/sliders',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
