@@ -9,6 +9,7 @@ import 'package:nurse_app/components/social_media_button.dart';
 import 'package:nurse_app/extensions/context_extension.dart';
 import 'package:nurse_app/features/about_us/cubit/about_us_cubit.dart';
 import 'package:nurse_app/main.dart';
+import 'package:nurse_app/utilities/dialogs.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../components/labeled_edit_textfield.dart';
@@ -357,6 +358,15 @@ class SocialProfilesPage extends StatelessWidget {
   }
 
   Widget _buildContactFormButton(BuildContext context) {
+    final contactFormCubit = AboutUsCubit();
+
+    final phoneController = TextEditingController();
+    String completeNumber = '';
+    final firstNameController = TextEditingController();
+    final lastNameController = TextEditingController();
+    final addressController = TextEditingController();
+    final problemDescriptionController = TextEditingController();
+
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -365,40 +375,94 @@ class SocialProfilesPage extends StatelessWidget {
             children: [
               Expanded(
                 child: LabeledEditTextfield(
+                  controller: firstNameController,
                   label: context.localizations.firstName,
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: LabeledEditTextfield(
+                  controller: lastNameController,
                   label: context.localizations.lastName,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 10),
-          const PhoneNumberField(
-            // controller: phoneController,
+          PhoneNumberField(
+            controller: phoneController,
             padding: EdgeInsets.zero,
-            fillColor: Color(0xFFC2C2C2),
-            outlineColor: Color(0xFFC2C2C2),
-            focusedColor: Color.fromARGB(255, 185, 185, 185),
-            // setCompleteNumber: (number) {
-            //   completeNumber = number;
-            // },
+            fillColor: const Color(0xFFC2C2C2),
+            outlineColor: const Color(0xFFC2C2C2),
+            focusedColor: const Color.fromARGB(255, 185, 185, 185),
+            setCompleteNumber: (number) {
+              completeNumber = number;
+            },
           ),
           LabeledEditTextfield(
+            controller: addressController,
             label: context.localizations.address,
           ),
           const SizedBox(height: 10),
           LabeledEditTextfield(
+            controller: problemDescriptionController,
             label: context.localizations.describeYourProblem,
           ),
           const SizedBox(height: 10),
-          MyThirdButton(
-            margin: EdgeInsets.zero,
-            onTap: () {},
-            buttonText: context.localizations.submit,
+          BlocConsumer<AboutUsCubit, AboutUsState>(
+            bloc: contactFormCubit,
+            listener: (context, state) {
+              if (state is SubmitContactFormFailure) {
+                Dialogs.showErrorDialog(
+                  context,
+                  'Error',
+                  state.message,
+                );
+              } else if (state is SubmitContactFormSuccess) {
+                Dialogs.showSuccessDialog(
+                  context,
+                  'Success',
+                  'Your message has been sent successfully.',
+                );
+                // Clear the form fields after successful submission
+                firstNameController.clear();
+                lastNameController.clear();
+                phoneController.clear();
+                addressController.clear();
+                problemDescriptionController.clear();
+              }
+            },
+            builder: (context, state) {
+              final isLoading = state is SubmitContactFormLoading;
+
+              return MyThirdButton(
+                isLoading: isLoading,
+                margin: EdgeInsets.zero,
+                onTap: () {
+                  if (firstNameController.text.isEmpty ||
+                      lastNameController.text.isEmpty ||
+                      completeNumber.isEmpty ||
+                      addressController.text.isEmpty ||
+                      problemDescriptionController.text.isEmpty) {
+                    Dialogs.showErrorDialog(
+                      context,
+                      'Error',
+                      'Please fill in all fields.',
+                    );
+                    return;
+                  }
+
+                  contactFormCubit.submitContactForm(
+                    phoneNumber: completeNumber,
+                    description: problemDescriptionController.text.trim(),
+                    address: addressController.text.trim(),
+                    firstName: firstNameController.text.trim(),
+                    lastName: lastNameController.text.trim(),
+                  );
+                },
+                buttonText: context.localizations.submit,
+              );
+            },
           ),
         ],
       ),

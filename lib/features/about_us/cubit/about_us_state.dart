@@ -32,3 +32,14 @@ final class AboutUsUpdateFailure extends AboutUsState {
 
   AboutUsUpdateFailure({required this.message});
 }
+
+// Submit contact form
+final class SubmitContactFormLoading extends AboutUsState {}
+
+final class SubmitContactFormSuccess extends AboutUsState {}
+
+final class SubmitContactFormFailure extends AboutUsState {
+  final String message;
+
+  SubmitContactFormFailure({required this.message});
+}

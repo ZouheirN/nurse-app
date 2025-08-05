@@ -7,7 +7,6 @@ import 'package:nurse_app/services/user_token.dart';
 
 part 'about_us_state.dart';
 
-
 class AboutUsCubit extends Cubit<AboutUsState> {
   AboutUsCubit() : super(AboutUsInitial());
 
@@ -68,6 +67,46 @@ class AboutUsCubit extends Cubit<AboutUsState> {
     } catch (e) {
       logger.e(e);
       emit(AboutUsUpdateFailure(message: 'Failed to update about us.'));
+    }
+  }
+
+  Future<void> submitContactForm({
+    required String firstName,
+    required String lastName,
+    required String address,
+    required String description,
+    required String phoneNumber,
+  }) async {
+    emit(SubmitContactFormLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      await dio.post(
+        '$HOST/contact',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+        data: {
+          'first_name': firstName,
+          'second_name': lastName,
+          'address': address,
+          'description': description,
+          'phone_number': phoneNumber,
+        },
+      );
+
+      emit(SubmitContactFormSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response?.data);
+      emit(SubmitContactFormFailure(
+          message:
+              e.response?.data['message'] ?? 'Failed to submit contact form.'),);
+    } catch (e) {
+      logger.e(e);
+      emit(SubmitContactFormFailure(message: 'Failed to submit contact form.'));
     }
   }
 }
