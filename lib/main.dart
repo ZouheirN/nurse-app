@@ -16,6 +16,7 @@ import 'package:nurse_app/pages/admin/add_service_page.dart';
 import 'package:nurse_app/pages/admin/admin_dashboard_page.dart';
 import 'package:nurse_app/pages/admin/admin_settings_page.dart';
 import 'package:nurse_app/pages/admin/areas_page.dart';
+import 'package:nurse_app/pages/admin/contact_submissions_page.dart';
 import 'package:nurse_app/pages/admin/edit_nurse_page.dart';
 import 'package:nurse_app/pages/admin/edit_service_page.dart';
 import 'package:nurse_app/pages/admin/manage_nurses_page.dart';
@@ -230,9 +231,8 @@ class _MyAppState extends State<MyApp> {
                 showLeading: args?['showLeading'],
               );
             },
-            '/manageAreas': (context) {
-              return const AreasPage();
-            },
+            '/manageAreas': (context) => const AreasPage(),
+            '/contactSubmissions': (context) => const ContactSubmissionsPage(),
           },
         );
       },

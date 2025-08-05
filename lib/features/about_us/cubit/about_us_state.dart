@@ -43,3 +43,25 @@ final class SubmitContactFormFailure extends AboutUsState {
 
   SubmitContactFormFailure({required this.message});
 }
+
+// Get contact forms
+final class GetContactFormsLoading extends AboutUsState {}
+final class GetContactFormsSuccess extends AboutUsState {
+  final GetContactFormsModel contactForms;
+
+  GetContactFormsSuccess({required this.contactForms});
+}
+final class GetContactFormsFailure extends AboutUsState {
+  final String message;
+
+  GetContactFormsFailure({required this.message});
+}
+
+// Delete contact form
+final class DeleteContactFormLoading extends AboutUsState {}
+final class DeleteContactFormSuccess extends AboutUsState {}
+final class DeleteContactFormFailure extends AboutUsState {
+  final String message;
+
+  DeleteContactFormFailure({required this.message});
+}

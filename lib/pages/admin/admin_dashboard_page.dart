@@ -88,6 +88,14 @@ class AdminDashboardPage extends StatelessWidget {
                         },
                       ),
                       const SizedBox(height: 20),
+                      AdminCard(
+                        imagePath: 'assets/images/notification.png',
+                        text: 'Contact Submissions',
+                        onTap: () {
+                          Navigator.pushNamed(context, '/contactSubmissions');
+                        },
+                      ),
+                      const SizedBox(height: 20),
                       LogoutButton(
                         icon: const Icon(Icons.logout),
                         buttonText: 'Logout',

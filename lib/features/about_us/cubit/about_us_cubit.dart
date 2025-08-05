@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 import 'package:nurse_app/consts.dart';
+import 'package:nurse_app/features/about_us/models/get_contact_forms_model.dart';
 import 'package:nurse_app/main.dart';
 import 'package:nurse_app/services/user_token.dart';
 
@@ -107,6 +108,58 @@ class AboutUsCubit extends Cubit<AboutUsState> {
     } catch (e) {
       logger.e(e);
       emit(SubmitContactFormFailure(message: 'Failed to submit contact form.'));
+    }
+  }
+
+  Future<void> getContactForms() async {
+    emit(GetContactFormsLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      final response = await dio.get(
+        '$HOST/admin/contacts',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      final contactForms = GetContactFormsModel.fromJson(response.data);
+
+      emit(GetContactFormsSuccess(contactForms: contactForms));
+    } on DioException catch (e) {
+      logger.e(e.response?.data);
+      emit(GetContactFormsFailure(message: e.response?.data['message']));
+    } catch (e) {
+      logger.e(e);
+      emit(GetContactFormsFailure(message: 'Failed to fetch contact forms.'));
+    }
+  }
+
+  Future<void> deleteContactForm(int id) async {
+    emit(DeleteContactFormLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      await dio.delete(
+        '$HOST/admin/contacts/$id',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      emit(DeleteContactFormSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response?.data);
+      emit(DeleteContactFormFailure(message: e.response?.data['message']));
+    } catch (e) {
+      logger.e(e);
+      emit(DeleteContactFormFailure(message: 'Failed to delete contact form.'));
     }
   }
 }
