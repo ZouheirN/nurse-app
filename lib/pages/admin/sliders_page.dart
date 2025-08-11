@@ -15,6 +15,7 @@ import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/features/home/cubit/home_cubit.dart';
 
 import '../../components/button.dart';
+import '../../components/home_screen_sliders.dart';
 import '../../components/loader.dart';
 import '../../components/second_button.dart';
 import '../../consts.dart';
@@ -29,12 +30,15 @@ class SlidersPage extends StatefulWidget {
 }
 
 class _SlidersPageState extends State<SlidersPage> {
-  final _homeCubitBtn = HomeCubit();
+  final getSliders = HomeCubit();
+  final slidersOrder = HomeCubit();
 
   Future<void> addSlider(int position) async {
     final titleController = TextEditingController();
     final subtitle = TextEditingController();
     File? pickedImage;
+
+    final homeCubit = HomeCubit();
 
     // show bottom sheet to input information
     showModalBottomSheet(
@@ -96,9 +100,41 @@ class _SlidersPageState extends State<SlidersPage> {
                         buttonText: 'Upload Image',
                       )
                     else
-                      MySecondButton(
-                        onTap: () async {},
-                        buttonText: 'Add Slider',
+                      BlocConsumer<HomeCubit, HomeState>(
+                        bloc: homeCubit,
+                        listener: (context, state) {
+                          if (state is AddSliderSuccess) {
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Slider added successfully!'),
+                              ),
+                            );
+                            getSliders.getSliders();
+                          } else if (state is AddSliderFailure) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(state.message),
+                              ),
+                            );
+                          }
+                        },
+                        builder: (context, state) {
+                          final isLoading = state is AddSliderLoading;
+
+                          return MySecondButton(
+                            isLoading: isLoading,
+                            onTap: () async {
+                              homeCubit.addSlider(
+                                pickedFile: XFile(pickedImage!.path),
+                                title: titleController.text,
+                                subtitle: subtitle.text,
+                                position: position,
+                              );
+                            },
+                            buttonText: 'Add Slider',
+                          );
+                        },
                       ),
                   ],
                 ),
@@ -108,45 +144,66 @@ class _SlidersPageState extends State<SlidersPage> {
         );
       },
     );
-    return;
+  }
 
-    final imagePicker = ImagePicker();
+  Future<void> deleteSlider(int id) async {
+    final homeCubit = HomeCubit();
 
-    final pickedFile = await imagePicker.pickImage(
-      source: ImageSource.gallery,
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete Slider'),
+          content: const Text('Are you sure you want to delete this slider?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            BlocConsumer<HomeCubit, HomeState>(
+              bloc: homeCubit,
+              listener: (context, state) {
+                if (state is DeleteSliderSuccess) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Slider deleted successfully!'),
+                    ),
+                  );
+                  getSliders.getSliders();
+                } else if (state is DeleteSliderFailure) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                    ),
+                  );
+                }
+              },
+              builder: (context, state) {
+                final isLoading = state is DeleteSliderLoading;
+
+                return TextButton(
+                  onPressed: isLoading
+                      ? null
+                      : () {
+                          homeCubit.deleteSlider(id);
+                        },
+                  child: isLoading
+                      ? const Text('Deleting...')
+                      : const Text('Delete'),
+                );
+              },
+            ),
+          ],
+        );
+      },
     );
+  }
 
-    final formData = FormData.fromMap({
-      'image': await MultipartFile.fromFile(
-        pickedFile!.path,
-        filename: pickedFile.name,
-      ),
-      'title': 'Test Popup',
-      'content': 'This is a test popup content.',
-      'type': 'info',
-    });
-
-    final token = await UserToken.getToken();
-
-    try {
-      final response = await dio.post(
-        '$HOST/admin/popups',
-        data: formData,
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-            'Accept': 'application/json',
-          },
-        ),
-      );
-
-      logger.i('Popup created: ${response.data}');
-    } on DioException catch (e) {
-      logger.e(e.response?.statusCode);
-      logger.e('Failed to create popup: ${e.response?.data}');
-    } catch (e) {
-      logger.e('Error creating popup: $e');
-    }
+  @override
+  void initState() {
+    getSliders.getSliders();
+    super.initState();
   }
 
   @override
@@ -170,12 +227,10 @@ class _SlidersPageState extends State<SlidersPage> {
   }
 
   Widget _buildSliders() {
-    final getSliders = HomeCubit();
-
     int dotIndex = 0;
 
     return BlocBuilder<HomeCubit, HomeState>(
-      bloc: getSliders..getSliders(),
+      bloc: getSliders,
       builder: (context, state) {
         if (state is GetSlidersLoading) {
           return const Padding(
@@ -200,64 +255,83 @@ class _SlidersPageState extends State<SlidersPage> {
               if (items.isEmpty)
                 const SizedBox.shrink()
               else ...[
-                ExpandableCarousel(
-                  items: [
-                    for (var item in items)
-                      CachedNetworkImage(
-                        imageUrl: item.image!,
-                        imageBuilder: (context, imageProvider) {
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: Image(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
-                            ),
-                          );
-                        },
-                      ),
-                  ],
-                  options: ExpandableCarouselOptions(
-                    autoPlay: true,
-                    autoPlayInterval: const Duration(seconds: 5),
-                    enlargeCenterPage: true,
-                    enableInfiniteScroll: true,
-                    pauseAutoPlayOnTouch: true,
-                    showIndicator: false,
-                    onPageChanged: (index, reason) {
-                      setState(() {
-                        dotIndex = index;
-                      });
-                    },
-                  ),
-                ),
-                Center(
-                  child: DotsIndicator(
-                    dotsCount: items.length,
-                    position: dotIndex.toDouble(),
-                    decorator: const DotsDecorator(
-                      activeColor: Color(0xFF7BB442),
-                      color: Color.fromRGBO(217, 217, 217, 1),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-              BlocConsumer<HomeCubit, HomeState>(
-                bloc: _homeCubitBtn,
-                listener: (context, state) {
-                  // TODO: implement listener
-                },
-                builder: (context, state) {
-                  return MyButton(
-                    onTap: () {
-                      final lastPosition = items.isEmpty ? 0 : items.length;
+                BlocConsumer<HomeCubit, HomeState>(
+                  bloc: slidersOrder,
+                  listener: (context, state) {
+                    if (state is ReorderSlidersSuccess) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Sliders reordered successfully!'),
+                        ),
+                      );
+                      getSliders.getSliders();
+                    } else if (state is ReorderSlidersFailure) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(state.message),
+                        ),
+                      );
+                    }
+                  },
+                  builder: (context, state) {
+                    final isLoading = state is ReorderSlidersLoading;
 
-                      addSlider(lastPosition);
-                    },
-                    buttonText: 'Add Slider',
-                  );
+                    return Opacity(
+                      opacity: isLoading ? 0.5 : 1.0,
+                      child: IgnorePointer(
+                        ignoring: isLoading,
+                        child: ReorderableListView.builder(
+                          itemCount: items.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            final item = items[index];
+
+                            return ListTile(
+                              key: ValueKey(item.id),
+                              title: Text(item.title.toString()),
+                              subtitle: Text(item.subtitle.toString()),
+                              leading: Image.network(
+                                item.image.toString(),
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    onPressed: () {
+                                      deleteSlider(item.id!);
+                                    },
+                                  ),
+                                  Icon(Icons.reorder, color: Colors.grey[600]),
+                                ],
+                              ),
+                            );
+                          },
+                          onReorder: (oldIndex, newIndex) {
+                            final id = items[oldIndex].id!;
+                            if (newIndex > oldIndex) {
+                              newIndex -= 1;
+                            }
+                            slidersOrder.reorderSlider(id, newIndex);
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+              const SizedBox(height: 16),
+              MyButton(
+                onTap: () {
+                  final lastPosition = items.isEmpty ? 0 : items.length;
+
+                  addSlider(lastPosition);
                 },
+                buttonText: 'Add Slider',
               ),
+              const SizedBox(height: 16),
+              const Text('How it looks like on the app:'),
+              const HomeScreenSliders(),
             ],
           );
         }

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:nurse_app/consts.dart';
 import 'package:nurse_app/features/home/models/get_popups_model.dart';
@@ -70,6 +71,104 @@ class HomeCubit extends Cubit<HomeState> {
     } catch (e) {
       logger.e(e);
       emit(GetSlidersFailure(message: 'Failed to get popups.'));
+    }
+  }
+
+  Future<void> addSlider({
+    required XFile pickedFile,
+    required String title,
+    required String subtitle,
+    required int position,
+  }) async {
+    emit(AddSliderLoading());
+
+    final formData = FormData.fromMap({
+      'image': await MultipartFile.fromFile(
+        pickedFile.path,
+        filename: pickedFile.name,
+      ),
+      'title': title,
+      'subtitle': subtitle,
+      'position': position,
+    });
+
+    final token = await UserToken.getToken();
+
+    try {
+       await dio.post(
+        '$HOST/admin/sliders',
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      emit(AddSliderSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response?.statusCode);
+      emit(AddSliderFailure(
+          message: e.response?.data['message'] ?? 'Failed to add slider.'));
+    } catch (e) {
+      logger.e('Error creating popup: $e');
+      emit(AddSliderFailure(message: 'Failed to add slider.'));
+    }
+  }
+
+  Future<void> deleteSlider(int id) async {
+    emit(DeleteSliderLoading());
+
+    final token = await UserToken.getToken();
+
+    try {
+        await dio.delete(
+        '$HOST/admin/sliders/$id',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      emit(DeleteSliderSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response?.statusCode);
+      emit(DeleteSliderFailure(
+          message: e.response?.data['message'] ?? 'Failed to delete slider.'));
+    } catch (e) {
+      logger.e('Error deleting slider: $e');
+      emit(DeleteSliderFailure(message: 'Failed to delete slider.'));
+    }
+  }
+
+  Future<void> reorderSlider(int id, int newPosition) async {
+    emit(ReorderSlidersLoading());
+
+    final token = await UserToken.getToken();
+
+    try {
+      await dio.put(
+        '$HOST/admin/sliders/$id',
+        data: {'position': newPosition},
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      emit(ReorderSlidersSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response?.statusCode);
+      emit(ReorderSlidersFailure(
+          message: e.response?.data['message'] ?? 'Failed to reorder slider.'));
+    } catch (e) {
+      logger.e('Error reordering slider: $e');
+      emit(ReorderSlidersFailure(message: 'Failed to reorder slider.'));
     }
   }
 }
