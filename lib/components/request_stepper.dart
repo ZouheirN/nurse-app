@@ -11,34 +11,49 @@ class RequestStepper extends StatelessWidget {
       children: [
         _buildStep(
           1,
-          Icons.check,
+          Image.asset(
+            'assets/images/mobile_friendly.png',
+            width: 24,
+            height: 24,
+          ),
         ),
         _buildLine(1, currentStep),
         _buildLine(2, currentStep),
         _buildStep(
           2,
-          Icons.local_hospital,
+          Image.asset(
+            'assets/images/clipboard.png',
+            width: 24,
+            height: 24,
+          ),
         ),
         _buildLine(2, currentStep),
         _buildLine(3, currentStep),
         _buildStep(
-          3,
-          Icons.home,
-        ),
+            3,
+            Image.asset(
+              'assets/images/fast-delivery.png',
+              width: 30,
+              height: 30,
+            )),
         _buildLine(3, currentStep),
         _buildLine(4, currentStep),
         _buildStep(
-          4,
-          Icons.home,
-        ),
+            4,
+            Image.asset(
+              'assets/images/delivery-truck.png',
+              width: 25,
+              height: 25,
+            )),
       ],
     );
   }
 
-  Widget _buildStep(int step, IconData icon) {
+  Widget _buildStep(int step, Widget image) {
     final isActive = currentStep >= step;
 
-    return Column(
+    return Stack(
+      alignment: Alignment.center,
       children: [
         Container(
           height: 56,
@@ -48,12 +63,13 @@ class RequestStepper extends StatelessWidget {
                 isActive ? const Color.fromRGBO(127, 255, 0, 1) : Colors.white,
             shape: BoxShape.circle,
           ),
-          child: Icon(
-            icon,
-            size: 24,
-            color: Colors.black,
-          ),
         ),
+        image,
+        // Icon(
+        //   icon,
+        //   size: 24,
+        //   color: Colors.black,
+        // ),
       ],
     );
   }

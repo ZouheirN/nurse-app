@@ -400,12 +400,9 @@ class RequestDetailsPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
-            const ColorFiltered(
-              colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcATop),
-              child: Image(
-                image: AssetImage('assets/images/square_logo.png'),
-                height: 110,
-              ),
+            const Image(
+              image: AssetImage('assets/images/clock.png'),
+              height: 147,
             ),
             const SizedBox(height: 20),
             Center(
