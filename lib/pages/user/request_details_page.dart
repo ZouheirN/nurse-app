@@ -1,17 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/loader.dart';
+import 'package:nurse_app/components/request_stepper.dart';
 import 'package:nurse_app/components/star_rating.dart';
-import 'package:nurse_app/components/text_data.dart';
-import 'package:nurse_app/components/uneditable_labeled_date.dart';
-import 'package:nurse_app/extensions/context_extension.dart';
-import 'package:nurse_app/features/nurse/cubit/nurse_cubit.dart';
 import 'package:nurse_app/features/request/cubit/request_cubit.dart';
 import 'package:nurse_app/utilities/helper_functions.dart';
-import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 
-import '../../components/service_card.dart';
 import '../../features/request/models/request_details_model.dart';
 
 class RequestDetailsPage extends StatelessWidget {
@@ -48,195 +42,426 @@ class RequestDetailsPage extends StatelessWidget {
         ),
         backgroundColor: Colors.transparent,
       ),
-      body: BlocBuilder<RequestCubit, RequestState>(
-        bloc: _requestCubit..getOrder(orderId: requestId),
-        builder: (context, state) {
-          if (state is RequestDetailsLoading) {
-            return const Loader();
-          }
+      body: SafeArea(
+        child: BlocBuilder<RequestCubit, RequestState>(
+          bloc: _requestCubit..getOrder(orderId: requestId),
+          builder: (context, state) {
+            if (state is RequestDetailsLoading) {
+              return const Loader();
+            }
 
-          if (state is RequestDetailsFailure) {
-            return Center(
-              child: Text(
-                'Error: ${state.message}',
-              ),
+            if (state is RequestDetailsFailure) {
+              return Center(
+                child: Text(
+                  'Error: ${state.message}',
+                ),
+              );
+            }
+
+            if (state is RequestDetailsSuccess) {
+              final request = state.request;
+
+              // final isOngoing = request.status == 'ongoing';
+              const isOngoing = true;
+
+              // todo fix names of requests (not hardcoded)
+              if (isOngoing) {
+                return _buildOngoingDetails(request);
+              } else {
+                return _buildNormalDetails(request);
+              }
+            }
+
+            return const Center(
+              child: Text('Failed to load request details'),
             );
-          }
+          },
+        ),
+      ),
+    );
+  }
 
-          if (state is RequestDetailsSuccess) {
-            final request = state.request;
+  Widget _buildNormalDetails(RequestDetailsModel request) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Color.fromRGBO(255, 255, 255, 1),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              blurRadius: 6,
+              spreadRadius: 0,
+              offset: Offset(0, 0),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Image.asset(
+              'assets/images/default.png',
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Critical Care Service',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Container(
+                  height: 28,
+                  width: 28,
+                  decoration: const BoxDecoration(
+                    color: Color.fromRGBO(123, 180, 66, 1),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey,
+                        blurRadius: 4,
+                        spreadRadius: 0,
+                        offset: Offset(-4, 4),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      '\$${formatPrice(20)}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 8,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 30),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Request Details',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Row(
+              children: [
+                Text(
+                  'Nurse Name: ',
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: Color.fromRGBO(122, 179, 65, 1.0),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  'TODO',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
+                    fontStyle: FontStyle.italic,
+                  ),
+                )
+              ],
+            ),
+            Row(
+              children: [
+                const Text(
+                  'Time to arrive: ',
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: Color.fromRGBO(122, 179, 65, 1.0),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  '${request.timeNeededToArrive.toStringAsFixed(0)} mins',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
+                    fontStyle: FontStyle.italic,
+                  ),
+                )
+              ],
+            ),
+            const Row(
+              children: [
+                Text(
+                  'Rating: ',
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: Color.fromRGBO(122, 179, 65, 1.0),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                StarRating(
+                  nurseId: 1, // todo Replace with actual nurse ID
+                  initialRating: 4,
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Request Date: ${formateDateTimeForRequestDetails(request.createdAt!)}',
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Color.fromRGBO(142, 142, 142, 1),
+                  fontWeight: FontWeight.w400,
+                ),
+                textAlign: TextAlign.left,
+              ),
+            ),
+            // if (request.nurse != null && request.nurseId != null)
+            //   _buildNurseDetails(request.nurseId!),
+            // if (request.services != null)
+            //   _buildServiceDetails(request.services!),
+            // if (request.endingTime == null &&
+            //     request.timeNeededToArrive != null)
+            // if (request.nurse != null && request.nurseId != null)
+            // _buildRequestDate(request),
+            const SizedBox(height: 30),
+            const ColorFiltered(
+              colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcATop),
+              child: Image(
+                image: AssetImage('assets/images/square_logo.png'),
+                height: 110,
+              ),
+            ),
+            const SizedBox(height: 10),
+          ],
+        ),
+      ),
+    );
+  }
 
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
+  Widget _buildOngoingDetails(RequestDetailsModel request) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color.fromRGBO(123, 180, 66, 1),
+              Color.fromRGBO(55, 80, 30, 1)
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              blurRadius: 6,
+              spreadRadius: 0,
+              offset: Offset(0, 0),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Image.asset(
+              'assets/images/default.png',
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Critical Care Service',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Container(
+                  height: 28,
+                  width: 28,
+                  decoration: const BoxDecoration(
+                    color: Color.fromRGBO(123, 180, 66, 1),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 2,
+                        spreadRadius: 0,
+                        offset: Offset(-2, 2),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      '\$${formatPrice(20)}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 8,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 30),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Request Details',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Row(
+              children: [
+                Text(
+                  'Nurse Name: ',
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  'TODO',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
+                    fontStyle: FontStyle.italic,
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(height: 20),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Request Tracking',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Arriving at 11:25 PM',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: RequestStepper(
+                currentStep: 1,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Center(
               child: Container(
-                decoration: const BoxDecoration(
-                  color: Color.fromRGBO(255, 255, 255, 1),
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  boxShadow: [
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: const Text(
+                  'Your Request is being Prepared',
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black),
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+            const ColorFiltered(
+              colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcATop),
+              child: Image(
+                image: AssetImage('assets/images/square_logo.png'),
+                height: 110,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Center(
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.black, width: 1),
+                  boxShadow: const [
                     BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 6,
+                      color: Color.fromRGBO(0, 0, 0, 0.25),
+                      blurRadius: 4,
                       spreadRadius: 0,
-                      offset: Offset(0, 0),
+                      offset: Offset(0, 4),
                     ),
                   ],
                 ),
-                padding: const EdgeInsets.all(16),
-                child: Column(
+                child: const Row(
                   children: [
-                    Image.asset(
-                      'assets/images/default.png',
+                    Icon(
+                      Icons.chat_bubble_outline,
+                      size: 24,
                     ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Critical Care Service',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Container(
-                          height: 28,
-                          width: 28,
-                          decoration: const BoxDecoration(
-                            color: Color.fromRGBO(123, 180, 66, 1),
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey,
-                                blurRadius: 4,
-                                spreadRadius: 0,
-                                offset: Offset(-4, 4),
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                            child: Text(
-                              '\$${formatPrice(20)}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 8,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      ],
+                    Spacer(),
+                    Text(
+                      'Live Chat',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
+                        fontStyle: FontStyle.italic,
+                      ),
                     ),
-                    const SizedBox(height: 30),
-                    const Align(
-                      alignment: Alignment.centerLeft,
+                    Spacer(),
+                    CircleAvatar(
+                      radius: 18,
+                      backgroundColor: Colors.black,
                       child: Text(
-                        'Request Details',
+                        '1',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w700,
+                          color: Colors.white,
                           fontStyle: FontStyle.italic,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    const Row(
-                      children: [
-                        Text(
-                          'Nurse Name: ',
-                          style: TextStyle(
-                            fontSize: 22,
-                            color: Color.fromRGBO(122, 179, 65, 1.0),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          'TODO',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w400,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text(
-                          'Time to arrive: ',
-                          style: TextStyle(
-                            fontSize: 22,
-                            color: Color.fromRGBO(122, 179, 65, 1.0),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          '${request.timeNeededToArrive.toStringAsFixed(0)} mins',
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w400,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        )
-                      ],
-                    ),
-                    const Row(
-                      children: [
-                        Text(
-                          'Rating: ',
-                          style: TextStyle(
-                            fontSize: 22,
-                            color: Color.fromRGBO(122, 179, 65, 1.0),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        StarRating(
-                          nurseId: 1, // todo Replace with actual nurse ID
-                          initialRating: 4,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Request Date: ${formateDateTimeForRequestDetails(request.createdAt!)}',
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Color.fromRGBO(142, 142, 142, 1),
-                          fontWeight: FontWeight.w400,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                    // if (request.nurse != null && request.nurseId != null)
-                    //   _buildNurseDetails(request.nurseId!),
-                    // if (request.services != null)
-                    //   _buildServiceDetails(request.services!),
-                    // if (request.endingTime == null &&
-                    //     request.timeNeededToArrive != null)
-                    // if (request.nurse != null && request.nurseId != null)
-                    // _buildRequestDate(request),
-                    const SizedBox(height: 30),
-                    const ColorFiltered(
-                      colorFilter:
-                          ColorFilter.mode(Colors.black, BlendMode.srcATop),
-                      child: Image(
-                        image: AssetImage('assets/images/square_logo.png'),
-                        height: 110,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
+                    )
                   ],
                 ),
               ),
-            );
-          }
-
-          return const Center(
-            child: Text('Failed to load request details'),
-          );
-        },
+            ),
+            const SizedBox(height: 40),
+          ],
+        ),
       ),
     );
   }
