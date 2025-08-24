@@ -130,12 +130,12 @@ class Service {
 
   final int id;
   final String name;
-  final num price;
+  final String price;
 
   Service copyWith({
     int? id,
     String? name,
-    num? price,
+    String? price,
   }) {
     return Service(
       id: id ?? this.id,

@@ -31,7 +31,11 @@ String formateDateTimeForRequestDetails(DateTime dateTime) {
 //   }
 // }
 
-String formatPrice(num price) {
+String formatPrice(num? price) {
+  if (price == null) {
+    return '0';
+  }
+
   if (price == price.roundToDouble()) {
     return price.toInt().toString();
   } else {

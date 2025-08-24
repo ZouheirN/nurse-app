@@ -217,7 +217,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                   Stack(
                                     children: [
                                       Text(
-                                        '\$${formatPrice(request.services![i].price!)}',
+                                        '\$${formatPrice(num.tryParse(request.services![i].price))}',
                                         style: const TextStyle(
                                           color: Colors.grey,
                                           fontWeight: FontWeight.w400,

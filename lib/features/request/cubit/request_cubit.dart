@@ -130,6 +130,8 @@ class RequestCubit extends Cubit<RequestState> {
         ),
       );
 
+      logger.i(response.data);
+
       final request = RequestDetailsModel.fromJson(response.data);
 
       emit(RequestDetailsSuccess(request: request));

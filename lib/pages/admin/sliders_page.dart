@@ -331,6 +331,7 @@ class _SlidersPageState extends State<SlidersPage> {
               ),
               const SizedBox(height: 16),
               const Text('How it looks like on the app:'),
+              const SizedBox(height: 16),
               const HomeScreenSliders(),
             ],
           );
