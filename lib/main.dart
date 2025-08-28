@@ -26,6 +26,7 @@ import 'package:nurse_app/pages/admin/order_details_page.dart';
 import 'package:nurse_app/pages/admin/region_pricing_page.dart';
 import 'package:nurse_app/pages/admin/sliders_page.dart';
 import 'package:nurse_app/pages/admin/submit_order_page.dart';
+import 'package:nurse_app/pages/user/chat_page.dart';
 import 'package:nurse_app/pages/user/edit_profile_page.dart';
 import 'package:nurse_app/pages/user/forgot_password_page.dart';
 import 'package:nurse_app/pages/user/login_page.dart';
@@ -235,6 +236,10 @@ class _MyAppState extends State<MyApp> {
             '/manageAreas': (context) => const AreasPage(),
             '/contactSubmissions': (context) => const ContactSubmissionsPage(),
             '/sliders': (context) => const SlidersPage(),
+            '/chat': (context) {
+              // final args = ModalRoute.of(context)?.settings.arguments as int;
+              return const ChatPage();
+            },
           },
         );
       },

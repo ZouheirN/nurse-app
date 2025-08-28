@@ -46,6 +46,7 @@ dependencies:
   flutter_slidable: ^4.0.0
   path_provider: ^2.1.5
   image_cropper: ^9.1.0
+  chat_bubbles: ^1.7.0
 
 dev_dependencies:
   flutter_test:

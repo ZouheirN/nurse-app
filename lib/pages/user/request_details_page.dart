@@ -66,7 +66,7 @@ class RequestDetailsPage extends StatelessWidget {
 
               // todo fix names of requests (not hardcoded)
               if (isOngoing) {
-                return _buildOngoingDetails(request);
+                return _buildOngoingDetails(request, context);
               } else {
                 return _buildNormalDetails(request);
               }
@@ -248,7 +248,7 @@ class RequestDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildOngoingDetails(RequestDetailsModel request) {
+  Widget _buildOngoingDetails(RequestDetailsModel request, BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Container(
@@ -406,53 +406,58 @@ class RequestDetailsPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Center(
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.black, width: 1),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color.fromRGBO(0, 0, 0, 0.25),
-                      blurRadius: 4,
-                      spreadRadius: 0,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: const Row(
-                  children: [
-                    Icon(
-                      Icons.chat_bubble_outline,
-                      size: 24,
-                    ),
-                    Spacer(),
-                    Text(
-                      'Live Chat',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                        fontStyle: FontStyle.italic,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pushNamed('/chat', arguments: {});
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.black, width: 1),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color.fromRGBO(0, 0, 0, 0.25),
+                        blurRadius: 4,
+                        spreadRadius: 0,
+                        offset: Offset(0, 4),
                       ),
-                    ),
-                    Spacer(),
-                    CircleAvatar(
-                      radius: 18,
-                      backgroundColor: Colors.black,
-                      child: Text(
-                        '1',
+                    ],
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(
+                        Icons.chat_bubble_outline,
+                        size: 24,
+                      ),
+                      Spacer(),
+                      Text(
+                        'Live Chat',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w700,
-                          color: Colors.white,
+                          color: Colors.black,
                           fontStyle: FontStyle.italic,
                         ),
                       ),
-                    )
-                  ],
+                      Spacer(),
+                      CircleAvatar(
+                        radius: 18,
+                        backgroundColor: Colors.black,
+                        child: Text(
+                          '1',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
