@@ -207,7 +207,7 @@ class _SignupPageState extends State<SignupPage> {
                             padding: const EdgeInsets.symmetric(horizontal: 27),
                             child: DropdownButtonFormField<int>(
                               decoration: InputDecoration(
-                                labelText: 'Select Area',
+                                hintText: 'Select Area',
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),

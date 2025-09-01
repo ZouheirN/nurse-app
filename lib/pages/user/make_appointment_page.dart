@@ -13,6 +13,7 @@ import 'package:quickalert/quickalert.dart';
 import '../../components/loader.dart';
 import '../../components/services_list.dart';
 import '../../components/time_type_selection_field.dart';
+import '../../features/areas/cubit/areas_cubit.dart';
 import '../../features/request/cubit/request_cubit.dart';
 import '../../features/services/cubit/services_cubit.dart';
 
@@ -39,6 +40,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
   final genderController = GenderSelectionController();
   DateTime? startDate;
   DateTime? endDate;
+  int? selectedAreaId;
 
   final ValueNotifier<bool> _isScheduled = ValueNotifier<bool>(false);
 
@@ -47,6 +49,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
 
   final _requestCubit = RequestCubit();
   final _servicesCubit = ServicesCubit();
+  final _areasCubit = AreasCubit();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -68,6 +71,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
   @override
   void initState() {
     _servicesCubit.fetchServices();
+    _areasCubit.getAreas();
     super.initState();
   }
 
@@ -201,7 +205,106 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                   return null;
                 },
               ),
-              const SizedBox(height: 7),
+              const SizedBox(height: 10),
+              BlocBuilder<AreasCubit, AreasState>(
+                bloc: _areasCubit,
+                builder: (context, state) {
+                  if (state is GetAreasLoading) {
+                    return const Loader();
+                  }
+
+                  if (state is GetAreasFailure) {
+                    return Text(
+                      'Failed to load areas: ${state.message}',
+                      style: const TextStyle(color: Colors.red),
+                    );
+                  }
+
+                  if (state is GetAreasSuccess) {
+                    final areas = state.areas.areas;
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Area',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 3),
+                          DropdownButtonFormField<int>(
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              enabledBorder: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide:
+                                    BorderSide(color: Color(0xFFE7E7E7)),
+                              ),
+                              disabledBorder: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide:
+                                    BorderSide(color: Color(0xFFE7E7E7)),
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide:
+                                    BorderSide(color: Color(0xFFE7E7E7)),
+                              ),
+                              errorBorder: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.red),
+                              ),
+                              focusedErrorBorder: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(color: Colors.red),
+                              ),
+                              fillColor: const Color(0xFFE7E7E7),
+                              filled: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                            ),
+                            items: areas.map((area) {
+                              return DropdownMenuItem<int>(
+                                value: area.id,
+                                child: Text(area.name.toString()),
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedAreaId = value;
+                              });
+                            },
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Please select an area';
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return const Center(
+                    child: Text(
+                      'No areas available',
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 10),
               GenderSelectionField(controller: genderController),
               // const SizedBox(height: 7),
               // TimeTypeSelectionField(controller: timeTypeController),
