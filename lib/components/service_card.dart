@@ -94,7 +94,7 @@ class _ServiceCardState extends State<ServiceCard> {
             shape: BoxShape.circle,
           ),
           child: const Text(
-            '10% OFF',
+            'SALE',
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 8,

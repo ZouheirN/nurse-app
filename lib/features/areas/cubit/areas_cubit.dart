@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
+import 'package:nurse_app/features/areas/models/get_service_area_prices_for_service_model.dart';
 import 'package:nurse_app/features/areas/models/get_service_area_prices_model.dart';
 
 import '../../../consts.dart';
@@ -61,6 +62,33 @@ class AreasCubit extends Cubit<AreasState> {
     }
   }
 
+  Future<void> getServiceAreaPricesForService(num? serviceId) async {
+    emit(GetServiceAreaPricesForServiceLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      final response = await dio.get(
+        '$HOST/admin/service-area-prices/service/$serviceId',
+        options: Options(headers: {
+          'Authorization': 'Bearer $token',
+        }),
+      );
+
+      final serviceAreaPrices =
+      GetServiceAreaPricesForService.fromJson(response.data);
+
+      emit(GetServiceAreaPricesForServiceSuccess(serviceAreaPrices: serviceAreaPrices));
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(GetServiceAreaPricesForServiceFailure(message: e.response!.data['message']));
+    } catch (e) {
+      logger.e(e);
+      emit(GetServiceAreaPricesForServiceFailure(
+          message: 'Failed to get service area prices.'));
+    }
+  }
+
   Future<void> addServiceAreaPrice({
     required int serviceId,
     required int areaId,
@@ -71,7 +99,7 @@ class AreasCubit extends Cubit<AreasState> {
     try {
       final token = await UserToken.getToken();
 
-      final response = await dio.post(
+       await dio.post(
         '$HOST/admin/service-area-prices',
         data: {
           'service_id': serviceId,
@@ -83,9 +111,6 @@ class AreasCubit extends Cubit<AreasState> {
         }),
       );
 
-      // final serviceAreaPrice =
-      //     GetServiceAreaPricesModel.fromJson(response.data);
-
       emit(AddServiceAreaPriceSuccess());
     } on DioException catch (e) {
       logger.e(e.response!.data);
@@ -93,6 +118,36 @@ class AreasCubit extends Cubit<AreasState> {
     } catch (e) {
       logger.e(e);
       emit(AddServiceAreaPriceFailure(
+          message: 'Failed to add service area price.'));
+    }
+  }
+
+  Future<void> editServiceAreaPrice({
+    required int servicePriceId,
+    required double price,
+  }) async {
+    emit(EditServiceAreaPriceLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      await dio.put(
+        '$HOST/admin/service-area-prices/$servicePriceId',
+        data: {
+          'price': price,
+        },
+        options: Options(headers: {
+          'Authorization': 'Bearer $token',
+        }),
+      );
+
+      emit(EditServiceAreaPriceSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(EditServiceAreaPriceFailure(message: e.response!.data['message']));
+    } catch (e) {
+      logger.e(e);
+      emit(EditServiceAreaPriceFailure(
           message: 'Failed to add service area price.'));
     }
   }
@@ -112,7 +167,7 @@ class AreasCubit extends Cubit<AreasState> {
 
       emit(GetAreasAdminSuccess(areas: areas));
     } on DioException catch (e) {
-      logger.e(e.response!.data);
+      logger.e(e);
       emit(GetAreasAdminFailure(
           message: e.response?.data['message'] ?? 'Failed to get areas.'));
     } catch (e) {

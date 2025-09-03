@@ -35,6 +35,21 @@ final class GetServiceAreaPricesFailure extends AreasState {
   GetServiceAreaPricesFailure({required this.message});
 }
 
+// Get service area prices for service
+final class GetServiceAreaPricesForServiceLoading extends AreasState {}
+
+final class GetServiceAreaPricesForServiceSuccess extends AreasState {
+  final GetServiceAreaPricesForService serviceAreaPrices;
+
+  GetServiceAreaPricesForServiceSuccess({required this.serviceAreaPrices});
+}
+
+final class GetServiceAreaPricesForServiceFailure extends AreasState {
+  final String message;
+
+  GetServiceAreaPricesForServiceFailure({required this.message});
+}
+
 // Add service area price
 final class AddServiceAreaPriceLoading extends AreasState {}
 
@@ -44,6 +59,15 @@ final class AddServiceAreaPriceFailure extends AreasState {
   final String message;
 
   AddServiceAreaPriceFailure({required this.message});
+}
+
+// Edit service area price
+final class EditServiceAreaPriceLoading extends AreasState {}
+final class EditServiceAreaPriceSuccess extends AreasState {}
+final class EditServiceAreaPriceFailure extends AreasState {
+  final String message;
+
+  EditServiceAreaPriceFailure({required this.message});
 }
 
 // Get Areas Admin

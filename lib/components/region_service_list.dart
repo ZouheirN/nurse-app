@@ -4,23 +4,25 @@ import 'package:intrinsic_size_builder/intrinsic_size_builder.dart';
 import 'package:nurse_app/components/service_card.dart';
 import 'package:nurse_app/features/services/models/get_services_model.dart';
 
-class ServicesList extends StatefulWidget {
-  final GetServicesModel services;
-  final List<num> selectedServiceIds;
+class RegionServiceList extends StatefulWidget {
+  final List<String> serviceNames;
+  final List<int> serviceIds;
+  final ValueNotifier<num?> selectedServiceId;
   final EdgeInsets padding;
 
-  const ServicesList({
+  const RegionServiceList({
     super.key,
-    required this.services,
-    required this.selectedServiceIds,
+    required this.serviceNames,
+    required this.serviceIds,
+    required this.selectedServiceId,
     this.padding = const EdgeInsets.symmetric(horizontal: 40),
   });
 
   @override
-  State<ServicesList> createState() => _ServicesListState();
+  State<RegionServiceList> createState() => _RegionServiceListState();
 }
 
-class _ServicesListState extends State<ServicesList> {
+class _RegionServiceListState extends State<RegionServiceList> {
   int selectedPage = 0;
   late PageController pageController;
 
@@ -32,7 +34,7 @@ class _ServicesListState extends State<ServicesList> {
 
   @override
   Widget build(BuildContext context) {
-    final services = widget.services.services;
+    final services = widget.serviceNames;
 
     return Column(
       children: [
@@ -50,6 +52,12 @@ class _ServicesListState extends State<ServicesList> {
                 services.sublist(
                   startIndex,
                   endIndex > services.length ? services.length : endIndex,
+                ),
+                widget.serviceIds.sublist(
+                  startIndex,
+                  endIndex > widget.serviceIds.length
+                      ? widget.serviceIds.length
+                      : endIndex,
                 ),
               );
             },
@@ -109,64 +117,34 @@ class _ServicesListState extends State<ServicesList> {
     );
   }
 
-  Widget _buildServicesPage(List<Service> services) {
+  Widget _buildServicesPage(List<String> serviceNames, List<num> serviceIds) {
     return IntrinsicSizeBuilder(
       subject: Row(
-        children: services.map((service) {
+        children: serviceNames.map((service) {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 5),
-            child: ServiceCard(
-              serviceId: service.id!,
-              imagePath: service.servicePic ?? 'assets/images/default.png',
-              title: service.name.toString(),
-              price: num.parse(service.price.toString()),
-              salePrice: num.tryParse(service.discountPrice.toString()),
-              description: service.description,
-              onSelectionChanged: (isSelected) {},
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.24,
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: Colors.green,
+                  width: 2,
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  service,
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ),
           );
         }).toList(),
       ),
       builder: (context, subjectSize, subject) {
-        // return Align(
-        //   alignment: Alignment.topCenter,
-        //   child: Container(
-        //     color: Colors.red,
-        //     child: Wrap(
-        //       spacing: 10,
-        //       runSpacing: 10,
-        //       crossAxisAlignment: WrapCrossAlignment.center,
-        //       children: services.map(
-        //             (service) {
-        //           return Padding(
-        //             padding: const EdgeInsets.symmetric(vertical: 5),
-        //             child: ServiceCard(
-        //               height: subjectSize.height,
-        //               serviceId: service['id'],
-        //               imagePath: service['service_pic'] ??
-        //                   'assets/images/square_logo.png',
-        //               title: service['name'],
-        //               price: service['price'],
-        //               isSelected:
-        //               widget.selectedServiceIds.contains(service['id']),
-        //               salePrice: service['discount_price'],
-        //               onSelectionChanged: (isSelected) {
-        //                 setState(() {
-        //                   if (isSelected) {
-        //                     widget.selectedServiceIds.add(service['id']);
-        //                   } else {
-        //                     widget.selectedServiceIds.remove(service['id']);
-        //                   }
-        //                 });
-        //               },
-        //             ),
-        //           );
-        //         },
-        //       ).toList(),
-        //     ),
-        //   ),
-        // );
-
         return Align(
           alignment: Alignment.topCenter,
           child: GridView(
@@ -179,29 +157,41 @@ class _ServicesListState extends State<ServicesList> {
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             padding: widget.padding,
-            children: services.map(
-              (Service service) {
+            children: serviceIds.map(
+              (num serviceId) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: ServiceCard(
-                    height: subjectSize.height,
-                    serviceId: service.id!,
-                    imagePath:
-                        service.servicePic ?? 'assets/images/default.png',
-                    title: service.name.toString(),
-                    price: num.parse(service.price.toString()),
-                    isSelected: widget.selectedServiceIds.contains(service.id),
-                    salePrice: num.tryParse(service.discountPrice.toString()),
-                    description: service.description,
-                    onSelectionChanged: (isSelected) {
+                  child: GestureDetector(
+                    onTap: () {
                       setState(() {
-                        if (isSelected) {
-                          widget.selectedServiceIds.add(service.id!);
+                        if (widget.selectedServiceId.value == serviceId) {
+                          widget.selectedServiceId.value = null;
                         } else {
-                          widget.selectedServiceIds.remove(service.id!);
+                          widget.selectedServiceId.value = serviceId;
                         }
                       });
                     },
+                    child: Container(
+                      height: subjectSize.height,
+                      width: MediaQuery.of(context).size.width * 0.24,
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: widget.selectedServiceId.value == serviceId
+                              ? Colors.green
+                              : Colors.transparent,
+                          width: 2,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          serviceNames[serviceIds.indexOf(serviceId)],
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
                   ),
                 );
               },

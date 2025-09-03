@@ -240,6 +240,13 @@ class _MyAppState extends State<MyApp> {
               // final args = ModalRoute.of(context)?.settings.arguments as int;
               return const ChatPage();
             },
+            '/regionPricing': (context) {
+              final args = ModalRoute.of(context)?.settings.arguments as int;
+
+              return RegionPricingPage(
+                areaId: args,
+              );
+            },
           },
         );
       },

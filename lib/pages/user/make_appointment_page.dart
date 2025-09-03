@@ -455,6 +455,15 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                         return;
                       }
 
+                      if (selectedAreaId == null) {
+                        Dialogs.showErrorDialog(
+                          context,
+                          'Error',
+                          'Please select an area.',
+                        );
+                        return;
+                      }
+
                       if (genderController.getGender() == null) {
                         Dialogs.showErrorDialog(
                           context,
@@ -502,6 +511,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                         selectedServices: selectedServiceIds,
                         startDate: _isScheduled.value ? startDate : null,
                         endDate: _isScheduled.value ? endDate : null,
+                        areaId: selectedAreaId!,
                       );
                     },
                     buttonText: 'Submit',

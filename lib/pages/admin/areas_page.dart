@@ -215,6 +215,16 @@ class _AreasPageState extends State<AreasPage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        '/regionPricing',
+                                        arguments: area.id,
+                                      );
+                                    },
+                                    icon: const Icon(Icons.attach_money),
+                                  ),
+                                  IconButton(
                                     icon: const Icon(Icons.edit),
                                     onPressed: () {
                                       _showAddAreaDialog(

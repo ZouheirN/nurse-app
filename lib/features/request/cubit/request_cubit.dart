@@ -25,6 +25,7 @@ class RequestCubit extends Cubit<RequestState> {
     required List<int> selectedServices,
     DateTime? startDate,
     DateTime? endDate,
+    required int areaId,
   }) async {
     emit(RequestCreateLoading());
 
@@ -43,6 +44,7 @@ class RequestCubit extends Cubit<RequestState> {
         // "scheduled_time": DateTime.now().toIso8601String(),
         "latitude": coordinates.latitude,
         "longitude": coordinates.longitude,
+        "area_id": areaId,
       };
 
       if (startDate != null) {
