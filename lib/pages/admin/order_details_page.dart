@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:map_launcher/map_launcher.dart';
 import 'package:nurse_app/components/admin_header.dart';
 import 'package:nurse_app/components/labeled_mini_textfield_order.dart';
 import 'package:nurse_app/components/labeled_textfield.dart';
@@ -10,6 +11,7 @@ import 'package:nurse_app/components/status_button.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/features/request/cubit/request_cubit.dart';
 import 'package:nurse_app/features/request/models/requests_history_model.dart';
+import 'package:nurse_app/main.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
 
 import '../../components/service_card.dart';
@@ -131,7 +133,17 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                     Icons.location_on,
                     color: Colors.black,
                   ),
-                  onTap: () {
+                  onTap: () async {
+                    final availableMaps = await MapLauncher.installedMaps;
+
+                    await availableMaps.first.showDirections(
+                      destination: Coords(
+                        request.latitude.toDouble(),
+                        request.longitude.toDouble(),
+                      ),
+                      destinationTitle: 'Patient Location',
+                    );
+
                     // final initialPosition = LatLng(
                     //   request.user!.latitude as double,
                     //   request.user!.longitude as double,
@@ -185,7 +197,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                for (int i = 0; i < request.services!.length; i++)
+                for (int i = 0; i < request.services.length; i++)
                   Padding(
                     padding:
                         const EdgeInsets.only(left: 35, right: 35, bottom: 10),
@@ -196,7 +208,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                           flex: 2,
                           child: LabeledMiniTextfieldOrder(
                             label: '',
-                            hintText: request.services![i].name,
+                            hintText: request.services[i].name,
                           ),
                         ),
                         Flexible(
@@ -217,7 +229,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                   Stack(
                                     children: [
                                       Text(
-                                        '\$${formatPrice(num.tryParse(request.services![i].price))}',
+                                        '\$${formatPrice(num.tryParse(request.services[i].price))}',
                                         style: const TextStyle(
                                           color: Colors.grey,
                                           fontWeight: FontWeight.w400,
@@ -276,7 +288,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                     final isLoading = state is RequestSetStatusLoading ||
                         state is RequestDeleteLoading;
 
-                    if (request.status == 'pending') {
+                    logger.d('Request Status: ${request.status}');
+
+                    if (request.status == 'submitted') {
                       return MyThirdButton(
                         onTap: () {
                           Navigator.pushNamed(context, '/submitOrder',

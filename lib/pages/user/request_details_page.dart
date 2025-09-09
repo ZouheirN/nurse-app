@@ -61,8 +61,8 @@ class RequestDetailsPage extends StatelessWidget {
             if (state is RequestDetailsSuccess) {
               final request = state.request;
 
-              // final isOngoing = request.status == 'ongoing';
-              const isOngoing = true;
+              final isOngoing = request.status == 'ongoing';
+              // const isOngoing = true;
 
               // todo fix names of requests (not hardcoded)
               if (isOngoing) {
@@ -107,9 +107,9 @@ class RequestDetailsPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Critical Care Service',
-                  style: TextStyle(
+                Text(
+                  request.problemDescription,
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
                   ),
@@ -131,7 +131,7 @@ class RequestDetailsPage extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      '\$${formatPrice(20)}',
+                      '\$${formatPrice(request.totalPrice)}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 8,
@@ -176,42 +176,43 @@ class RequestDetailsPage extends StatelessWidget {
                 )
               ],
             ),
-            Row(
-              children: [
-                const Text(
-                  'Time to arrive: ',
-                  style: TextStyle(
-                    fontSize: 22,
-                    color: Color.fromRGBO(122, 179, 65, 1.0),
-                    fontWeight: FontWeight.w600,
+            if (request.timeNeededToArrive != null)
+              Row(
+                children: [
+                  const Text(
+                    'Time to arrive: ',
+                    style: TextStyle(
+                      fontSize: 22,
+                      color: Color.fromRGBO(122, 179, 65, 1.0),
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                Text(
-                  '${request.timeNeededToArrive.toStringAsFixed(0)} mins',
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w400,
-                    fontStyle: FontStyle.italic,
-                  ),
-                )
-              ],
-            ),
-            const Row(
-              children: [
-                Text(
-                  'Rating: ',
-                  style: TextStyle(
-                    fontSize: 22,
-                    color: Color.fromRGBO(122, 179, 65, 1.0),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                StarRating(
-                  nurseId: 1, // todo Replace with actual nurse ID
-                  initialRating: 4,
-                ),
-              ],
-            ),
+                  Text(
+                    '${request.timeNeededToArrive!.toStringAsFixed(0)} mins',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w400,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  )
+                ],
+              ),
+            // const Row(
+            //   children: [
+            //     Text(
+            //       'Rating: ',
+            //       style: TextStyle(
+            //         fontSize: 22,
+            //         color: Color.fromRGBO(122, 179, 65, 1.0),
+            //         fontWeight: FontWeight.w600,
+            //       ),
+            //     ),
+            //     StarRating(
+            //       nurseId: 1, // todo Replace with actual nurse ID
+            //       initialRating: 4,
+            //     ),
+            //   ],
+            // ),
             const SizedBox(height: 20),
             Align(
               alignment: Alignment.centerLeft,
@@ -248,7 +249,8 @@ class RequestDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildOngoingDetails(RequestDetailsModel request, BuildContext context) {
+  Widget _buildOngoingDetails(
+      RequestDetailsModel request, BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Container(

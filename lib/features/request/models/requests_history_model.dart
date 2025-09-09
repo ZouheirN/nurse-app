@@ -14,6 +14,7 @@ class RequestsHistoryModel {
     required this.location,
     required this.latitude,
     required this.longitude,
+    required this.totalPrice,
     required this.deletedAt,
     required this.createdAt,
     required this.updatedAt,
@@ -35,6 +36,7 @@ class RequestsHistoryModel {
   final String? location;
   final num? latitude;
   final num? longitude;
+  final num? totalPrice;
   final DateTime? deletedAt;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -56,6 +58,7 @@ class RequestsHistoryModel {
     String? location,
     num? latitude,
     num? longitude,
+    num? totalPrice,
     DateTime? deletedAt,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -77,6 +80,7 @@ class RequestsHistoryModel {
       location: location ?? this.location,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
+      totalPrice: totalPrice ?? this.totalPrice,
       deletedAt: deletedAt ?? this.deletedAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -85,7 +89,7 @@ class RequestsHistoryModel {
     );
   }
 
-  factory RequestsHistoryModel.fromJson(Map<String, dynamic> json){
+  factory RequestsHistoryModel.fromJson(Map<String, dynamic> json) {
     return RequestsHistoryModel(
       id: json["id"],
       userId: json["user_id"],
@@ -101,36 +105,40 @@ class RequestsHistoryModel {
       location: json["location"],
       latitude: json["latitude"],
       longitude: json["longitude"],
+      totalPrice: json["total_price"],
       deletedAt: DateTime.tryParse(json["deleted_at"] ?? ""),
       createdAt: DateTime.tryParse(json["created_at"] ?? ""),
       updatedAt: DateTime.tryParse(json["updated_at"] ?? ""),
       user: json["user"] == null ? null : User.fromJson(json["user"]),
-      services: json["services"] == null ? [] : List<Service>.from(json["services"]!.map((x) => Service.fromJson(x))),
+      services: json["services"] == null
+          ? []
+          : List<Service>.from(
+              json["services"]!.map((x) => Service.fromJson(x))),
     );
   }
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "user_id": userId,
-    "full_name": fullName,
-    "phone_number": phoneNumber,
-    "name": name,
-    "problem_description": problemDescription,
-    "status": status,
-    "time_needed_to_arrive": timeNeededToArrive,
-    "nurse_gender": nurseGender,
-    "time_type": timeType,
-    "scheduled_time": scheduledTime?.toIso8601String(),
-    "location": location,
-    "latitude": latitude,
-    "longitude": longitude,
-    "deleted_at": deletedAt?.toIso8601String(),
-    "created_at": createdAt?.toIso8601String(),
-    "updated_at": updatedAt?.toIso8601String(),
-    "user": user?.toJson(),
-    "services": services.map((x) => x?.toJson()).toList(),
-  };
-
+        "id": id,
+        "user_id": userId,
+        "full_name": fullName,
+        "phone_number": phoneNumber,
+        "name": name,
+        "problem_description": problemDescription,
+        "status": status,
+        "time_needed_to_arrive": timeNeededToArrive,
+        "nurse_gender": nurseGender,
+        "time_type": timeType,
+        "scheduled_time": scheduledTime?.toIso8601String(),
+        "location": location,
+        "latitude": latitude,
+        "longitude": longitude,
+        "total_price": totalPrice,
+        "deleted_at": deletedAt?.toIso8601String(),
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "user": user?.toJson(),
+        "services": services.map((x) => x?.toJson()).toList(),
+      };
 }
 
 class Service {
@@ -184,7 +192,7 @@ class Service {
     );
   }
 
-  factory Service.fromJson(Map<String, dynamic> json){
+  factory Service.fromJson(Map<String, dynamic> json) {
     return Service(
       id: json["id"],
       name: json["name"],
@@ -200,18 +208,17 @@ class Service {
   }
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "description": description,
-    "service_pic": servicePic,
-    "price": price,
-    "discount_price": discountPrice,
-    "category_id": categoryId,
-    "created_at": createdAt?.toIso8601String(),
-    "updated_at": updatedAt?.toIso8601String(),
-    "pivot": pivot?.toJson(),
-  };
-
+        "id": id,
+        "name": name,
+        "description": description,
+        "service_pic": servicePic,
+        "price": price,
+        "discount_price": discountPrice,
+        "category_id": categoryId,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "pivot": pivot?.toJson(),
+      };
 }
 
 class Pivot {
@@ -233,7 +240,7 @@ class Pivot {
     );
   }
 
-  factory Pivot.fromJson(Map<String, dynamic> json){
+  factory Pivot.fromJson(Map<String, dynamic> json) {
     return Pivot(
       requestId: json["request_id"],
       serviceId: json["service_id"],
@@ -241,10 +248,9 @@ class Pivot {
   }
 
   Map<String, dynamic> toJson() => {
-    "request_id": requestId,
-    "service_id": serviceId,
-  };
-
+        "request_id": requestId,
+        "service_id": serviceId,
+      };
 }
 
 class User {
@@ -306,7 +312,8 @@ class User {
       location: location ?? this.location,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
-      confirmationCodeExpiresAt: confirmationCodeExpiresAt ?? this.confirmationCodeExpiresAt,
+      confirmationCodeExpiresAt:
+          confirmationCodeExpiresAt ?? this.confirmationCodeExpiresAt,
       isFirstLogin: isFirstLogin ?? this.isFirstLogin,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -314,7 +321,7 @@ class User {
     );
   }
 
-  factory User.fromJson(Map<String, dynamic> json){
+  factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json["id"],
       roleId: json["role_id"],
@@ -334,22 +341,21 @@ class User {
   }
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "role_id": roleId,
-    "name": name,
-    "email": email,
-    "email_verified_at": emailVerifiedAt?.toIso8601String(),
-    "phone_number": phoneNumber,
-    "location": location,
-    "latitude": latitude,
-    "longitude": longitude,
-    "confirmation_code_expires_at": confirmationCodeExpiresAt,
-    "is_first_login": isFirstLogin,
-    "created_at": createdAt?.toIso8601String(),
-    "updated_at": updatedAt?.toIso8601String(),
-    "role": role?.toJson(),
-  };
-
+        "id": id,
+        "role_id": roleId,
+        "name": name,
+        "email": email,
+        "email_verified_at": emailVerifiedAt?.toIso8601String(),
+        "phone_number": phoneNumber,
+        "location": location,
+        "latitude": latitude,
+        "longitude": longitude,
+        "confirmation_code_expires_at": confirmationCodeExpiresAt,
+        "is_first_login": isFirstLogin,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "role": role?.toJson(),
+      };
 }
 
 class Role {
@@ -379,7 +385,7 @@ class Role {
     );
   }
 
-  factory Role.fromJson(Map<String, dynamic> json){
+  factory Role.fromJson(Map<String, dynamic> json) {
     return Role(
       id: json["id"],
       name: json["name"],
@@ -389,10 +395,9 @@ class Role {
   }
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "created_at": createdAt?.toIso8601String(),
-    "updated_at": updatedAt?.toIso8601String(),
-  };
-
+        "id": id,
+        "name": name,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+      };
 }

@@ -9,6 +9,7 @@ class RequestDetailsModel {
     required this.nurseGender,
     required this.timeType,
     required this.scheduledTime,
+    required this.endingTime,
     required this.location,
     required this.latitude,
     required this.longitude,
@@ -17,6 +18,8 @@ class RequestDetailsModel {
     required this.updatedAt,
     required this.services,
     required this.user,
+    required this.name,
+    required this.totalPrice,
   });
 
   final int id;
@@ -26,16 +29,19 @@ class RequestDetailsModel {
   final String problemDescription;
   final String status;
   final String nurseGender;
-  final String timeType;
+  final String? timeType;
   final DateTime? scheduledTime;
+  final DateTime? endingTime;
   final String location;
   final num latitude;
   final num longitude;
-  final num timeNeededToArrive;
+  final num? timeNeededToArrive;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final List<Service> services;
   final User? user;
+  final String name;
+  final num totalPrice;
 
   RequestDetailsModel copyWith({
     int? id,
@@ -47,6 +53,7 @@ class RequestDetailsModel {
     String? nurseGender,
     String? timeType,
     DateTime? scheduledTime,
+    DateTime? endingTime,
     String? location,
     num? latitude,
     num? longitude,
@@ -55,6 +62,8 @@ class RequestDetailsModel {
     DateTime? updatedAt,
     List<Service>? services,
     User? user,
+    String? name,
+    num? totalPrice,
   }) {
     return RequestDetailsModel(
       id: id ?? this.id,
@@ -66,6 +75,7 @@ class RequestDetailsModel {
       nurseGender: nurseGender ?? this.nurseGender,
       timeType: timeType ?? this.timeType,
       scheduledTime: scheduledTime ?? this.scheduledTime,
+      endingTime: endingTime ?? this.endingTime,
       location: location ?? this.location,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
@@ -74,10 +84,12 @@ class RequestDetailsModel {
       updatedAt: updatedAt ?? this.updatedAt,
       services: services ?? this.services,
       user: user ?? this.user,
+      name: name ?? this.name,
+      totalPrice: totalPrice ?? this.totalPrice,
     );
   }
 
-  factory RequestDetailsModel.fromJson(Map<String, dynamic> json){
+  factory RequestDetailsModel.fromJson(Map<String, dynamic> json) {
     return RequestDetailsModel(
       id: json["id"] ?? 0,
       userId: json["user_id"] ?? 0,
@@ -88,37 +100,43 @@ class RequestDetailsModel {
       nurseGender: json["nurse_gender"] ?? "",
       timeType: json["time_type"] ?? "",
       scheduledTime: DateTime.tryParse(json["scheduled_time"] ?? ""),
+      endingTime: DateTime.tryParse(json["ending_time"] ?? ""),
       location: json["location"] ?? "",
       latitude: json["latitude"] ?? 0,
       longitude: json["longitude"] ?? 0,
-      timeNeededToArrive: json["time_needed_to_arrive"] ?? 0,
+      timeNeededToArrive: json["time_needed_to_arrive"],
       createdAt: DateTime.tryParse(json["created_at"] ?? ""),
       updatedAt: DateTime.tryParse(json["updated_at"] ?? ""),
-      services: json["services"] == null ? [] : List<Service>.from(json["services"]!.map((x) => Service.fromJson(x))),
+      services: json["services"] == null
+          ? []
+          : List<Service>.from(
+              json["services"]!.map((x) => Service.fromJson(x))),
       user: json["user"] == null ? null : User.fromJson(json["user"]),
+      name: json["name"] ?? "",
+      totalPrice: json["total_price"] ?? 0,
     );
   }
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "user_id": userId,
-    "full_name": fullName,
-    "phone_number": phoneNumber,
-    "problem_description": problemDescription,
-    "status": status,
-    "nurse_gender": nurseGender,
-    "time_type": timeType,
-    "scheduled_time": scheduledTime?.toIso8601String(),
-    "location": location,
-    "latitude": latitude,
-    "longitude": longitude,
-    "time_needed_to_arrive": timeNeededToArrive,
-    "created_at": createdAt?.toIso8601String(),
-    "updated_at": updatedAt?.toIso8601String(),
-    "services": services.map((x) => x?.toJson()).toList(),
-    "user": user?.toJson(),
-  };
-
+        "id": id,
+        "user_id": userId,
+        "full_name": fullName,
+        "phone_number": phoneNumber,
+        "problem_description": problemDescription,
+        "status": status,
+        "nurse_gender": nurseGender,
+        "time_type": timeType,
+        "scheduled_time": scheduledTime?.toIso8601String(),
+        "location": location,
+        "latitude": latitude,
+        "longitude": longitude,
+        "time_needed_to_arrive": timeNeededToArrive,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "services": services.map((x) => x.toJson()).toList(),
+        "user": user?.toJson(),
+        "name": name,
+      };
 }
 
 class Service {
@@ -144,7 +162,7 @@ class Service {
     );
   }
 
-  factory Service.fromJson(Map<String, dynamic> json){
+  factory Service.fromJson(Map<String, dynamic> json) {
     return Service(
       id: json["id"] ?? 0,
       name: json["name"] ?? "",
@@ -153,11 +171,10 @@ class Service {
   }
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "price": price,
-  };
-
+        "id": id,
+        "name": name,
+        "price": price,
+      };
 }
 
 class User {
@@ -183,7 +200,7 @@ class User {
     );
   }
 
-  factory User.fromJson(Map<String, dynamic> json){
+  factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json["id"] ?? 0,
       name: json["name"] ?? "",
@@ -192,9 +209,8 @@ class User {
   }
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "email": email,
-  };
-
+        "id": id,
+        "name": name,
+        "email": email,
+      };
 }

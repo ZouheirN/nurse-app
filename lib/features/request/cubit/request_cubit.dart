@@ -11,7 +11,6 @@ import 'package:nurse_app/services/user_token.dart';
 
 part 'request_state.dart';
 
-
 class RequestCubit extends Cubit<RequestState> {
   RequestCubit() : super(RequestInitial());
 
@@ -41,20 +40,20 @@ class RequestCubit extends Cubit<RequestState> {
         "nurse_gender": nurseGender,
         "full_name": name,
         "phone_number": phoneNumber,
-        // "scheduled_time": DateTime.now().toIso8601String(),
+        "scheduled_time": DateTime.now().toIso8601String(),
         "latitude": coordinates.latitude,
         "longitude": coordinates.longitude,
         "area_id": areaId,
       };
 
       if (startDate != null) {
-        // data['scheduled_time'] = startDate.toIso8601String();
+        data['scheduled_time'] = startDate.toIso8601String();
       }
 
-      // if (endDate != null) {
-      //   data['ending_time'] = endDate.toIso8601String();
-      //   // data['time_type'] = timeType!;
-      // }
+      if (endDate != null) {
+        data['ending_time'] = endDate.toIso8601String();
+        // data['time_type'] = timeType!;
+      }
 
       data['time_type'] = 'full-time';
 
@@ -99,6 +98,8 @@ class RequestCubit extends Cubit<RequestState> {
           },
         ),
       );
+
+      logger.i(response.data);
 
       final List<RequestsHistoryModel> requests = (List.from(response.data))
           .map((request) => RequestsHistoryModel.fromJson(request))
@@ -149,35 +150,41 @@ class RequestCubit extends Cubit<RequestState> {
   Future<void> submitRequest({
     required num id,
     required String status,
-    required DateTime scheduledTime,
+    required DateTime? scheduledTime,
     required int? timeNeededToArrive,
     required DateTime? endingTime,
     required String location,
-    required num nurseId,
-    required List<num> serviceIds,
     required String? timeType,
     required String? problemDescription,
     required String nurseGender,
+    required String fullName,
+    required String phoneNumber,
+    required String name,
   }) async {
     emit(RequestSubmitLoading());
 
     try {
       final token = await UserToken.getToken();
 
-      final data = {
-        'status': status,
-        'location': location,
-        'nurse_id': nurseId,
-        'service_ids': serviceIds,
-        'problem_description': problemDescription,
-        'nurse_gender': nurseGender,
+      final Map<String, dynamic> data = {
+        "full_name": fullName,
+        "phone_number": phoneNumber,
+        "name": name,
+        "problem_description": problemDescription,
+        "status": status,
+        "nurse_gender": nurseGender,
       };
 
       if (endingTime == null) {
         data['time_needed_to_arrive'] = timeNeededToArrive;
         logger.i(data);
       } else {
-        data['scheduled_time'] = scheduledTime.toLocal().toIso8601String();
+        data['scheduled_time'] = scheduledTime
+            ?.toLocal()
+            .add(
+              Duration(minutes: timeNeededToArrive ?? 1),
+            )
+            .toIso8601String();
         data['ending_time'] = endingTime.toLocal().toIso8601String();
         data['time_type'] = timeType;
       }
@@ -187,6 +194,8 @@ class RequestCubit extends Cubit<RequestState> {
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
           },
         ),
         data: data,
@@ -195,7 +204,8 @@ class RequestCubit extends Cubit<RequestState> {
       emit(RequestSubmitSuccess());
     } on DioException catch (e) {
       logger.e(e.response!.data);
-      emit(RequestSubmitFailure(message: 'Failed to submit request.'));
+      emit(RequestSubmitFailure(
+          message: e.response!.data['message'] ?? 'Failed to submit request.'));
     } catch (e) {
       logger.e(e);
       emit(RequestSubmitFailure(message: 'Failed to submit request.'));

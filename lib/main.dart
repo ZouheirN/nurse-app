@@ -41,6 +41,7 @@ import 'package:nurse_app/services/user.dart';
 import 'package:nurse_app/utilities/localization_box.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:device_preview/device_preview.dart';
+import 'features/request/models/request_details_model.dart';
 import 'pages/admin/send_notification_page.dart';
 
 final logger = Logger();
@@ -221,7 +222,7 @@ class _MyAppState extends State<MyApp> {
             },
             '/submitOrder': (context) {
               final args = ModalRoute.of(context)?.settings.arguments
-                  as RequestsHistoryModel;
+                  as RequestDetailsModel;
               return SubmitOrderPage(order: args);
             },
             '/adminSettings': (context) => const AdminSettingsPage(),

@@ -49,14 +49,15 @@ class _HistoryCardState extends State<HistoryCard>
     final aspectRatio = size.height / size.width;
 
     final isOngoing = widget.request.status == 'ongoing';
-    final name = widget.request.name.toString();
-    // final problemDescription = widget.request.problemDescription.toString();
-    const problemDescription = 'Check out the details';
+    // final name = widget.request.name.toString();
+    final problemDescription = widget.request.problemDescription.toString();
     final time = formatDateTimeForCard(widget.request.scheduledTime ?? widget.request.createdAt!);
 
-    final sumOfPrices = widget.request.services
-        .map((service) => num.parse(service.price.toString()))
-        .reduce((a, b) => a + b);
+    // final sumOfPrices = widget.request.services
+    //     .map((service) => num.parse(service.price.toString()))
+    //     .reduce((a, b) => a + b);
+
+    final price = widget.request.totalPrice;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -115,7 +116,7 @@ class _HistoryCardState extends State<HistoryCard>
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
-                                  name,
+                                  problemDescription,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -123,9 +124,9 @@ class _HistoryCardState extends State<HistoryCard>
                                         isOngoing ? Colors.white : Colors.black,
                                   ),
                                 ),
-                                Text(
-                                  problemDescription,
-                                  style: const TextStyle(
+                                const Text(
+                                  'Check out the details',
+                                  style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey,
                                   ),
@@ -161,7 +162,7 @@ class _HistoryCardState extends State<HistoryCard>
                                       ),
                                       child: Center(
                                         child: Text(
-                                          '\$${formatPrice(sumOfPrices)}',
+                                          '\$${formatPrice(price ?? 0)}',
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 8,
