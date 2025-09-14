@@ -65,6 +65,14 @@ class AdminDashboardPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       AdminCard(
+                        // imagePath: 'assets/images/notification.png',
+                        text: 'Manage Categories',
+                        onTap: () {
+                          Navigator.pushNamed(context, '/categories');
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      AdminCard(
                         imagePath: 'assets/images/settings.png',
                         text: 'Account Settings',
                         onTap: () {

@@ -136,3 +136,31 @@ final class EditFaqFailure extends HomeState {
     required this.message,
   });
 }
+
+// Get Categories
+final class GetCategoriesLoading extends HomeState {}
+final class GetCategoriesSuccess extends HomeState {
+  final GetCategoriesModel categories;
+
+  GetCategoriesSuccess({
+    required this.categories,
+  });
+}
+final class GetCategoriesFailure extends HomeState {
+  final String message;
+
+  GetCategoriesFailure({
+    required this.message,
+  });
+}
+
+// Add Category
+final class AddCategoryLoading extends HomeState {}
+final class AddCategorySuccess extends HomeState {}
+final class AddCategoryFailure extends HomeState {
+  final String message;
+
+  AddCategoryFailure({
+    required this.message,
+  });
+}

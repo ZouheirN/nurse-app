@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +10,7 @@ import 'package:nurse_app/features/home/models/get_popups_model.dart';
 
 import '../../../main.dart';
 import '../../../services/user_token.dart';
+import '../models/get_categories_model.dart';
 import '../models/get_faqs_model.dart';
 import '../models/get_sliders_model.dart';
 
@@ -110,6 +113,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(AddSliderSuccess());
     } on DioException catch (e) {
       logger.e(e.response?.statusCode);
+      logger.e(e.response?.data);
       emit(AddSliderFailure(
           message: e.response?.data['message'] ?? 'Failed to add slider.'));
     } catch (e) {
@@ -180,8 +184,8 @@ class HomeCubit extends Cubit<HomeState> {
       final token = await UserToken.getToken();
 
       Map<String, String> headers = {
-        'Authorization' : 'Bearer $token',
-        'Accept' : 'application/json',
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
       };
 
       if (!isAdmin) {
@@ -335,6 +339,73 @@ class HomeCubit extends Cubit<HomeState> {
     } catch (e) {
       logger.e('Error editing FAQ: $e');
       emit(EditFaqFailure(message: 'Failed to edit FAQ.'));
+    }
+  }
+
+  Future<void> getCategories() async {
+    emit(GetCategoriesLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      final response = await dio.get(
+        '$HOST/categories',
+        options: Options(headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        }),
+      );
+
+      final categories = GetCategoriesModel.fromJson(response.data);
+
+      emit(GetCategoriesSuccess(categories: categories));
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(GetCategoriesFailure(
+          message: e.response?.data['message'] ?? 'Failed to get categories.'));
+    } catch (e) {
+      logger.e(e);
+      emit(GetCategoriesFailure(message: 'Failed to get categories.'));
+    }
+  }
+
+  Future<void> addCategory({
+    required String name,
+    required File imageFile,
+  }) async {
+    emit(AddCategoryLoading());
+
+    final token = await UserToken.getToken();
+
+    try {
+      final formData = FormData.fromMap({
+        'name': name,
+        'image': await MultipartFile.fromFile(
+          imageFile.path,
+          filename: name,
+        ),
+      });
+
+      await dio.post(
+        '$HOST/admin/categories',
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      emit(AddCategorySuccess());
+    } on DioException catch (e) {
+      logger.e(e.response?.statusCode);
+      logger.e(e.response?.data);
+      emit(AddCategoryFailure(
+          message: e.response?.data['message'] ?? 'Failed to add category.'));
+    } catch (e) {
+      logger.e('Error adding category: $e');
+      emit(AddCategoryFailure(message: 'Failed to add category.'));
     }
   }
 }

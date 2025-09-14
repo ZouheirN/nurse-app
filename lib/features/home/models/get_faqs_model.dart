@@ -32,7 +32,7 @@ class GetFaqsModel {
   Map<String, dynamic> toJson() => {
     "success": success,
     "message": message,
-    "data": data.map((x) => x?.toJson()).toList(),
+    "data": data.map((x) => x.toJson()).toList(),
   };
 
 }

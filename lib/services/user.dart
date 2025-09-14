@@ -19,7 +19,7 @@ void loginUser(num userId, num roleId) async {
 
   final isAdmin = user?.roleId == 1;
 
-  StreamVideo.reset(disconnect: true);
+  await StreamVideo.reset(disconnect: true);
   StreamVideo(
     STREAM_API_KEY,
     user: User.regular(

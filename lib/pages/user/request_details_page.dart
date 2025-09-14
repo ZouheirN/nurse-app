@@ -61,8 +61,8 @@ class RequestDetailsPage extends StatelessWidget {
             if (state is RequestDetailsSuccess) {
               final request = state.request;
 
-              final isOngoing = request.status == 'ongoing';
-              // const isOngoing = true;
+              // final isOngoing = request.status == 'ongoing';
+              const isOngoing = true;
 
               // todo fix names of requests (not hardcoded)
               if (isOngoing) {

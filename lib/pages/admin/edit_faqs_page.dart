@@ -233,19 +233,19 @@ class _EditFaqsPageState extends State<EditFaqsPage> {
             } else if (state is GetFaqsSuccess) {
               final faqs = state.faqs;
 
-              if (faqs.data.isEmpty) {
-                return Column(
-                  children: [
-                    const Expanded(
-                        child: Center(child: Text('No FAQs available.'))),
-                    ElevatedButton.icon(
-                      onPressed: () => _showAddFaqDialog(1),
-                      label: const Text('Add FAQ'),
-                      icon: const Icon(Icons.add),
-                    ),
-                  ],
-                );
-              }
+              // if (faqs.data.isEmpty) {
+              //   return Column(
+              //     children: [
+              //       const Expanded(
+              //           child: Center(child: Text('No FAQs available.'))),
+              //       ElevatedButton.icon(
+              //         onPressed: () => _showAddFaqDialog(1),
+              //         label: const Text('Add FAQ'),
+              //         icon: const Icon(Icons.add),
+              //       ),
+              //     ],
+              //   );
+              // }
 
               return Column(
                 children: [

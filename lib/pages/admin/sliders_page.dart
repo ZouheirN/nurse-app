@@ -13,6 +13,7 @@ import 'package:nurse_app/components/labeled_textfield_admin.dart';
 import 'package:nurse_app/components/textfield.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/features/home/cubit/home_cubit.dart';
+import 'package:nurse_app/utilities/dialogs.dart';
 
 import '../../components/button.dart';
 import '../../components/home_screen_sliders.dart';
@@ -112,10 +113,10 @@ class _SlidersPageState extends State<SlidersPage> {
                             );
                             getSliders.getSliders();
                           } else if (state is AddSliderFailure) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(state.message),
-                              ),
+                            Dialogs.showErrorDialog(
+                              context,
+                              "Error",
+                              state.message,
                             );
                           }
                         },
@@ -283,6 +284,7 @@ class _SlidersPageState extends State<SlidersPage> {
                         child: ReorderableListView.builder(
                           itemCount: items.length,
                           shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             final item = items[index];
 
