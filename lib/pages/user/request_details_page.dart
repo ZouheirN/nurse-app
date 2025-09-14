@@ -410,7 +410,10 @@ class RequestDetailsPage extends StatelessWidget {
             Center(
               child: GestureDetector(
                 onTap: () {
-                  Navigator.of(context).pushNamed('/chat', arguments: {});
+                  Navigator.of(context).pushNamed('/chat', arguments: {
+                    'requestId': request.id,
+                    'isAdmin': false,
+                  });
                 },
                 child: Container(
                   padding:

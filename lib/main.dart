@@ -240,8 +240,12 @@ class _MyAppState extends State<MyApp> {
             '/contactSubmissions': (context) => const ContactSubmissionsPage(),
             '/sliders': (context) => const SlidersPage(),
             '/chat': (context) {
-              // final args = ModalRoute.of(context)?.settings.arguments as int;
-              return const ChatPage();
+              final args = ModalRoute.of(context)?.settings.arguments as Map?;
+              return ChatPage(
+                requestId: args!['requestId'],
+                isAdmin: args['isAdmin'],
+                patientName: args['patientName'],
+              );
             },
             '/regionPricing': (context) {
               final args = ModalRoute.of(context)?.settings.arguments as int;
@@ -250,7 +254,7 @@ class _MyAppState extends State<MyApp> {
                 areaId: args,
               );
             },
-            '/faqs' : (context) => const EditFaqsPage(),
+            '/faqs': (context) => const EditFaqsPage(),
             '/categories': (context) => const ManageCategoriesPage(),
           },
         );

@@ -341,12 +341,11 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                 Navigator.pushNamed(
                                   context,
                                   '/chat',
-                                  // arguments: {
-                                  //   'orderId': request.id,
-                                  //   'userId': request.userId,
-                                  //   'userName': request.fullName,
-                                  //   'isAdmin': true,
-                                  // },
+                                  arguments: {
+                                    'requestId': request.id,
+                                    'isAdmin': true,
+                                    'patientName': request.fullName,
+                                  },
                                 );
                               },
                               buttonText: 'Chat with Patient',
