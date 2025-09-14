@@ -35,7 +35,7 @@ class _AreasPageState extends State<AreasPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Add New Area'),
+          title: Text(areaName != null ? 'Edit Area' : 'Add New Area'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

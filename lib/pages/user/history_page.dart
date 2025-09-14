@@ -38,7 +38,7 @@ class _HistoryPageState extends State<HistoryPage> {
       context.localizations.lastMonth,
       context.localizations.all,
     ];
-    _selectedFilter = context.localizations.today;
+    _selectedFilter = context.localizations.all;
   }
 
   @override
@@ -131,10 +131,41 @@ class _HistoryPageState extends State<HistoryPage> {
                 //   onTap: () {},
                 // );
 
+                // Filter requests based on the selected filter
+                List<dynamic> filteredRequests;
+                final now = DateTime.now();
+                if (_selectedFilter == context.localizations.today) {
+                  filteredRequests = requests.where((request) {
+                    return request.createdAt!.year == now.year &&
+                        request.createdAt!.month == now.month &&
+                        request.createdAt!.day == now.day;
+                  }).toList();
+                } else if (_selectedFilter == context.localizations.thisWeek) {
+                  filteredRequests = requests.where((request) {
+                    final weekAgo = now.subtract(const Duration(days: 7));
+                    return request.createdAt!.isAfter(weekAgo);
+                  }).toList();
+                } else if (_selectedFilter == context.localizations.lastMonth) {
+                  filteredRequests = requests.where((request) {
+                    final monthAgo = DateTime(now.year, now.month - 1, now.day);
+                    return request.createdAt!.isAfter(monthAgo);
+                  }).toList();
+                } else {
+                  filteredRequests = requests;
+                }
+
+                if (filteredRequests.isEmpty) {
+                  return Expanded(
+                    child: Center(
+                      child: Text(context.localizations.noRequestsFound),
+                    ),
+                  );
+                }
+
                 return Expanded(
                   child: ListView(
                     shrinkWrap: true,
-                    children: requests.map(
+                    children: filteredRequests.map(
                       (request) {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 10),

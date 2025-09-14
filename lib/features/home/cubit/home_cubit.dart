@@ -173,19 +173,25 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  Future<void> getFaqs() async {
+  Future<void> getFaqs({required bool isAdmin}) async {
     emit(GetFaqsLoading());
 
     try {
       final token = await UserToken.getToken();
 
+      Map<String, String> headers = {
+        'Authorization' : 'Bearer $token',
+        'Accept' : 'application/json',
+      };
+
+      if (!isAdmin) {
+        headers['Accept-Language'] = 'en'; // todo: make dynamic
+      }
+
       final response = await dio.get(
-        '$HOST/admin/faqs',
+        isAdmin ? '$HOST/admin/faqs' : '$HOST/faqs',
         options: Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-            'Accept': 'application/json',
-          },
+          headers: headers,
         ),
       );
 

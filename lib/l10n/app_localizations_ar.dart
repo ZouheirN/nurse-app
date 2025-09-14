@@ -142,4 +142,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get whatsAppNumbers => 'أرقام واتساب';
+
+  @override
+  String get noRequestsFound => 'لم يتم العثور على طلبات';
 }

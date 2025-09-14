@@ -1,8 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/extensions/context_extension.dart';
+import 'package:nurse_app/features/home/cubit/home_cubit.dart';
 
-class Faq extends StatelessWidget {
+class Faq extends StatefulWidget {
   const Faq({super.key});
+
+  @override
+  State<Faq> createState() => _FaqState();
+}
+
+class _FaqState extends State<Faq> {
+  final _faqCubit = HomeCubit();
+
+  @override
+  void initState() {
+    _faqCubit.getFaqs(isAdmin: false);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +32,31 @@ class Faq extends StatelessWidget {
             fontSize: 20,
           ),
         ),
-        _buildTile(context.localizations.faq1, context.localizations.faq1Body),
-        _buildTile(context.localizations.faq2, context.localizations.faq2Body),
-        _buildTile(context.localizations.faq3, context.localizations.faq3Body),
+        BlocBuilder<HomeCubit, HomeState>(
+          bloc: _faqCubit,
+          builder: (context, state) {
+            if (state is GetFaqsLoading) {
+              return const Loader();
+            } else if (state is GetFaqsSuccess) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (var faq in state.faqs.data) _buildTile(
+                    faq.question.toString(), faq.answer.toString(),),
+                ],
+              );
+            } else if (state is GetFaqsFailure) {
+              return Center(
+                child: Text(state.message),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
+        ),
+        // _buildTile(context.localizations.faq1, context.localizations.faq1Body),
+        // _buildTile(context.localizations.faq2, context.localizations.faq2Body),
+        // _buildTile(context.localizations.faq3, context.localizations.faq3Body),
       ],
     );
   }

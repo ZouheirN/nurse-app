@@ -23,7 +23,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final ValueNotifier<String> _selectedOption = ValueNotifier('home');
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

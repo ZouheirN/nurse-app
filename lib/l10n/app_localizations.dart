@@ -361,6 +361,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'WhatsApp Numbers'**
   String get whatsAppNumbers;
+
+  /// No description provided for @noRequestsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No Requests Found'**
+  String get noRequestsFound;
 }
 
 class _AppLocalizationsDelegate

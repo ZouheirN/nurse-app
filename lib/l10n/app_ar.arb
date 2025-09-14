@@ -46,5 +46,6 @@
     "describeYourProblem": "صف مشكلتك",
     "submit": "إرسال",
     "updateLocation": "تحديث الموقع",
-    "whatsAppNumbers": "أرقام واتساب"
+    "whatsAppNumbers": "أرقام واتساب",
+    "noRequestsFound": "لم يتم العثور على طلبات"
 }

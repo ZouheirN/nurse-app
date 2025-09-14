@@ -143,4 +143,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get whatsAppNumbers => 'WhatsApp Numbers';
+
+  @override
+  String get noRequestsFound => 'No Requests Found';
 }

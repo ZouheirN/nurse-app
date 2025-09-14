@@ -19,7 +19,7 @@ class _EditFaqsPageState extends State<EditFaqsPage> {
 
   @override
   void initState() {
-    _faqsCubit.getFaqs();
+    _faqsCubit.getFaqs(isAdmin: true);
     super.initState();
   }
 
@@ -67,7 +67,7 @@ class _EditFaqsPageState extends State<EditFaqsPage> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('FAQ added successfully')),
                   );
-                  _faqsCubit.getFaqs();
+                  _faqsCubit.getFaqs(isAdmin: true);
                   Navigator.of(context).pop();
                 } else if (state is AddFaqFailure) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -179,7 +179,7 @@ class _EditFaqsPageState extends State<EditFaqsPage> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('FAQ updated successfully')),
                   );
-                  _faqsCubit.getFaqs();
+                  _faqsCubit.getFaqs(isAdmin: true);
                   Navigator.of(context).pop();
                 } else if (state is EditFaqFailure) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -278,7 +278,7 @@ class _EditFaqsPageState extends State<EditFaqsPage> {
                                       content:
                                           Text('FAQ deleted successfully')),
                                 );
-                                _faqsCubit.getFaqs();
+                                _faqsCubit.getFaqs(isAdmin: true);
                               } else if (state is DeleteFaqFailure) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(

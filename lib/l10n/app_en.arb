@@ -46,5 +46,6 @@
     "describeYourProblem": "Describe Your Problem",
     "submit": "Submit",
     "updateLocation": "Update Location",
-    "whatsAppNumbers": "WhatsApp Numbers"
+    "whatsAppNumbers": "WhatsApp Numbers",
+    "noRequestsFound": "No Requests Found"
 }

@@ -40,7 +40,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       context.localizations.lastMonth,
       context.localizations.all,
     ];
-    _selectedFilter = context.localizations.today;
+    _selectedFilter = context.localizations.all;
   }
 
   @override
@@ -141,10 +141,45 @@ class _NotificationsPageState extends State<NotificationsPage> {
                           );
                         }
 
+                        List<dynamic> filteredNotifications;
+                        final now = DateTime.now();
+                        if (_selectedFilter == context.localizations.today) {
+                          filteredNotifications =
+                              notifications.where((notification) {
+                            return notification.createdAt!.year == now.year &&
+                                notification.createdAt!.month == now.month &&
+                                notification.createdAt!.day == now.day;
+                          }).toList();
+                        } else if (_selectedFilter ==
+                            context.localizations.thisWeek) {
+                          filteredNotifications =
+                              notifications.where((notification) {
+                            final weekAgo =
+                                now.subtract(const Duration(days: 7));
+                            return notification.createdAt!.isAfter(weekAgo);
+                          }).toList();
+                        } else if (_selectedFilter ==
+                            context.localizations.lastMonth) {
+                          filteredNotifications =
+                              notifications.where((notification) {
+                            final monthAgo =
+                                DateTime(now.year, now.month - 1, now.day);
+                            return notification.createdAt!.isAfter(monthAgo);
+                          }).toList();
+                        } else {
+                          filteredNotifications = notifications;
+                        }
+
+                        if (filteredNotifications.isEmpty) {
+                          return Center(
+                            child: Text(context.localizations.noRequestsFound),
+                          );
+                        }
+
                         return ListView.builder(
-                          itemCount: notifications.length,
+                          itemCount: filteredNotifications.length,
                           itemBuilder: (context, index) {
-                            final notification = notifications[index];
+                            final notification = filteredNotifications[index];
 
                             return BlocProvider(
                               create: (context) => NotificationCubit(),

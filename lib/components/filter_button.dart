@@ -20,27 +20,27 @@ class _FilterButtonState extends State<FilterButton> {
   Widget build(BuildContext context) {
     bool isAll = widget.filterText == 'All';
 
-    return Container(
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [
-            Color.fromRGBO(19, 27, 10, 1),
-            Color.fromRGBO(101, 148, 54, 1),
-          ],
-          begin: Alignment.centerRight,
-          end: Alignment.centerLeft,
+    return GestureDetector(
+      onTap: () {
+        widget.onTap();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [
+              Color.fromRGBO(19, 27, 10, 1),
+              Color.fromRGBO(101, 148, 54, 1),
+            ],
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+          ),
+          borderRadius: BorderRadius.circular(50),
+          border: Border.all(
+            color: widget.isSelected ? Colors.black : Colors.transparent,
+            width: 1,
+          ),
         ),
-        borderRadius: BorderRadius.circular(50),
-        border: Border.all(
-          color: widget.isSelected ? Colors.black : Colors.transparent,
-          width: 1,
-        ),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: isAll ? 15 : 5, vertical: 5),
-      child: GestureDetector(
-        onTap: () {
-          widget.onTap();
-        },
+        padding: EdgeInsets.symmetric(horizontal: isAll ? 15 : 5, vertical: 5),
         child: Row(
           children: [
             if (!isAll) ...[
