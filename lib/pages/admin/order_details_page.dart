@@ -60,7 +60,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AdminHeader(title: 'Order #${widget.orderId}'),
+      appBar: AdminHeader(
+        title: 'Order #${widget.orderId}',
+      ),
       body: BlocConsumer<RequestCubit, RequestState>(
         bloc: _requestCubit,
         listener: (context, state) {
@@ -298,35 +300,58 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                         },
                         buttonText: 'Accept',
                       );
-                    } else if (request.status == 'approved') {
+                    } else if (request.status == 'assigned') {
                       return Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 40),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              const StatusButton(
-                                buttonText: 'Pending',
-                                color: Color(0xFF8E8E8E),
-                              ),
-                              StatusButton(
-                                isLoading: isLoading,
-                                onTap: () async {
-                                  await _requestCubitButton.setStatus(
-                                    order: request,
-                                    status: 'completed',
-                                  );
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 40),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  const StatusButton(
+                                    buttonText: 'Pending',
+                                    color: Color(0xFF8E8E8E),
+                                  ),
+                                  StatusButton(
+                                    isLoading: isLoading,
+                                    onTap: () async {
+                                      await _requestCubitButton.setStatus(
+                                        order: request,
+                                        status: 'completed',
+                                      );
 
-                                  await _requestCubit.emitRequestDetailsSuccess(
-                                    order: request,
-                                    status: 'completed',
-                                  );
-                                },
-                                buttonText: 'Complete',
-                                color: const Color(0xFF7BB442),
+                                      await _requestCubit
+                                          .emitRequestDetailsSuccess(
+                                        order: request,
+                                        status: 'completed',
+                                      );
+                                    },
+                                    buttonText: 'Complete',
+                                    color: const Color(0xFF7BB442),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(height: 10),
+                            MyThirdButton(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  '/chat',
+                                  // arguments: {
+                                  //   'orderId': request.id,
+                                  //   'userId': request.userId,
+                                  //   'userName': request.fullName,
+                                  //   'isAdmin': true,
+                                  // },
+                                );
+                              },
+                              buttonText: 'Chat with Patient',
+                            ),
+                          ],
                         ),
                       );
                     } else if (request.status == 'completed') {

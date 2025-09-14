@@ -17,6 +17,7 @@ import 'package:nurse_app/pages/admin/admin_dashboard_page.dart';
 import 'package:nurse_app/pages/admin/admin_settings_page.dart';
 import 'package:nurse_app/pages/admin/areas_page.dart';
 import 'package:nurse_app/pages/admin/contact_submissions_page.dart';
+import 'package:nurse_app/pages/admin/edit_faqs_page.dart';
 import 'package:nurse_app/pages/admin/edit_nurse_page.dart';
 import 'package:nurse_app/pages/admin/edit_service_page.dart';
 import 'package:nurse_app/pages/admin/manage_nurses_page.dart';
@@ -26,7 +27,7 @@ import 'package:nurse_app/pages/admin/order_details_page.dart';
 import 'package:nurse_app/pages/admin/region_pricing_page.dart';
 import 'package:nurse_app/pages/admin/sliders_page.dart';
 import 'package:nurse_app/pages/admin/submit_order_page.dart';
-import 'package:nurse_app/pages/user/chat_page.dart';
+import 'package:nurse_app/components/chat_page.dart';
 import 'package:nurse_app/pages/user/edit_profile_page.dart';
 import 'package:nurse_app/pages/user/forgot_password_page.dart';
 import 'package:nurse_app/pages/user/login_page.dart';
@@ -248,6 +249,7 @@ class _MyAppState extends State<MyApp> {
                 areaId: args,
               );
             },
+            '/faqs' : (context) => const EditFaqsPage(),
           },
         );
       },

@@ -11,7 +11,6 @@ import '../../areas/models/get_areas_model.dart';
 
 part 'authentication_state.dart';
 
-
 class AuthenticationCubit extends Cubit<AuthenticationState> {
   AuthenticationCubit() : super(AuthenticationInitial());
 
@@ -76,7 +75,10 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
       final userModel = UserModel.fromJson(response.data['user']);
       UserBox.saveUser(userModel);
 
-      loginUser(userModel.id!, userModel.roleId!);
+      loginUser(
+        userModel.id!,
+        userModel.roleId!,
+      );
 
       emit(AuthenticationSignInSuccess(userModel: userModel));
     } on DioException catch (e) {
@@ -206,11 +208,9 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
       await dio.post(
         '$HOST/logout',
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-          }
-        ),
+        options: Options(headers: {
+          'Authorization': 'Bearer $token',
+        }),
       );
     } on DioException catch (e) {
       logger.e(e.response!.data);

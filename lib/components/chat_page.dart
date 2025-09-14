@@ -16,8 +16,10 @@ import 'package:latlong2/latlong.dart' as latLng;
 import 'package:map_launcher/map_launcher.dart';
 import 'package:nurse_app/main.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:stream_video_flutter/stream_video_flutter.dart';
 
-import '../../components/custom_message_bar.dart';
+import 'call_screen.dart';
+import 'custom_message_bar.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -160,7 +162,25 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        try {
+                          var call = StreamVideo.instance.makeCall(
+                            callType: StreamCallType.defaultType(),
+                            id: 'pvz2v4bDmYb5OmMhTfpAA', // todo dynamic id
+                          );
+
+                          await call.getOrCreate();
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CallScreen(call: call),
+                            ),
+                          );
+                        } catch (e) {
+                          logger.e(e.toString());
+                        }
+                      },
                       icon: const Icon(Icons.call, color: Colors.black87),
                     ),
                   ],

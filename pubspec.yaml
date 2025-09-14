@@ -50,6 +50,8 @@ dependencies:
   flutter_sound: ^9.28.0
   audioplayers: ^6.5.0
   permission_handler: ^12.0.1
+  stream_video_flutter: ^0.10.3
+  stream_video_push_notification: ^0.10.3
 
 dev_dependencies:
   flutter_test:

@@ -81,7 +81,7 @@ class AdminDashboardPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       AdminCard(
-                        imagePath: 'assets/images/notification.png',
+                        // imagePath: 'assets/images/notification.png',
                         text: 'Areas',
                         onTap: () {
                           Navigator.pushNamed(context, '/manageAreas');
@@ -89,7 +89,7 @@ class AdminDashboardPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       AdminCard(
-                        imagePath: 'assets/images/notification.png',
+                        // imagePath: 'assets/images/notification.png',
                         text: 'Contact Submissions',
                         onTap: () {
                           Navigator.pushNamed(context, '/contactSubmissions');
@@ -97,10 +97,18 @@ class AdminDashboardPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       AdminCard(
-                        imagePath: 'assets/images/notification.png',
+                        // imagePath: 'assets/images/notification.png',
                         text: 'Sliders',
                         onTap: () {
                           Navigator.pushNamed(context, '/sliders');
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      AdminCard(
+                        // imagePath: 'assets/images/notification.png',
+                        text: 'Edit FAQs',
+                        onTap: () {
+                          Navigator.pushNamed(context, '/faqs');
                         },
                       ),
                       const SizedBox(height: 20),

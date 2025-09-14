@@ -6,6 +6,7 @@ class LabeledTextFieldAdmin extends StatefulWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final bool? hasPadding;
+  final Function? onChanged;
 
   const LabeledTextFieldAdmin({
     super.key,
@@ -14,6 +15,7 @@ class LabeledTextFieldAdmin extends StatefulWidget {
     this.controller,
     this.validator,
     this.hasPadding = true,
+    this.onChanged,
   });
 
   @override
@@ -57,6 +59,11 @@ class _LabeledTextFieldAdminState extends State<LabeledTextFieldAdmin> {
           Focus(
             onFocusChange: _onFocusChange,
             child: TextFormField(
+              onChanged: (value) {
+                if (widget.onChanged != null) {
+                  widget.onChanged!(value);
+                }
+              },
               controller: widget.controller,
               keyboardType: widget.keyboardType,
               decoration: InputDecoration(

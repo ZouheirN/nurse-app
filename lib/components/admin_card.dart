@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class AdminCard extends StatelessWidget {
-  final String imagePath;
+  final String? imagePath;
   final String text;
   final VoidCallback onTap;
 
   const AdminCard({
     super.key,
-    required this.imagePath,
+    this.imagePath,
     required this.text,
     required this.onTap,
   });
@@ -31,12 +31,14 @@ class AdminCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              imagePath,
-              width: 50,
-              height: 50,
-            ),
-            const SizedBox(width: 10),
+            if (imagePath != null) ...[
+              Image.asset(
+                imagePath!,
+                width: 50,
+                height: 50,
+              ),
+              const SizedBox(width: 10),
+            ],
             Text(
               text,
               style: const TextStyle(

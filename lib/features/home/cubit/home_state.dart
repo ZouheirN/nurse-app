@@ -75,3 +75,64 @@ final class ReorderSlidersFailure extends HomeState {
     required this.message,
   });
 }
+
+// Get FAQs
+final class GetFaqsLoading extends HomeState {}
+final class GetFaqsSuccess extends HomeState {
+  final GetFaqsModel faqs;
+
+  GetFaqsSuccess({
+    required this.faqs,
+  });
+}
+final class GetFaqsFailure extends HomeState {
+  final String message;
+
+  GetFaqsFailure({
+    required this.message,
+  });
+}
+
+// Add FAQ
+final class AddFaqLoading extends HomeState {}
+final class AddFaqSuccess extends HomeState {}
+final class AddFaqFailure extends HomeState {
+  final String message;
+
+  AddFaqFailure({
+    required this.message,
+  });
+}
+
+// Reorder FAQs
+final class ReorderFaqsLoading extends HomeState {}
+final class ReorderFaqsSuccess extends HomeState {}
+final class ReorderFaqsFailure extends HomeState {
+  final String message;
+
+  ReorderFaqsFailure({
+    required this.message,
+  });
+}
+
+// Delete FAQ
+final class DeleteFaqLoading extends HomeState {}
+final class DeleteFaqSuccess extends HomeState {}
+final class DeleteFaqFailure extends HomeState {
+  final String message;
+
+  DeleteFaqFailure({
+    required this.message,
+  });
+}
+
+// Edit FAQ
+final class EditFaqLoading extends HomeState {}
+final class EditFaqSuccess extends HomeState {}
+final class EditFaqFailure extends HomeState {
+  final String message;
+
+  EditFaqFailure({
+    required this.message,
+  });
+}

@@ -8,6 +8,7 @@ import 'package:nurse_app/features/home/models/get_popups_model.dart';
 
 import '../../../main.dart';
 import '../../../services/user_token.dart';
+import '../models/get_faqs_model.dart';
 import '../models/get_sliders_model.dart';
 
 part 'home_state.dart';
@@ -95,7 +96,7 @@ class HomeCubit extends Cubit<HomeState> {
     final token = await UserToken.getToken();
 
     try {
-       await dio.post(
+      await dio.post(
         '$HOST/admin/sliders',
         data: formData,
         options: Options(
@@ -123,7 +124,7 @@ class HomeCubit extends Cubit<HomeState> {
     final token = await UserToken.getToken();
 
     try {
-        await dio.delete(
+      await dio.delete(
         '$HOST/admin/sliders/$id',
         options: Options(
           headers: {
@@ -169,6 +170,165 @@ class HomeCubit extends Cubit<HomeState> {
     } catch (e) {
       logger.e('Error reordering slider: $e');
       emit(ReorderSlidersFailure(message: 'Failed to reorder slider.'));
+    }
+  }
+
+  Future<void> getFaqs() async {
+    emit(GetFaqsLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      final response = await dio.get(
+        '$HOST/admin/faqs',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      final faqs = GetFaqsModel.fromJson(response.data);
+
+      emit(GetFaqsSuccess(faqs: faqs));
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(GetFaqsFailure(message: e.response!.data['message']));
+    } catch (e) {
+      logger.e(e);
+      emit(GetFaqsFailure(message: 'Failed to get faqs.'));
+    }
+  }
+
+  Future<void> addFaq({
+    required String question,
+    required String answer,
+    required int order,
+  }) async {
+    emit(AddFaqLoading());
+
+    final token = await UserToken.getToken();
+
+    try {
+      await dio.post(
+        '$HOST/admin/faqs',
+        data: {
+          'question': question,
+          'answer': answer,
+          'order': order,
+          'is_active': true,
+        },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      emit(AddFaqSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response?.statusCode);
+      emit(AddFaqFailure(
+          message: e.response?.data['message'] ?? 'Failed to add FAQ.'));
+    } catch (e) {
+      logger.e('Error adding FAQ: $e');
+      emit(AddFaqFailure(message: 'Failed to add FAQ.'));
+    }
+  }
+
+  Future<void> reorderFaq(List<int> newOrder) async {
+    emit(ReorderFaqsLoading());
+
+    final token = await UserToken.getToken();
+
+    try {
+      await dio.post(
+        '$HOST/admin/faqs/reorder',
+        data: {'faq_ids': newOrder},
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      emit(ReorderFaqsSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response?.statusCode);
+      emit(ReorderFaqsFailure(
+          message: e.response?.data['message'] ?? 'Failed to reorder FAQs.'));
+    } catch (e) {
+      logger.e('Error reordering FAQs: $e');
+      emit(ReorderFaqsFailure(message: 'Failed to reorder FAQs.'));
+    }
+  }
+
+  Future<void> deleteFaq(int id) async {
+    emit(DeleteFaqLoading());
+
+    final token = await UserToken.getToken();
+
+    try {
+      await dio.delete(
+        '$HOST/admin/faqs/$id',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      emit(DeleteFaqSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response?.statusCode);
+      emit(DeleteFaqFailure(
+          message: e.response?.data['message'] ?? 'Failed to delete FAQ.'));
+    } catch (e) {
+      logger.e('Error deleting FAQ: $e');
+      emit(DeleteFaqFailure(message: 'Failed to delete FAQ.'));
+    }
+  }
+
+  Future<void> editFaq({
+    required int id,
+    required String question,
+    required String answer,
+    required int order,
+    required bool isActive,
+  }) async {
+    emit(EditFaqLoading());
+
+    final token = await UserToken.getToken();
+
+    try {
+      await dio.put(
+        '$HOST/admin/faqs/$id',
+        data: {
+          'question': question,
+          'answer': answer,
+          'order': order,
+          'is_active': isActive,
+        },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      emit(EditFaqSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response?.statusCode);
+      emit(EditFaqFailure(
+          message: e.response?.data['message'] ?? 'Failed to edit FAQ.'));
+    } catch (e) {
+      logger.e('Error editing FAQ: $e');
+      emit(EditFaqFailure(message: 'Failed to edit FAQ.'));
     }
   }
 }
