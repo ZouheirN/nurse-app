@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lazy_load_indexed_stack/lazy_load_indexed_stack.dart';
 import 'package:nurse_app/extensions/context_extension.dart';
 import 'package:nurse_app/main.dart';
 import 'package:nurse_app/pages/user/history_page.dart';
@@ -21,20 +22,28 @@ class Navbar extends StatefulWidget {
 
 class _NavbarState extends State<Navbar> {
   int myIndex = 2; // Default to HomePage index
-  List<Widget> widgetList = [
-    const HistoryPage(),
-    const NotificationsPage(
-      showLeading: false,
-    ),
-    const HomePage(),
-    SocialProfilesPage(),
-    const SettingsPage(),
-  ];
+
+  List<Widget> pageList = List<Widget>.empty(growable: true);
+
+  // List<Widget> widgetList = [
+  //   const HistoryPage(),
+  //   const NotificationsPage(
+  //     showLeading: false,
+  //   ),
+  //   const HomePage(),
+  //   SocialProfilesPage(),
+  //   const SettingsPage(),
+  // ];
 
   final _homeCubit = HomeCubit();
 
   @override
   void initState() {
+    pageList.add(const HistoryPage());
+    pageList.add(const NotificationsPage(showLeading: false));
+    pageList.add(const HomePage());
+    pageList.add(SocialProfilesPage());
+    pageList.add(const SettingsPage());
     _homeCubit.getPopups();
     super.initState();
   }
@@ -59,8 +68,14 @@ class _NavbarState extends State<Navbar> {
         }
       },
       child: Scaffold(
-        body: Center(
-          child: widgetList[myIndex],
+        body: LazyLoadIndexedStack(
+          index: myIndex,
+          preloadIndexes: const [2, 3, 4], // preload these pages
+          autoDisposeIndexes: const [0, 1], // dispose other pages
+          children: pageList,
+          // child: Center(
+          //   child: widgetList[myIndex],
+          // ),
         ),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,

@@ -28,51 +28,53 @@ class SocialProfilesPage extends StatelessWidget {
       useSafeArea: true,
       backgroundColor: const Color(0xFFFDFDFD),
       builder: (context) {
-        return Container(
-          margin: const EdgeInsets.symmetric(
-            vertical: 12.0,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                height: 5.0,
-                width: 50.0,
-                decoration: const BoxDecoration(
-                  color: Color.fromRGBO(142, 142, 142, 0.53),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                context.localizations.whatsAppNumbers,
-                style: const TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const SizedBox(height: 10),
-              for (final number in numbers)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: MySecondButton(
-                    onTap: () {
-                      final whatsappUrl = Uri.parse('https://wa.me/$number');
-                      launchUrl(whatsappUrl);
-                    },
-                    buttonText: number,
-                    icon: const Icon(
-                      FontAwesomeIcons.whatsapp,
-                      color: Colors.white,
-                      size: 25,
+        return SafeArea(
+          child: Container(
+            margin: const EdgeInsets.symmetric(
+              vertical: 12.0,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 5.0,
+                  width: 50.0,
+                  decoration: const BoxDecoration(
+                    color: Color.fromRGBO(142, 142, 142, 0.53),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
                     ),
                   ),
                 ),
-            ],
+                const SizedBox(height: 20),
+                Text(
+                  context.localizations.whatsAppNumbers,
+                  style: const TextStyle(
+                    fontStyle: FontStyle.italic,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                for (final number in numbers)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: MySecondButton(
+                      onTap: () {
+                        final whatsappUrl = Uri.parse('https://wa.me/$number');
+                        launchUrl(whatsappUrl);
+                      },
+                      buttonText: number,
+                      icon: const Icon(
+                        FontAwesomeIcons.whatsapp,
+                        color: Colors.white,
+                        size: 25,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         );
       },

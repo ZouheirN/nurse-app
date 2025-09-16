@@ -254,42 +254,6 @@ abstract class AppLocalizations {
   /// **'Trusted By'**
   String get trustedBy;
 
-  /// No description provided for @faq1.
-  ///
-  /// In en, this message translates to:
-  /// **'How should I safely shower an elderly person?'**
-  String get faq1;
-
-  /// No description provided for @faq1Body.
-  ///
-  /// In en, this message translates to:
-  /// **'• Ensure the bathroom is warm and slip-resistant mats are in place.\n• Use a shower chair for extra support if needed.\n• Check the water temperature to prevent burns.\n• Use a handheld showerhead for better control.\n• Gently wash the person, paying attention to hygiene and comfort.\n• Dry them completely to prevent skin irritation.'**
-  String get faq1Body;
-
-  /// No description provided for @faq2.
-  ///
-  /// In en, this message translates to:
-  /// **'How often should I change an elderly person\'s diaper?'**
-  String get faq2;
-
-  /// No description provided for @faq2Body.
-  ///
-  /// In en, this message translates to:
-  /// **'• Diapers should be changed every 3-4 hours or whenever soiled.\n• Wash your hands and wear gloves before starting.\n• Gently roll the person to their side and remove the soiled diaper.\n• Clean the area with mild soap or wipes, ensuring it’s dry before putting on a new diaper.\n• Apply barrier cream to prevent rashes.\n• Secure the new diaper snugly but not too tight to allow comfort.'**
-  String get faq2Body;
-
-  /// No description provided for @faq3.
-  ///
-  /// In en, this message translates to:
-  /// **'What does travel assistance for elderly individuals include?'**
-  String get faq3;
-
-  /// No description provided for @faq3Body.
-  ///
-  /// In en, this message translates to:
-  /// **'• Help with booking transportation suited to their mobility needs.\n• Assistance with luggage, boarding, and disembarking.\n• Ensuring they have medications and necessary documents.\n• Providing wheelchair or walking aid support if required.\n• Accompanying them to medical appointments, vacations, or family visits.'**
-  String get faq3Body;
-
   /// No description provided for @firstName.
   ///
   /// In en, this message translates to:
@@ -367,6 +331,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No Requests Found'**
   String get noRequestsFound;
+
+  /// No description provided for @area.
+  ///
+  /// In en, this message translates to:
+  /// **'Area'**
+  String get area;
+
+  /// No description provided for @selectNurseGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Nurse Gender'**
+  String get selectNurseGender;
+
+  /// No description provided for @selectServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Services'**
+  String get selectServices;
+
+  /// No description provided for @scheduleAppointment.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule Appointment'**
+  String get scheduleAppointment;
+
+  /// No description provided for @pleaseFillTheBelowForm.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill the below form:'**
+  String get pleaseFillTheBelowForm;
 }
 
 class _AppLocalizationsDelegate

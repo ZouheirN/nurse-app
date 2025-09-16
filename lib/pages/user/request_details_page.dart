@@ -61,8 +61,8 @@ class RequestDetailsPage extends StatelessWidget {
             if (state is RequestDetailsSuccess) {
               final request = state.request;
 
-              // final isOngoing = request.status == 'ongoing';
-              const isOngoing = true;
+              final isOngoing = request.status == 'ongoing';
+              // const isOngoing = true;
 
               // todo fix names of requests (not hardcoded)
               if (isOngoing) {
@@ -448,19 +448,19 @@ class RequestDetailsPage extends StatelessWidget {
                         ),
                       ),
                       Spacer(),
-                      CircleAvatar(
-                        radius: 18,
-                        backgroundColor: Colors.black,
-                        child: Text(
-                          '1',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      )
+                      // CircleAvatar(
+                      //   radius: 18,
+                      //   backgroundColor: Colors.black,
+                      //   child: Text(
+                      //     '1',
+                      //     style: TextStyle(
+                      //       fontSize: 24,
+                      //       fontWeight: FontWeight.w700,
+                      //       color: Colors.white,
+                      //       fontStyle: FontStyle.italic,
+                      //     ),
+                      //   ),
+                      // )
                     ],
                   ),
                 ),

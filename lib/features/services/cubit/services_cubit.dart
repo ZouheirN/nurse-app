@@ -12,7 +12,7 @@ part 'services_state.dart';
 class ServicesCubit extends Cubit<ServicesState> {
   ServicesCubit() : super(ServicesInitial());
 
-  Future<void> fetchServices() async {
+  Future<void> fetchServices({int? areaId}) async {
     emit(ServicesFetchLoading());
 
     try {
@@ -31,6 +31,17 @@ class ServicesCubit extends Cubit<ServicesState> {
 
       final services = GetServicesModel.fromJson(response.data);
 
+      // if (areaId != null) {
+      //   final serviceIds = services.services.map(
+      //     (e) {
+      //       return e.id!;
+      //     },
+      //   ).toList();
+      //
+      //   final quotedServices =
+      //       await quoteServices(areaId: areaId, serviceIds: serviceIds);
+      // }
+
       emit(ServicesFetchSuccess(services: services));
     } on DioException catch (e) {
       logger.e(e.response!.data);
@@ -38,6 +49,40 @@ class ServicesCubit extends Cubit<ServicesState> {
     } catch (e) {
       logger.e(e);
       emit(ServicesFetchFailure(message: 'Failed to fetch services.'));
+    }
+  }
+
+  Future<void> quoteServices({
+    required List<int> serviceIds,
+    required int areaId,
+  }) async {
+    try {
+      final token = await UserToken.getToken();
+
+      final response = await dio.get(
+        '$HOST/services/quote',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+        ),
+        data: {
+          "service_ids": serviceIds,
+          "area_id": areaId,
+        },
+      );
+
+      logger.i(response.data);
+
+      final services = GetServicesModel.fromJson(response.data);
+
+      emit(ServicesFetchSuccess(services: services));
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+    } catch (e) {
+      logger.e(e);
     }
   }
 

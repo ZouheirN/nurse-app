@@ -4,22 +4,19 @@ import 'package:nurse_app/components/gender_selection_field.dart';
 import 'package:nurse_app/components/labeled_date.dart';
 import 'package:nurse_app/components/labeled_textfield.dart';
 import 'package:nurse_app/components/phone_number_field.dart';
-import 'package:nurse_app/components/second_button.dart';
 import 'package:nurse_app/components/third_button.dart';
-import 'package:nurse_app/main.dart';
+import 'package:nurse_app/extensions/context_extension.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
 import 'package:quickalert/quickalert.dart';
-
 import '../../components/loader.dart';
 import '../../components/services_list.dart';
-import '../../components/time_type_selection_field.dart';
 import '../../features/areas/cubit/areas_cubit.dart';
 import '../../features/request/cubit/request_cubit.dart';
 import '../../features/services/cubit/services_cubit.dart';
 
 class MakeAppointmentPage extends StatefulWidget {
   final String category;
-  final Function(String) setValue;
+  final Function(String?) setValue;
 
   const MakeAppointmentPage({
     super.key,
@@ -41,6 +38,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
   DateTime? startDate;
   DateTime? endDate;
   int? selectedAreaId;
+  String? selectedAreaName;
 
   final ValueNotifier<bool> _isScheduled = ValueNotifier<bool>(false);
 
@@ -70,19 +68,21 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
 
   @override
   void initState() {
-    _servicesCubit.fetchServices();
+    // _servicesCubit.fetchServices();
     _areasCubit.getAreas();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final currentLocale = Localizations.localeOf(context);
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
 
-        widget.setValue('home');
+        widget.setValue(null);
       },
       child: SingleChildScrollView(
         child: Form(
@@ -99,7 +99,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                       color: Colors.black,
                     ),
                     onPressed: () {
-                      widget.setValue('home');
+                      widget.setValue(null);
                     },
                   ),
                   Text(
@@ -123,13 +123,13 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
               //   ),
               // ),
               // const SizedBox(height: 15),
-              const Padding(
-                padding: EdgeInsets.symmetric(
+              Padding(
+                padding: const EdgeInsets.symmetric(
                   horizontal: 40,
                 ),
                 child: Text(
-                  'Please fill the below form:',
-                  style: TextStyle(
+                  context.localizations.pleaseFillTheBelowForm,
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
                     fontStyle: FontStyle.italic,
@@ -141,10 +141,14 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                 children: [
                   Expanded(
                     child: LabeledTextfield(
-                      padding: const EdgeInsets.only(
-                        left: 40,
-                      ),
-                      label: 'First Name',
+                      padding: currentLocale.languageCode == 'ar'
+                          ? const EdgeInsets.only(
+                              right: 40,
+                            )
+                          : const EdgeInsets.only(
+                              left: 40,
+                            ),
+                      label: context.localizations.firstName,
                       keyboardType: TextInputType.name,
                       controller: firstNameController,
                       validator: (value) {
@@ -159,10 +163,14 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                   const SizedBox(width: 5),
                   Expanded(
                     child: LabeledTextfield(
-                      padding: const EdgeInsets.only(
-                        right: 40,
-                      ),
-                      label: 'Last Name',
+                      padding: currentLocale.languageCode == 'ar'
+                          ? const EdgeInsets.only(
+                              left: 40,
+                            )
+                          : const EdgeInsets.only(
+                              right: 40,
+                            ),
+                      label: context.localizations.lastName,
                       keyboardType: TextInputType.name,
                       controller: lastNameController,
                       validator: (value) {
@@ -183,7 +191,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
               const SizedBox(height: 7),
               LabeledTextfield(
                 expand: true,
-                label: 'Describe Your Problem',
+                label: context.localizations.describeYourProblem,
                 keyboardType: TextInputType.multiline,
                 controller: problemDescriptionController,
                 validator: (value) {
@@ -195,7 +203,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
               ),
               const SizedBox(height: 7),
               LabeledTextfield(
-                label: 'Address',
+                label: context.localizations.address,
                 keyboardType: TextInputType.text,
                 controller: locationController,
                 validator: (value) {
@@ -228,9 +236,9 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Area',
-                            style: TextStyle(
+                          Text(
+                            context.localizations.area,
+                            style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
@@ -283,7 +291,16 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                             onChanged: (value) {
                               setState(() {
                                 selectedAreaId = value;
+                                selectedAreaName = areas[areas.indexWhere(
+                                  (element) => element.id == value,
+                                )]
+                                    .name
+                                    .toString();
                               });
+
+                              _servicesCubit.fetchServices(
+                                areaId: selectedAreaId,
+                              );
                             },
                             validator: (value) {
                               if (value == null) {
@@ -309,11 +326,11 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
               // const SizedBox(height: 7),
               // TimeTypeSelectionField(controller: timeTypeController),
               const SizedBox(height: 10),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 40),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Text(
-                  'Select Services',
-                  style: TextStyle(
+                  context.localizations.selectServices,
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -324,6 +341,10 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                 child: BlocBuilder<ServicesCubit, ServicesState>(
                   bloc: _servicesCubit,
                   builder: (context, state) {
+                    if (selectedAreaId == null) {
+                      return const Text('Select an area to view services');
+                    }
+
                     if (state is ServicesFetchLoading) {
                       return const Loader();
                     } else if (state is ServicesFetchSuccess) {
@@ -345,9 +366,9 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Schedule Appointment',
-                      style: TextStyle(
+                    Text(
+                      context.localizations.scheduleAppointment,
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -501,7 +522,8 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                       }
 
                       _requestCubit.createRequest(
-                        name:
+                        name: widget.category,
+                        fullName:
                             '${firstNameController.text.trim()} ${lastNameController.text.trim()}',
                         phoneNumber: completeNumber,
                         location: locationController.text.trim(),
@@ -514,7 +536,7 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                         areaId: selectedAreaId!,
                       );
                     },
-                    buttonText: 'Submit',
+                    buttonText: context.localizations.submit,
                   );
                 },
               ),

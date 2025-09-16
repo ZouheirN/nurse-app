@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nurse_app/extensions/context_extension.dart';
 
 class GenderSelectionController {
   String? selectedGender;
@@ -33,8 +34,8 @@ class _GenderSelectionFieldState extends State<GenderSelectionField> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Select Nurse Gender',
+          Text(
+            context.localizations.selectNurseGender,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,

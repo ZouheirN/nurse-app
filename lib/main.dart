@@ -3,11 +3,13 @@ import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:nurse_app/consts.dart';
 import 'package:nurse_app/features/authentication/models/user_model.dart';
+import 'package:nurse_app/features/home/cubit/home_cubit.dart';
 import 'package:nurse_app/features/request/models/requests_history_model.dart';
 import 'package:nurse_app/l10n/app_localizations.dart';
 import 'package:nurse_app/l10n/l10n.dart';
@@ -195,7 +197,8 @@ class _MyAppState extends State<MyApp> {
               );
             },
             '/forgotPassword': (context) {
-              final args = ModalRoute.of(context)?.settings.arguments as String;
+              final args =
+                  ModalRoute.of(context)?.settings.arguments as String;
               return ForgotPasswordPage(phoneNumber: args);
             },
             '/requestDetails': (context) {
@@ -237,7 +240,8 @@ class _MyAppState extends State<MyApp> {
               );
             },
             '/manageAreas': (context) => const AreasPage(),
-            '/contactSubmissions': (context) => const ContactSubmissionsPage(),
+            '/contactSubmissions': (context) =>
+                const ContactSubmissionsPage(),
             '/sliders': (context) => const SlidersPage(),
             '/chat': (context) {
               final args = ModalRoute.of(context)?.settings.arguments as Map?;

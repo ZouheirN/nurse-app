@@ -16,6 +16,7 @@ class RequestCubit extends Cubit<RequestState> {
 
   Future<void> createRequest({
     required String name,
+    required String fullName,
     required String phoneNumber,
     required String location,
     required String problemDescription,
@@ -44,6 +45,7 @@ class RequestCubit extends Cubit<RequestState> {
         "latitude": coordinates.latitude,
         "longitude": coordinates.longitude,
         "area_id": areaId,
+        "name": name,
       };
 
       if (startDate != null) {

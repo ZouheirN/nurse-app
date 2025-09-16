@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nurse_app/components/pending_button.dart';
 
 class PendingPage extends StatelessWidget {
-  final Function(String) setValue;
+  final Function(String?) setValue;
 
   const PendingPage({super.key, required this.setValue});
 
@@ -13,7 +13,7 @@ class PendingPage extends StatelessWidget {
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
 
-        setValue('home');
+        setValue(null);
       },
       child: SingleChildScrollView(
         child: Column(
@@ -21,7 +21,7 @@ class PendingPage extends StatelessWidget {
           children: [
             PendingButton(
               onTap: () {
-                setValue('home');
+                setValue(null);
               },
               buttonText: 'Go Back', // todo localize
               icon: const Icon(
@@ -32,7 +32,7 @@ class PendingPage extends StatelessWidget {
             const SizedBox(height: 15),
             const Center(
               child: Text(
-                'Your Request has been\nsubmitted!',
+                'Your Request has been\nsubmitted!', // todo localize
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,

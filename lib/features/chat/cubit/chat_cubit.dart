@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:laravel_echo_null/laravel_echo_null.dart';
+import 'package:pusher_client_socket/pusher_client_socket.dart';
 import 'package:meta/meta.dart';
 import 'package:nurse_app/features/chat/models/get_messages_model.dart';
 import 'package:nurse_app/services/user.dart';
@@ -36,6 +38,27 @@ class ChatCubit extends Cubit<ChatState> {
         Uri.parse('wss://$HOST/chat/threads/$chatId/messages'),
         protocols: ['Bearer', token!],
       );
+
+      // Echo<PusherClient, PusherChannel> echo = Echo.pusher(
+      //   '343b7b28924b70e72293',
+      //   authEndPoint: '$HOST/chat/threads/$chatId/messages',
+      //   authHeaders: {
+      //     'Authorization': 'Bearer $token',
+      //     'Content-Type': 'application/json',
+      //     'Accept': 'application/json',
+      //   },
+      //   cluster: 'eu',
+      //   wsPort: 80,
+      //   wssPort: 443,
+      //   encrypted: true,
+      //   activityTimeout: 120000,
+      //   pongTimeout: 30000,
+      //   maxReconnectionAttempts: 6,
+      //   reconnectGap: const Duration(seconds: 2),
+      //   enableLogging: true,
+      //   autoConnect: true,
+      //   nameSpace: '/chat',
+      // );
 
       emit(ChatLoaded(
         chatId,
