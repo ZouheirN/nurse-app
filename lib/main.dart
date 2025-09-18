@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:file_saver/file_saver.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -46,12 +47,19 @@ import 'package:nurse_app/utilities/localization_box.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:device_preview/device_preview.dart';
 import 'features/request/models/request_details_model.dart';
+import 'firebase_options.dart';
 import 'pages/admin/send_notification_page.dart';
 
 final logger = Logger();
 final dio = Dio();
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   await Hive.initFlutter();
 
   Hive.registerAdapter(UserModelAdapter());

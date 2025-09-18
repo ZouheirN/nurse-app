@@ -82,20 +82,18 @@ class _HomePageState extends State<HomePage> {
                                     spacing: 10,
                                     children: [
                                       for (final category in categories)
-                                        Expanded(
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              _selectedOption.value =
-                                                  category.name;
-                                            },
-                                            child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                child: // todo fix
-                                                    CachedNetworkImage(
-                                                        imageUrl:
-                                                            'https://i.ibb.co/d0KcQgdz/category1.jpg')),
-                                          ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            _selectedOption.value =
+                                                category.name;
+                                          },
+                                          child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: // todo fix
+                                                  CachedNetworkImage(
+                                                      imageUrl:
+                                                          'https://i.ibb.co/d0KcQgdz/category1.jpg')),
                                         ),
                                     ],
                                   ),

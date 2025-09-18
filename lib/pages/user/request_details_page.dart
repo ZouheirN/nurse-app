@@ -61,8 +61,8 @@ class RequestDetailsPage extends StatelessWidget {
             if (state is RequestDetailsSuccess) {
               final request = state.request;
 
-              final isOngoing = request.status == 'ongoing';
-              // const isOngoing = true;
+              // final isOngoing = request.status == 'ongoing';
+              const isOngoing = true;
 
               // todo fix names of requests (not hardcoded)
               if (isOngoing) {
@@ -217,7 +217,7 @@ class RequestDetailsPage extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Request Date: ${formateDateTimeForRequestDetails(request.createdAt!)}',
+                'Request Date: ${formatDateTimeForRequestDetails(request.createdAt!)}',
                 style: const TextStyle(
                   fontSize: 13,
                   color: Color.fromRGBO(142, 142, 142, 1),
@@ -631,7 +631,7 @@ class RequestDetailsPage extends StatelessWidget {
 //   //   return Padding(
 //   //     padding: const EdgeInsets.symmetric(horizontal: 40),
 //   //     child: Text(
-//   //       'Request Date: ${formateDateTimeForRequestDetails(request.createdAt!)}',
+//   //       'Request Date: ${formatDateTimeForRequestDetails(request.createdAt!)}',
 //   //       style: const TextStyle(
 //   //         fontSize: 22,
 //   //         color: Color(0xFF8E8E8E),

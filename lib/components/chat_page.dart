@@ -224,13 +224,31 @@ class _ChatPageState extends State<ChatPage> {
                         id: chatId.toString(),
                       );
 
-                      await call.getOrCreate();
+                      final result = await call.getOrCreate(
+                        memberIds: ['2'],
+                        video: false,
+                        ringing: true,
+                      );
 
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CallScreen(call: call),
-                        ),
+                      result.fold(
+                        success: (success) {
+                          if (mounted) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => CallScreen(
+                                  call: call,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        failure: (failure) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(failure.error.message),
+                            ),
+                          );
+                        },
                       );
                     } catch (e) {
                       logger.e(e.toString());
@@ -498,13 +516,15 @@ class _ChatPageState extends State<ChatPage> {
               curve: Curves.easeOut,
             );
 
-            messages.add(state.message);
+            // add message to the start
+            messages.insert(0, state.message);
           }
         },
         builder: (context, state) {
           final userId = UserBox.getUser()!.id?.toInt();
 
           return ListView.builder(
+            reverse: true,
             itemCount: messages.length,
             shrinkWrap: true,
             controller: _scrollController,

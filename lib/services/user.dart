@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -7,8 +9,10 @@ import 'package:nurse_app/features/authentication/models/user_model.dart';
 import 'package:nurse_app/services/user_token.dart' as ut;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:stream_video_flutter/stream_video_flutter.dart';
+import 'package:stream_video_push_notification/stream_video_push_notification.dart';
 
 import '../consts.dart';
+import '../firebase_options.dart';
 
 void loginUser(num userId, num roleId) async {
   if (!kIsWeb) {
@@ -23,12 +27,33 @@ void loginUser(num userId, num roleId) async {
   StreamVideo(
     STREAM_API_KEY,
     user: User.regular(
-      userId: user!.id.toString(),
+      // userId: user!.id.toString(),
+      userId: '2',
       role: isAdmin ? 'admin' : 'user',
-      name: user.name,
+      name: user?.name,
     ),
-    userToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3Byb250by5nZXRzdHJlYW0uaW8iLCJzdWIiOiJ1c2VyL1N1cmZfQmlyY2giLCJ1c2VyX2lkIjoiU3VyZl9CaXJjaCIsInZhbGlkaXR5X2luX3NlY29uZHMiOjYwNDgwMCwiaWF0IjoxNzU3NDE1NzkxLCJleHAiOjE3NTgwMjA1OTF9.MNrp8Nt6ngMFhaVV85HjlhSwAgMQrV9LWaGPSoRkwkQ',
-  );
+    // userToken:
+    //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSJ9.YNCFmWqRfWNwzjWzy8CcsRe6D9aVxL45u8gvuRofVbY',
+    userToken:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMiJ9.2jqV-NqPiD9toEOo8RDu37F--rKxPMkObGKsbvvRUf0',
+    options: const StreamVideoOptions(
+      keepConnectionsAliveWhenInBackground: true,
+    ),
+    pushNotificationManagerProvider: StreamVideoPushNotificationManager.create(
+      iosPushProvider: const StreamVideoPushProvider.apn(
+        name: iosPushProviderName,
+      ),
+      androidPushProvider: const StreamVideoPushProvider.firebase(
+        name: androidPushProviderName,
+      ),
+      pushParams: const StreamVideoPushParams(
+        appName: 'Al Ahmad',
+        ios: IOSParams(iconName: 'IconMask'),
+      ),
+      registerApnDeviceToken: true,
+    ),
+  ).connect();
+
   // StreamVideo(
   //   'mmhfdzb5evj2',
   //   user: User.regular(userId: 'Separate_Twig', role: 'admin', name: 'John Doe'),

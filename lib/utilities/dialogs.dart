@@ -21,10 +21,10 @@ class Dialogs {
       try {
         final path = '${(await getTemporaryDirectory()).path}/${image.split('/').last}';
 
-        final response = await dio.download(
-          image,
-          path,
-        );
+        // final response = await dio.download(
+        //   image,
+        //   path,
+        // );
 
         showDialog(
           context: context,

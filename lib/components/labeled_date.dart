@@ -67,8 +67,6 @@ class _LabeledDateFieldState extends State<LabeledDateField> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Container(
       height: 70,
       width: double.infinity,
@@ -94,8 +92,8 @@ class _LabeledDateFieldState extends State<LabeledDateField> {
                     decoration: InputDecoration(
                       hintText: _selectedDate == null
                           ? 'mm/dd/yyyy'
-                      :formateDateTimeForRequestDetails(_selectedDate!),
-                          // : "${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}@${_selectedDate!.hour}:${_selectedDate!.minute}",
+                          : formatDateTimeForRequestDetails(_selectedDate!),
+                      // : "${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}@${_selectedDate!.hour}:${_selectedDate!.minute}",
                       enabledBorder: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(3)),
                         borderSide:

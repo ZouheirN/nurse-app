@@ -5,6 +5,7 @@ class LabeledEditTextfield extends StatefulWidget {
   final TextInputType keyboardType;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
+  final bool enabled;
 
   const LabeledEditTextfield({
     super.key,
@@ -12,6 +13,7 @@ class LabeledEditTextfield extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.controller,
     this.validator,
+    this.enabled = true,
   });
 
   @override
@@ -35,7 +37,7 @@ class _LabeledEditTextfieldState extends State<LabeledEditTextfield> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       // height: 70,
       width: double.infinity,
       // padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -53,11 +55,16 @@ class _LabeledEditTextfieldState extends State<LabeledEditTextfield> {
           Focus(
             onFocusChange: _onFocusChange,
             child: TextFormField(
+              enabled: widget.enabled,
               validator: widget.validator,
               controller: widget.controller,
               keyboardType: widget.keyboardType,
               decoration: InputDecoration(
                 enabledBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide: BorderSide(color: Color(0xFF8ABC58)),
+                ),
+                disabledBorder: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   borderSide: BorderSide(color: Color(0xFF8ABC58)),
                 ),

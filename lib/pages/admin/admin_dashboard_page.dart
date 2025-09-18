@@ -1,16 +1,100 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nurse_app/components/admin_card.dart';
 import 'package:nurse_app/components/logout_button.dart';
 import 'package:nurse_app/consts.dart';
+import 'package:stream_video/stream_video.dart';
 
+import '../../components/call_screen.dart';
 import '../../main.dart';
+import '../../services/firebase_messaging_handler.dart';
 import '../../services/user.dart';
 import '../../services/user_token.dart';
 
-class AdminDashboardPage extends StatelessWidget {
+class AdminDashboardPage extends StatefulWidget {
   const AdminDashboardPage({super.key});
+
+  @override
+  State<AdminDashboardPage> createState() => _AdminDashboardPageState();
+}
+
+class _AdminDashboardPageState extends State<AdminDashboardPage> {
+  final Subscriptions subscriptions = Subscriptions();
+  static const int _fcmSubscription = 1;
+  static const int _callKitSubscription = 2;
+
+  void _observeFcmMessages() {
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+    subscriptions.add(
+      _fcmSubscription,
+      FirebaseMessaging.onMessage.listen(_handleRemoteMessage),
+    );
+  }
+
+  void _observeCallKitEvents() {
+    final streamVideo = StreamVideo.instance;
+
+    subscriptions.add(
+      _callKitSubscription,
+      streamVideo.observeCoreCallKitEvents(
+        onCallAccepted: (callToJoin) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CallScreen(
+                call: callToJoin,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  void _tryConsumingIncomingCallFromTerminatedState() {
+    // This is only relevant for Android.
+    if (CurrentPlatform.isIos) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      StreamVideo.instance.consumeAndAcceptActiveCall(
+        onCallAccepted: (callToJoin) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CallScreen(
+                call: callToJoin,
+              ),
+            ),
+          );
+        },
+      );
+    });
+  }
+
+  Future<bool> _handleRemoteMessage(RemoteMessage message) async {
+    return StreamVideo.instance.handleRingingFlowNotifications(message.data);
+  }
+
+  @override
+  void initState() {
+    FirebaseMessaging.instance.requestPermission();
+
+    _tryConsumingIncomingCallFromTerminatedState();
+
+    _observeFcmMessages();
+    _observeCallKitEvents();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    subscriptions.cancelAll();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,20 +219,20 @@ class AdminDashboardPage extends StatelessWidget {
                 ),
               ),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                // open image picker
-
-              },
-              child: const Text('Test Popup'),
-            ),
+            // ElevatedButton(
+            //   onPressed: () async {
+            //     // open image picker
+            //
+            //   },
+            //   child: const Text('Test Popup'),
+            // ),
             Column(
               children: [
                 const Text(
                   'Powered By',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
                 ),
-                const SizedBox(height: 3),
+                // const SizedBox(height: 3),
                 Image.asset(
                   'assets/images/powered_by.png',
                   width: 150,

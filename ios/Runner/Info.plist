@@ -61,6 +61,10 @@
 	<string>This app requires access to your photo library to select and upload images.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+    <array>
+    	 <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    </array>
     <key>NSAppTransportSecurity</key>
         <dict>
             <key>NSAllowsArbitraryLoads</key>

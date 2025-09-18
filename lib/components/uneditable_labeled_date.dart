@@ -58,7 +58,7 @@ class _UneditableLabeledDateState extends State<UneditableLabeledDate> {
                   decoration: InputDecoration(
                     hintText: _selectedDate == null
                         ? 'mm/dd/yyyy'
-                        : formateDateTimeForRequestDetails(_selectedDate!),
+                        : formatDateTimeForRequestDetails(_selectedDate!),
                     enabledBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(3)),
                       borderSide:

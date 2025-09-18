@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl_phone_field/phone_number.dart';
 import 'package:nurse_app/components/labeled_edit_textfield.dart';
@@ -9,6 +10,8 @@ import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/consts.dart';
 import 'package:nurse_app/extensions/context_extension.dart';
+import 'package:nurse_app/features/profile/cubit/profile_cubit.dart';
+import 'package:nurse_app/utilities/helper_functions.dart';
 import 'package:quickalert/quickalert.dart';
 
 import '../../services/user.dart';
@@ -22,24 +25,21 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  late int userId;
-  bool isLoading = true;
-
-  String name = '';
-  String phoneNumber = '';
-  String email = '';
-  String location = '';
-  String completeNumber = '';
-
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
+  final TextEditingController birthDateController = TextEditingController();
+
+  String completeNumber = '';
+
+  final _profileCubit = ProfileCubit();
+  final _profileCubitBtn = ProfileCubit();
 
   @override
   void initState() {
     super.initState();
-    fetchProfileData();
+    _profileCubit.getProfile();
   }
 
   @override
@@ -48,84 +48,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     phoneController.dispose();
     emailController.dispose();
     locationController.dispose();
+    birthDateController.dispose();
     super.dispose();
-  }
-
-  Future<void> fetchProfileData() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    final token = await UserToken.getToken();
-
-    final response = await http.get(
-      Uri.parse('$HOST/me'),
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    );
-    if (response.statusCode == 200) {
-      final jsonData = json.decode(response.body);
-
-      setState(() {
-        userId = jsonData['id'];
-        name = jsonData['name'] ?? '';
-        phoneNumber = jsonData['phone_number'] ?? '';
-        email = jsonData['email'] ?? '';
-        location = jsonData['location'] ?? '';
-
-        nameController.text = name;
-        phoneController.text = PhoneNumber.fromCompleteNumber(
-                completeNumber: jsonData['phone_number'])
-            .number;
-        completeNumber = jsonData['phone_number'];
-        emailController.text = email;
-        locationController.text = location;
-
-        isLoading = false;
-      });
-    } else {
-      print('Failed to load user data');
-    }
-  }
-
-  Future<void> updateProfile() async {
-    final token = await UserToken.getToken();
-
-    final response = await http.put(
-      Uri.parse('$HOST/users/$userId'),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-      body: json.encode({
-        'name': nameController.text,
-        'phone_number': completeNumber,
-        'email': emailController.text,
-        'location': locationController.text,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.success,
-        text: 'Profile updated successfully.',
-        onConfirmBtnTap: () {
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
-        },
-      );
-    } else {
-      final errorData = json.decode(response.body);
-      final errorMessage = errorData['message'];
-
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        text: errorMessage,
-      );
-    }
   }
 
   @override
@@ -156,9 +80,37 @@ class _EditProfilePageState extends State<EditProfilePage> {
         backgroundColor: Colors.transparent,
       ),
       body: SafeArea(
-        child: isLoading
-            ? const Loader()
-            : SingleChildScrollView(
+        child: BlocConsumer<ProfileCubit, ProfileState>(
+          bloc: _profileCubit,
+          listener: (context, state) {
+            if (state is GetProfileSuccess) {
+              final profile = state.profile;
+
+              nameController.text = profile.name ?? '';
+
+              if (profile.phoneNumber != null) {
+                final number = PhoneNumber.fromCompleteNumber(
+                    completeNumber: profile.phoneNumber!);
+                phoneController.text = number.number;
+              } else {
+                phoneController.text = '';
+              }
+              emailController.text = profile.email ?? '';
+              locationController.text = profile.location ?? '';
+              birthDateController.text = formatDateYYYYMMDD(profile.birthDate) ?? '';
+            }
+          },
+          builder: (context, state) {
+            if (state is GetProfileLoading) {
+              return const Loader();
+            } else if (state is GetProfileFailure) {
+              return Center(
+                child: Text(
+                  state.message,
+                ),
+              );
+            } else if (state is GetProfileSuccess) {
+              return SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Padding(
                   padding:
@@ -176,51 +128,30 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           child: Column(
                             children: [
                               LabeledEditTextfield(
-                                label: context.localizations.firstName,
+                                label: "Name", // todo localize
                                 keyboardType: TextInputType.name,
                                 controller: nameController,
                               ),
                               const SizedBox(height: 10),
-                              LabeledEditTextfield(
-                                label: context.localizations.lastName,
-                                keyboardType: TextInputType.name,
-                                controller: nameController,
-                              ),
-                              const SizedBox(height: 10),
-                              LabeledEditTextfield(
-                                label: context.localizations.nickname,
-                                keyboardType: TextInputType.name,
-                                controller: nameController,
-                              ),
-                              const SizedBox(height: 10),
-                              LabeledEditTextfield(
-                                label: context.localizations.dateOfBirth,
-                                keyboardType: TextInputType.name,
-                                controller: nameController,
-                              ),
-                              const SizedBox(height: 22),
-                              MyThirdButton(
-                                margin: EdgeInsets.zero,
+                              GestureDetector(
                                 onTap: () {
-                                  updateProfile();
+                                  showCustomDatePicker(
+                                      context, birthDateController);
                                 },
-                                buttonText: context.localizations.save,
+                                child: LabeledEditTextfield(
+                                  label: context.localizations.dateOfBirth,
+                                  keyboardType: TextInputType.name,
+                                  controller: birthDateController,
+                                  enabled: false,
+                                ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 0,
-                        color: const Color.fromRGBO(255, 255, 255, 1),
-                        child: Padding(
-                          padding: const EdgeInsets.all(18.0),
-                          child: Column(
-                            children: [
+                              const SizedBox(height: 10),
+                              LabeledEditTextfield(
+                                label: context.localizations.location,
+                                keyboardType: TextInputType.name,
+                                controller: locationController,
+                              ),
+                              const SizedBox(height: 10),
                               LabeledEditTextfield(
                                 label: context.localizations.emailAddress,
                                 keyboardType: TextInputType.name,
@@ -239,17 +170,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 },
                               ),
                               const SizedBox(height: 22),
-                              MyThirdButton(
-                                margin: EdgeInsets.zero,
-                                onTap: () {
-                                  updateProfile();
-                                },
-                                buttonText: context.localizations.save,
-                              ),
+                              _buildSaveButton(),
                             ],
                           ),
                         ),
                       ),
+                      // const SizedBox(height: 20),
+                      // Card(
+                      //   shape: RoundedRectangleBorder(
+                      //     borderRadius: BorderRadius.circular(10),
+                      //   ),
+                      //   elevation: 0,
+                      //   color: const Color.fromRGBO(255, 255, 255, 1),
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.all(18.0),
+                      //     child: Column(
+                      //       children: [],
+                      //     ),
+                      //   ),
+                      // ),
                       const SizedBox(height: 20),
                       Card(
                         shape: RoundedRectangleBorder(
@@ -299,64 +238,67 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           ),
                         ),
                       ),
-                      // Container(
-                      //   decoration: BoxDecoration(
-                      //     color: const Color(0xFFD9D9D9),
-                      //     border: Border.all(
-                      //       color: const Color(0xFFD9D9D9),
-                      //       width: 2,
-                      //     ),
-                      //     borderRadius: BorderRadius.circular(10),
-                      //   ),
-                      //   child: Column(
-                      //     children: [
-                      //       const SizedBox(height: 10),
-                      //       LabeledEditTextfield(
-                      //         label: 'Username',
-                      //         keyboardType: TextInputType.name,
-                      //         controller: nameController,
-                      //       ),
-                      //       const SizedBox(height: 7),
-                      //       PhoneNumberField(
-                      //         controller: phoneController,
-                      //         padding:
-                      //             const EdgeInsets.symmetric(horizontal: 20),
-                      //         fillColor: const Color(0xFFC2C2C2),
-                      //         outlineColor: const Color(0xFFC2C2C2),
-                      //         focusedColor:
-                      //             const Color.fromARGB(255, 185, 185, 185),
-                      //         setCompleteNumber: (number) {
-                      //           completeNumber = number;
-                      //         },
-                      //       ),
-                      //       const SizedBox(height: 7),
-                      //       LabeledEditTextfield(
-                      //         label: 'Email',
-                      //         keyboardType: TextInputType.emailAddress,
-                      //         controller: emailController,
-                      //       ),
-                      //       const SizedBox(height: 7),
-                      //       LabeledEditTextfield(
-                      //         label: 'Location',
-                      //         keyboardType: TextInputType.text,
-                      //         controller: locationController,
-                      //       ),
-                      //       const SizedBox(height: 20),
-                      //     ],
-                      //   ),
-                      // ),
-                      // const SizedBox(height: 20),
-                      // MyThirdButton(
-                      //   onTap: () {
-                      //     updateProfile();
-                      //   },
-                      //   buttonText: 'Save',
-                      // ),
                     ],
                   ),
                 ),
-              ),
+              );
+            }
+
+            return const Center(
+              child: Text('An unexpected error occurred. '),
+            );
+          },
+        ),
       ),
+    );
+  }
+
+  Widget _buildSaveButton() {
+    return BlocConsumer<ProfileCubit, ProfileState>(
+      bloc: _profileCubitBtn,
+      listener: (context, state) {
+        if (state is UpdateProfileSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Profile updated successfully'),
+            ),
+          );
+          _profileCubit.getProfile();
+        } else if (state is UpdateProfileFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        final isLoading = state is UpdateProfileLoading;
+
+        return MyThirdButton(
+          margin: EdgeInsets.zero,
+          isLoading: isLoading,
+          onTap: () {
+            _profileCubitBtn.updateProfile(
+              id: UserBox.getUser()!.id!,
+              name: nameController.text.trim().isEmpty
+                  ? null
+                  : nameController.text.trim(),
+              birthDate: birthDateController.text.trim().isEmpty
+                  ? null
+                  : birthDateController.text.trim(),
+              location: locationController.text.trim().isEmpty
+                  ? null
+                  : locationController.text.trim(),
+              phoneNumber: completeNumber.isEmpty ? null : completeNumber,
+              email: emailController.text.trim().isEmpty
+                  ? null
+                  : emailController.text.trim(),
+            );
+          },
+          buttonText: context.localizations.save,
+        );
+      },
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lazy_load_indexed_stack/lazy_load_indexed_stack.dart';
@@ -10,8 +11,11 @@ import 'package:nurse_app/pages/user/settings_page.dart';
 import 'package:nurse_app/pages/user/social_profiles_page.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:stream_video/stream_video.dart';
 
+import '../../components/call_screen.dart';
 import '../../features/home/cubit/home_cubit.dart';
+import '../../services/firebase_messaging_handler.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({super.key});
@@ -21,6 +25,10 @@ class Navbar extends StatefulWidget {
 }
 
 class _NavbarState extends State<Navbar> {
+  final Subscriptions subscriptions = Subscriptions();
+  static const int _fcmSubscription = 1;
+  static const int _callKitSubscription = 2;
+
   int myIndex = 2; // Default to HomePage index
 
   List<Widget> pageList = List<Widget>.empty(growable: true);
@@ -37,6 +45,59 @@ class _NavbarState extends State<Navbar> {
 
   final _homeCubit = HomeCubit();
 
+  void _observeFcmMessages() {
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+    subscriptions.add(
+      _fcmSubscription,
+      FirebaseMessaging.onMessage.listen(_handleRemoteMessage),
+    );
+  }
+
+  void _observeCallKitEvents() {
+    final streamVideo = StreamVideo.instance;
+
+    subscriptions.add(
+      _callKitSubscription,
+      streamVideo.observeCoreCallKitEvents(
+        onCallAccepted: (callToJoin) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CallScreen(
+                call: callToJoin,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  void _tryConsumingIncomingCallFromTerminatedState() {
+    // This is only relevant for Android.
+    if (CurrentPlatform.isIos) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      StreamVideo.instance.consumeAndAcceptActiveCall(
+        onCallAccepted: (callToJoin) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CallScreen(
+                call: callToJoin,
+              ),
+            ),
+          );
+        },
+      );
+    });
+  }
+
+  Future<bool> _handleRemoteMessage(RemoteMessage message) async {
+    return StreamVideo.instance.handleRingingFlowNotifications(message.data);
+  }
+
   @override
   void initState() {
     pageList.add(const HistoryPage());
@@ -45,7 +106,21 @@ class _NavbarState extends State<Navbar> {
     pageList.add(SocialProfilesPage());
     pageList.add(const SettingsPage());
     _homeCubit.getPopups();
+
+    FirebaseMessaging.instance.requestPermission();
+
+    _tryConsumingIncomingCallFromTerminatedState();
+
+    _observeFcmMessages();
+    _observeCallKitEvents();
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    subscriptions.cancelAll();
+    super.dispose();
   }
 
   @override

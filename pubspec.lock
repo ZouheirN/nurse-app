@@ -535,7 +535,7 @@ packages:
     source: hosted
     version: "0.9.3+3"
   firebase_core:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_core
       sha256: "7be63a3f841fc9663342f7f3a011a42aef6a61066943c90b1c434d79d5c995c5"
@@ -559,7 +559,7 @@ packages:
     source: hosted
     version: "2.24.1"
   firebase_messaging:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_messaging
       sha256: "60be38574f8b5658e2f22b7e311ff2064bea835c248424a383783464e8e02fcc"
@@ -1696,7 +1696,7 @@ packages:
     source: hosted
     version: "2.1.0"
   stream_video:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: stream_video
       sha256: "1e655438f88b8573580dc2a6f45c9372abeeae4d1cf169fbed3cda708b6d1b18"

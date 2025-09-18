@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "180751287958",
+    "project_id": "nurse-app-9b8bc",
+    "storage_bucket": "nurse-app-9b8bc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:180751287958:android:8840db2b41fb50623b24b7",
+        "android_client_info": {
+          "package_name": "com.devzur.nursecare"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPjprijrb6SahTJlCLlCCboYrddt8Z9YA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

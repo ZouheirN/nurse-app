@@ -6,4 +6,8 @@ const String ONE_SIGNAL_APP_ID = '26d738eb-ef7f-4560-b40a-8aa54455170f';
 
 const String ONE_SIGNAL_API_KEY = 'os_v2_app_e3ltr27pp5cwbnakrksuivixb763xuhedo3ee3m627rjrdr5gd5dityr7xkikzwuvrmbszczz66lejoovjni2rcasnqmnsa22ayr4jq';
 
-const String STREAM_API_KEY = 'mmhfdzb5evj2';
+const String STREAM_API_KEY = 'erbgvynnfkyq';
+
+const String iosPushProviderName = 'apn-dev';
+
+const String androidPushProviderName = 'alahmad_firebase_provider';

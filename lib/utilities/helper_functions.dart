@@ -3,14 +3,22 @@
 //   return '${dateTime.year}-${dateTime.month}-${dateTime.day} ${dateTime.hour}:${dateTime.minute}:${dateTime.second}';
 // }
 
+import 'package:flutter/material.dart';
+
 String formatDateTimeForCard(DateTime dateTime) {
   var dateLocal = dateTime.toLocal();
   return '${dateLocal.hour.toString().padLeft(2, '0')}:${dateLocal.minute.toString().padLeft(2, '0')}\n${dateLocal.month}/${dateLocal.day}/${dateLocal.year}';
 }
 
-String formateDateTimeForRequestDetails(DateTime dateTime) {
+String formatDateTimeForRequestDetails(DateTime dateTime) {
   var dateLocal = dateTime.toLocal();
   return '${dateLocal.month}/${dateLocal.day}/${dateLocal.year}@${(dateLocal.hour % 12 == 0 ? 12 : dateLocal.hour % 12).toString().padLeft(2, '0')}:${dateLocal.minute.toString().padLeft(2, '0')} ${dateLocal.hour >= 12 ? 'pm' : 'am'}';
+}
+
+String? formatDateYYYYMMDD(String? date) {
+  if (date == null) return null;
+  DateTime parsedDate = DateTime.parse(date);
+  return '${parsedDate.year}-${parsedDate.month.toString().padLeft(2, '0')}-${parsedDate.day.toString().padLeft(2, '0')}';
 }
 
 // String formatPrice(String number) {
@@ -41,4 +49,18 @@ String formatPrice(num? price) {
   } else {
     return price.toStringAsFixed(2);
   }
+}
+
+void showCustomDatePicker(
+    BuildContext context, TextEditingController dobController) {
+  showDatePicker(
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate: DateTime(1900),
+    lastDate: DateTime.now(),
+  ).then((selectedDate) {
+    if (selectedDate != null) {
+      dobController.text = selectedDate.toLocal().toString().split(' ')[0];
+    }
+  });
 }

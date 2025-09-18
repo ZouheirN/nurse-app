@@ -6,6 +6,7 @@ import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/textfield.dart';
 import 'package:nurse_app/features/areas/cubit/areas_cubit.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
+import 'package:nurse_app/utilities/helper_functions.dart';
 
 import '../../features/authentication/cubit/authentication_cubit.dart';
 
@@ -157,17 +158,7 @@ class _SignupPageState extends State<SignupPage> {
                     const SizedBox(height: 14),
                     GestureDetector(
                       onTap: () {
-                        showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1900),
-                          lastDate: DateTime.now(),
-                        ).then((selectedDate) {
-                          if (selectedDate != null) {
-                            dobController.text =
-                                selectedDate.toLocal().toString().split(' ')[0];
-                          }
-                        });
+                       showCustomDatePicker(context, dobController);
                       },
                       child: MyTextField(
                         controller: dobController,
