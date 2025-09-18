@@ -4,12 +4,14 @@ class MyButton extends StatelessWidget {
   final Function()? onTap;
   final String buttonText;
   final bool isLoading;
+  final bool hasPadding;
 
   const MyButton({
     super.key,
     required this.onTap,
     required this.buttonText,
     this.isLoading = false,
+    this.hasPadding = true,
   });
 
   @override
@@ -18,7 +20,7 @@ class MyButton extends StatelessWidget {
       onTap: isLoading ? null : onTap,
       child: Container(
         height: 50,
-        margin: const EdgeInsets.symmetric(horizontal: 50),
+        margin: hasPadding ? const EdgeInsets.symmetric(horizontal: 50) : null,
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [

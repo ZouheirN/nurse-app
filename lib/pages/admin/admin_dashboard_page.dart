@@ -204,6 +204,14 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                         },
                       ),
                       const SizedBox(height: 20),
+                      AdminCard(
+                        // imagePath: 'assets/images/notification.png',
+                        text: 'Edit Popups',
+                        onTap: () {
+                          Navigator.pushNamed(context, '/popups');
+                        },
+                      ),
+                      const SizedBox(height: 20),
                       LogoutButton(
                         icon: const Icon(Icons.logout),
                         buttonText: 'Logout',

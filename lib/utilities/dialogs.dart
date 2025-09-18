@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:nurse_app/components/button.dart';
 import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -19,7 +20,8 @@ class Dialogs {
   }) async {
     if (image != null) {
       try {
-        final path = '${(await getTemporaryDirectory()).path}/${image.split('/').last}';
+        final path =
+            '${(await getTemporaryDirectory()).path}/${image.split('/').last}';
 
         // final response = await dio.download(
         //   image,
@@ -30,22 +32,39 @@ class Dialogs {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
+              backgroundColor: Colors.white,
               title: Text(title ?? ''),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Image.file(File(path)),
-                  const SizedBox(height: 16),
-                  Text(content ?? ''),
+                  if (content != null) ...[
+                    const SizedBox(height: 16),
+                    Text(
+                      content,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          fontStyle: FontStyle.italic),
+                    ),
+                  ],
                 ],
               ),
+              actionsAlignment: MainAxisAlignment.center,
               actions: [
-                TextButton(
-                  onPressed: () {
+                MyButton(
+                  hasPadding: false,
+                  onTap: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('OK'),
+                  buttonText: 'GOT IT',
                 ),
+                // TextButton(
+                //   onPressed: () {
+                //     Navigator.of(context).pop();
+                //   },
+                //   child: const Text('OK'),
+                // ),
               ],
             );
           },

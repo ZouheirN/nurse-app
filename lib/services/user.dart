@@ -153,4 +153,9 @@ class UserBox {
   static bool isUserLoggedIn() {
     return _box.get('user') != null;
   }
+
+  static bool isAdmin() {
+    final user = _box.get('user') as UserModel?;
+    return user?.roleId == 1;
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:nurse_app/components/loader.dart';
 import 'package:nurse_app/features/home/cubit/home_cubit.dart';
 
@@ -286,21 +287,23 @@ class _EditFaqsPageState extends State<EditFaqsPage> {
                                 );
                               }
                             },
-                            child: Dismissible(
+                            child: Slidable(
                               key: ValueKey(faq.id),
-                              background: Container(
-                                color: Colors.red,
-                                alignment: Alignment.centerRight,
-                                padding: const EdgeInsets.only(right: 20),
-                                child: const Icon(
-                                  Icons.delete,
-                                  color: Colors.white,
-                                ),
+                              endActionPane: ActionPane(
+                                motion: const DrawerMotion(),
+                                children: [
+                                  SlidableAction(
+                                    onPressed: (context) {
+                                      _faqsCubitDelete.deleteFaq(faq.id!);
+                                    },
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    icon: Icons.delete,
+                                    label: 'Delete',
+                                    padding: EdgeInsets.zero,
+                                  ),
+                                ],
                               ),
-                              direction: DismissDirection.endToStart,
-                              onDismissed: (direction) {
-                                _faqsCubitDelete.deleteFaq(faq.id!);
-                              },
                               child: ListTile(
                                 onTap: () => _showEditFaqDialog(
                                   faq.id!,

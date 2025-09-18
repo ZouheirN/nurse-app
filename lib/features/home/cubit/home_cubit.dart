@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:nurse_app/consts.dart';
+import 'package:nurse_app/features/home/models/get_popups_admin.dart';
 import 'package:nurse_app/features/home/models/get_popups_model.dart';
 
 import '../../../main.dart';
@@ -44,6 +45,78 @@ class HomeCubit extends Cubit<HomeState> {
     } catch (e) {
       logger.e(e);
       emit(GetPopupsFailure(message: 'Failed to get popups.'));
+    }
+  }
+
+  Future<void> getPopupsAdmin() async {
+    emit(GetPopupsLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      final response = await dio.get(
+        '$HOST/admin/popups',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      final popups = GetPopupsAdminModel.fromJson(response.data);
+
+      emit(GetPopupsAdminSuccess(popups: popups));
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(GetPopupsFailure(message: e.response!.data['message']));
+    } catch (e) {
+      logger.e(e);
+      emit(GetPopupsFailure(message: 'Failed to get popups.'));
+    }
+  }
+
+  Future<void> editPopup({
+    required String id,
+    required String title,
+    required String content,
+    required String type,
+    required DateTime? startDate,
+    required DateTime? endDate,
+    required bool isActive,
+  }) async {
+    emit(EditPopupLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      await dio.put(
+        '$HOST/admin/popups/$id',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+        ),
+        data: {
+          'title': title,
+          'content': content,
+          'type': type,
+          'start_date': startDate?.toIso8601String(),
+          'end_date': endDate?.toIso8601String(),
+          'is_active': isActive,
+        },
+      );
+
+      emit(EditPopupSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(EditPopupFailure(
+          message: e.response!.data['message'] ?? 'Failed to edit popup.'));
+    } catch (e) {
+      logger.e(e);
+      emit(EditPopupFailure(message: 'Failed to edit popup.'));
     }
   }
 

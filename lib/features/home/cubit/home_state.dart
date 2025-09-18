@@ -15,6 +15,14 @@ final class GetPopupsSuccess extends HomeState {
   });
 }
 
+final class GetPopupsAdminSuccess extends HomeState {
+  final GetPopupsAdminModel popups;
+
+  GetPopupsAdminSuccess({
+    required this.popups,
+  });
+}
+
 final class GetPopupsFailure extends HomeState {
   final String message;
 
@@ -22,6 +30,18 @@ final class GetPopupsFailure extends HomeState {
     required this.message,
   });
 }
+
+// Edit Popup
+final class EditPopupLoading extends HomeState {}
+final class EditPopupSuccess extends HomeState {}
+final class EditPopupFailure extends HomeState {
+  final String message;
+
+  EditPopupFailure({
+    required this.message,
+  });
+}
+
 
 final class GetSlidersLoading extends HomeState {}
 
