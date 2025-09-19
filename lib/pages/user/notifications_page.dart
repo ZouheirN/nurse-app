@@ -171,8 +171,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         }
 
                         if (filteredNotifications.isEmpty) {
-                          return Center(
-                            child: Text(context.localizations.noRequestsFound),
+                          return const Center(
+                            child: Text(
+                                'No notifications for the selected filter.'),
                           );
                         }
 

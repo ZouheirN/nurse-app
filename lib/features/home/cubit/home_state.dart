@@ -184,3 +184,20 @@ final class AddCategoryFailure extends HomeState {
     required this.message,
   });
 }
+
+// Get Dashboard
+final class GetDashboardLoading extends HomeState {}
+final class GetDashboardSuccess extends HomeState {
+  final GetDashboardModel dashboard;
+
+  GetDashboardSuccess({
+    required this.dashboard,
+  });
+}
+final class GetDashboardFailure extends HomeState {
+  final String message;
+
+  GetDashboardFailure({
+    required this.message,
+  });
+}

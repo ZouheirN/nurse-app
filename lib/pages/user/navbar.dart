@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +13,7 @@ import 'package:nurse_app/pages/user/social_profiles_page.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:stream_video/stream_video.dart';
+import 'package:badges/badges.dart' as badges;
 
 import '../../components/call_screen.dart';
 import '../../features/home/cubit/home_cubit.dart';
@@ -44,6 +46,7 @@ class _NavbarState extends State<Navbar> {
   // ];
 
   final _homeCubit = HomeCubit();
+  final _homeCubitDashboard = HomeCubit();
 
   void _observeFcmMessages() {
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
@@ -106,6 +109,7 @@ class _NavbarState extends State<Navbar> {
     pageList.add(SocialProfilesPage());
     pageList.add(const SettingsPage());
     _homeCubit.getPopups();
+    _homeCubitDashboard.getDashboard();
 
     FirebaseMessaging.instance.requestPermission();
 
@@ -177,27 +181,81 @@ class _NavbarState extends State<Navbar> {
           currentIndex: myIndex,
           items: [
             BottomNavigationBarItem(
-              icon: ColorFiltered(
-                colorFilter: const ColorFilter.mode(
-                  Colors.black,
-                  BlendMode.srcIn,
-                ),
-                child: Image.asset(
-                  'assets/images/clipboard.png',
-                  height: 25,
-                  width: 25,
-                ),
+              icon: BlocBuilder<HomeCubit, HomeState>(
+                bloc: _homeCubitDashboard,
+                builder: (context, state) {
+                  final int requestCount;
+                  if (state is GetDashboardSuccess) {
+                    requestCount = state.dashboard.activeRequests?.toInt() ?? 0;
+                  } else {
+                    requestCount = 0;
+                  }
+
+                  return badges.Badge(
+                    showBadge: requestCount > 0,
+                    badgeStyle: const badges.BadgeStyle(
+                      badgeColor: Colors.red,
+                      padding: EdgeInsets.all(5),
+                    ),
+                    badgeContent: Text(
+                      requestCount > 99 ? '99+' : requestCount.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    child: ColorFiltered(
+                      colorFilter: const ColorFilter.mode(
+                        Colors.black,
+                        BlendMode.srcIn,
+                      ),
+                      child: Image.asset(
+                        'assets/images/clipboard.png',
+                        height: 25,
+                        width: 25,
+                      ),
+                    ),
+                  );
+                },
               ),
-              activeIcon: ColorFiltered(
-                colorFilter: const ColorFilter.mode(
-                  Color(0xFF7BB442),
-                  BlendMode.srcIn,
-                ),
-                child: Image.asset(
-                  'assets/images/clipboard.png',
-                  height: 25,
-                  width: 25,
-                ),
+              activeIcon: BlocBuilder<HomeCubit, HomeState>(
+                bloc: _homeCubitDashboard,
+                builder: (context, state) {
+                  final int requestCount;
+                  if (state is GetDashboardSuccess) {
+                    requestCount = state.dashboard.activeRequests?.toInt() ?? 0;
+                  } else {
+                    requestCount = 0;
+                  }
+
+                  return badges.Badge(
+                    showBadge: requestCount > 0,
+                    badgeStyle: const badges.BadgeStyle(
+                      badgeColor: Color(0xFF7BB442),
+                      padding: EdgeInsets.all(5),
+                    ),
+                    badgeContent: Text(
+                      requestCount > 99 ? '99+' : requestCount.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    child: ColorFiltered(
+                      colorFilter: const ColorFilter.mode(
+                        Color(0xFF7BB442),
+                        BlendMode.srcIn,
+                      ),
+                      child: Image.asset(
+                        'assets/images/clipboard.png',
+                        height: 25,
+                        width: 25,
+                      ),
+                    ),
+                  );
+                },
               ),
               label: context.localizations.requests,
             ),

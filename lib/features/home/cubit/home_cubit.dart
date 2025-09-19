@@ -12,6 +12,7 @@ import 'package:nurse_app/features/home/models/get_popups_model.dart';
 import '../../../main.dart';
 import '../../../services/user_token.dart';
 import '../models/get_categories_model.dart';
+import '../models/get_dashboard_model.dart';
 import '../models/get_faqs_model.dart';
 import '../models/get_sliders_model.dart';
 
@@ -19,6 +20,38 @@ part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
+
+  Future<void> getDashboard() async {
+    emit(GetDashboardLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      final response = await dio.get(
+        '$HOST/user/dashboard',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+
+      logger.i(response.data);
+
+      final dashboard = GetDashboardModel.fromJson(response.data);
+
+      emit(GetDashboardSuccess(dashboard: dashboard));
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(GetDashboardFailure(
+          message: e.response?.data['message'] ?? 'Failed to get dashboard.'));
+    } catch (e) {
+      logger.e(e);
+      emit(GetDashboardFailure(message: 'Failed to get dashboard.'));
+    }
+  }
 
   Future<void> getPopups() async {
     emit(GetPopupsLoading());
@@ -41,7 +74,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(GetPopupsSuccess(popups: popups));
     } on DioException catch (e) {
       logger.e(e.response!.data);
-      emit(GetPopupsFailure(message: e.response!.data['message']));
+      emit(GetPopupsFailure(message: e.response?.data['message'] ?? 'Failed to get popups.'));
     } catch (e) {
       logger.e(e);
       emit(GetPopupsFailure(message: 'Failed to get popups.'));
