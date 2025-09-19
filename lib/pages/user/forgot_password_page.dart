@@ -8,9 +8,14 @@ import '../../components/textfield.dart';
 import '../../utilities/dialogs.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
+  final bool showAsResetPassword;
   final String phoneNumber;
 
-  const ForgotPasswordPage({super.key, required this.phoneNumber});
+  const ForgotPasswordPage({
+    super.key,
+    required this.phoneNumber,
+    this.showAsResetPassword = false,
+  });
 
   @override
   State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
@@ -36,9 +41,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         elevation: 0,
         title: Row(
           children: [
-            const Text(
-              'Forgot Password',
-              style: TextStyle(
+            Text(
+              widget.showAsResetPassword ? 'Reset Password' : 'Forgot Password',
+              style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.w700,
                 fontSize: 23,

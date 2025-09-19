@@ -92,6 +92,34 @@ class SocialProfilesPage extends StatelessWidget {
             const Header(
               showLocation: false,
             ),
+            Container(
+              height: 100,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color.fromRGBO(19, 27, 10, 1),
+                    Color.fromRGBO(101, 148, 54, 1),
+                  ],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  context.localizations.reachUsAt,
+                  style: const TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ),
+            ),
             BlocBuilder<AboutUsCubit, AboutUsState>(
               bloc: _aboutUsCubit..fetchAboutUs(),
               builder: (context, state) {
@@ -102,66 +130,10 @@ class SocialProfilesPage extends StatelessWidget {
                 if (state is AboutUsFetchSuccess) {
                   final aboutUs = state.aboutUs;
 
-                  logger.i(aboutUs);
-
                   return Expanded(
                     child: ListView(
                       shrinkWrap: true,
                       children: [
-                        Container(
-                          height: 100,
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Color.fromRGBO(19, 27, 10, 1),
-                                Color.fromRGBO(101, 148, 54, 1),
-                              ],
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                            ),
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(30),
-                              bottomRight: Radius.circular(30),
-                            ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              context.localizations.reachUsAt,
-                              style: const TextStyle(
-                                fontSize: 36,
-                                fontWeight: FontWeight.w800,
-                                color: Colors.white,
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                          ),
-                        ),
-                        // Padding(
-                        //   padding: const EdgeInsets.all(16),
-                        //   child: Column(
-                        //     crossAxisAlignment: CrossAxisAlignment.stretch,
-                        //     children: [
-                        //       ClipRRect(
-                        //         borderRadius: BorderRadius.circular(20),
-                        //         child: Image.asset(
-                        //           'assets/images/social.png',
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                        // const SizedBox(height: 10),
-                        // const Center(
-                        //   child: Text(
-                        //     'Check our website',
-                        //     style: TextStyle(
-                        //       fontSize: 20,
-                        //       fontWeight: FontWeight.w700,
-                        //     ),
-                        //     textAlign: TextAlign.center,
-                        //   ),
-                        // ),
-                        const SizedBox(height: 15),
                         Text(
                           context.localizations.officeLocation,
                           style: const TextStyle(
@@ -180,7 +152,9 @@ class SocialProfilesPage extends StatelessWidget {
                             child: FlutterMap(
                               options: const MapOptions(
                                 initialCenter: latLng.LatLng(
-                                    33.563520668688156, 35.389677252154485),
+                                  33.567200934252256,
+                                  35.39557421754231, // todo make dynamic
+                                ),
                                 initialZoom: 15.0,
                               ),
                               children: [
@@ -190,21 +164,21 @@ class SocialProfilesPage extends StatelessWidget {
                                   subdomains: const ['a', 'b', 'c'],
                                   userAgentPackageName: "com.devzur.alahmad",
                                 ),
-                                // MarkerLayer(
-                                //   markers: [
-                                //     Marker(
-                                //       point: LatLng(
-                                //         aboutUs['location']['latitude'],
-                                //         aboutUs['location']['longitude'],
-                                //       ),
-                                //       child: const Icon(
-                                //         Icons.location_on,
-                                //         color: Colors.red,
-                                //         size: 40,
-                                //       ),
-                                //     ),
-                                //   ],
-                                // ),
+                                const MarkerLayer(
+                                  markers: [
+                                    Marker(
+                                      point: latLng.LatLng(
+                                        33.567200934252256,
+                                        35.39557421754231, // todo make dynamic
+                                      ),
+                                      child: Icon(
+                                        Icons.location_on,
+                                        color: Colors.red,
+                                        size: 40,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           ),

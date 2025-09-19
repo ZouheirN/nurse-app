@@ -84,7 +84,7 @@ class _ManageServicesPageState extends State<ManageServicesPage> {
                                         'assets/images/square_logo.png',
                                     title: service.name.toString(),
                                     price: service.price.toString(),
-                                    salePrice: service.discountPrice.toString(),
+                                    salePrice: service.discountPrice,
                                     onTap: () {
                                       Navigator.pushNamed(
                                         context,

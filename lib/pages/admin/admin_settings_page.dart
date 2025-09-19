@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/admin_header.dart';
+import 'package:nurse_app/components/button.dart';
 import 'package:nurse_app/components/labeled_textfield_admin.dart';
+import 'package:nurse_app/components/second_button.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/features/about_us/cubit/about_us_cubit.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
@@ -49,181 +51,213 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const AdminHeader(title: 'Settings'),
-      body: BlocConsumer<AboutUsCubit, AboutUsState>(
-        bloc: _aboutUsCubit,
-        listener: (context, state) {
-          if (state is AboutUsFetchSuccess) {
-            final aboutUs = state.aboutUs;
+      body: SafeArea(
+        child: BlocConsumer<AboutUsCubit, AboutUsState>(
+          bloc: _aboutUsCubit,
+          listener: (context, state) {
+            if (state is AboutUsFetchSuccess) {
+              final aboutUs = state.aboutUs;
 
-            websiteTextController.text = aboutUs['online_shop_url'];
-            instagramTextController.text = aboutUs['instagram_url'];
-            facebookTextController.text = aboutUs['facebook_url'];
-            tiktokTextController.text = aboutUs['tiktok_url'];
-            final numbers = aboutUs['whatsapp_numbers'];
-            for (var number in numbers) {
-              whatsappTextController.add(TextEditingController(text: number));
+              websiteTextController.text = aboutUs['online_shop_url'];
+              instagramTextController.text = aboutUs['instagram_url'];
+              facebookTextController.text = aboutUs['facebook_url'];
+              tiktokTextController.text = aboutUs['tiktok_url'];
+              final numbers = aboutUs['whatsapp_numbers'];
+              for (var number in numbers) {
+                whatsappTextController.add(TextEditingController(text: number));
+              }
             }
-          }
-        },
-        builder: (context, state) {
-          if (state is AboutUsFetchLoading) {
-            return const Loader();
-          }
+          },
+          builder: (context, state) {
+            if (state is AboutUsFetchLoading) {
+              return const Loader();
+            }
 
-          if (state is AboutUsFetchSuccess) {
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Center(
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 40),
-                          LabeledTextFieldAdmin(
-                            label: 'Website Link',
-                            controller: websiteTextController,
-                            keyboardType: TextInputType.url,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Website link cannot be empty';
-                              }
-
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          LabeledTextFieldAdmin(
-                            label: 'Instagram Link',
-                            controller: instagramTextController,
-                            keyboardType: TextInputType.url,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Instagram link cannot be empty';
-                              }
-
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          LabeledTextFieldAdmin(
-                            label: 'Facebook Link',
-                            controller: facebookTextController,
-                            keyboardType: TextInputType.url,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Facebook link cannot be empty';
-                              }
-
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          LabeledTextFieldAdmin(
-                            label: 'TikTok Link',
-                            controller: tiktokTextController,
-                            keyboardType: TextInputType.url,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'TikTok link cannot be empty';
-                              }
-
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          for (var i = 0;
-                              i < whatsappTextController.length;
-                              i++) ...[
+            if (state is AboutUsFetchSuccess) {
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // const SizedBox(height: 40),
                             LabeledTextFieldAdmin(
-                              label: 'WhatsApp Link ${i + 1}',
-                              controller: whatsappTextController[i],
+                              label: 'Website Link',
+                              controller: websiteTextController,
                               keyboardType: TextInputType.url,
                               validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'WhatsApp link cannot be empty';
+                                if (value!.isEmpty) {
+                                  return 'Website link cannot be empty';
                                 }
 
                                 return null;
                               },
                             ),
                             const SizedBox(height: 10),
-                          ],
-                          const SizedBox(height: 20),
-                          BlocConsumer<AboutUsCubit, AboutUsState>(
-                            bloc: _aboutUsCubitButton,
-                            listener: (context, state) {
-                              if (state is AboutUsUpdateSuccess) {
-                                final aboutUs = state.aboutUs;
-
-                                websiteTextController.text =
-                                    aboutUs['online_shop_url'];
-                                instagramTextController.text =
-                                    aboutUs['instagram_url'];
-                                facebookTextController.text =
-                                    aboutUs['facebook_url'];
-                                tiktokTextController.text =
-                                    aboutUs['tiktok_url'];
-                                final numbers = aboutUs['whatsapp_numbers'];
-                                for (int i = 0; i < numbers.length; i++) {
-                                  if (i < whatsappTextController.length) {
-                                    whatsappTextController[i].text = numbers[i];
-                                  } else {
-                                    whatsappTextController.add(
-                                        TextEditingController(
-                                            text: numbers[i]));
-                                  }
+                            LabeledTextFieldAdmin(
+                              label: 'Instagram Link',
+                              controller: instagramTextController,
+                              keyboardType: TextInputType.url,
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Instagram link cannot be empty';
                                 }
 
-                                Dialogs.showSuccessDialog(context, 'Success',
-                                    'About us updated successfully.');
-                              } else if (state is AboutUsUpdateFailure) {
-                                Dialogs.showErrorDialog(
-                                    context, 'Error', state.message);
-                              }
-                            },
-                            builder: (context, state) {
-                              final isLoading = state is AboutUsUpdateLoading;
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            LabeledTextFieldAdmin(
+                              label: 'Facebook Link',
+                              controller: facebookTextController,
+                              keyboardType: TextInputType.url,
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Facebook link cannot be empty';
+                                }
 
-                              return MyThirdButton(
-                                isLoading: isLoading,
-                                onTap: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    List<String> phoneNumbers =
-                                        whatsappTextController
-                                            .map((controller) =>
-                                                controller.text.trim())
-                                            .toList();
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            LabeledTextFieldAdmin(
+                              label: 'TikTok Link',
+                              controller: tiktokTextController,
+                              keyboardType: TextInputType.url,
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'TikTok link cannot be empty';
+                                }
 
-                                    _aboutUsCubitButton.updateAboutUs(
-                                      website:
-                                          websiteTextController.text.trim(),
-                                      instagram:
-                                          instagramTextController.text.trim(),
-                                      facebook:
-                                          facebookTextController.text.trim(),
-                                      tiktok: tiktokTextController.text.trim(),
-                                      whatsapp: phoneNumbers,
-                                    );
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            for (var i = 0;
+                                i < whatsappTextController.length;
+                                i++) ...[
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: LabeledTextFieldAdmin(
+                                      label: 'WhatsApp Link ${i + 1}',
+                                      removeRightPadding: true,
+                                      controller: whatsappTextController[i],
+                                      keyboardType: TextInputType.url,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'WhatsApp link cannot be empty';
+                                        }
+
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  if (whatsappTextController.length > 1)
+                                    IconButton(
+                                      icon: const Icon(Icons.remove_circle,
+                                          color: Colors.red),
+                                      onPressed: () {
+                                        setState(() {
+                                          whatsappTextController[i].dispose();
+                                          whatsappTextController.removeAt(i);
+                                        });
+                                      },
+                                    ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                            ],
+                            const SizedBox(height: 10),
+                            MyButton(
+                              buttonText: 'Add WhatsApp Link',
+                              onTap: () {
+                                setState(() {
+                                  whatsappTextController
+                                      .add(TextEditingController());
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 20),
+                            BlocConsumer<AboutUsCubit, AboutUsState>(
+                              bloc: _aboutUsCubitButton,
+                              listener: (context, state) {
+                                if (state is AboutUsUpdateSuccess) {
+                                  final aboutUs = state.aboutUs;
+
+                                  websiteTextController.text =
+                                      aboutUs['online_shop_url'];
+                                  instagramTextController.text =
+                                      aboutUs['instagram_url'];
+                                  facebookTextController.text =
+                                      aboutUs['facebook_url'];
+                                  tiktokTextController.text =
+                                      aboutUs['tiktok_url'];
+                                  final numbers = aboutUs['whatsapp_numbers'];
+                                  for (int i = 0; i < numbers.length; i++) {
+                                    if (i < whatsappTextController.length) {
+                                      whatsappTextController[i].text =
+                                          numbers[i];
+                                    } else {
+                                      whatsappTextController.add(
+                                          TextEditingController(
+                                              text: numbers[i]));
+                                    }
                                   }
-                                },
-                                buttonText: 'Update',
-                              );
-                            },
-                          ),
-                        ],
+
+                                  Dialogs.showSuccessDialog(context, 'Success',
+                                      'About us updated successfully.');
+                                } else if (state is AboutUsUpdateFailure) {
+                                  Dialogs.showErrorDialog(
+                                      context, 'Error', state.message);
+                                }
+                              },
+                              builder: (context, state) {
+                                final isLoading = state is AboutUsUpdateLoading;
+
+                                return MyThirdButton(
+                                  isLoading: isLoading,
+                                  onTap: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      List<String> phoneNumbers =
+                                          whatsappTextController
+                                              .map((controller) =>
+                                                  controller.text.trim())
+                                              .toList();
+
+                                      _aboutUsCubitButton.updateAboutUs(
+                                        website:
+                                            websiteTextController.text.trim(),
+                                        instagram:
+                                            instagramTextController.text.trim(),
+                                        facebook:
+                                            facebookTextController.text.trim(),
+                                        tiktok:
+                                            tiktokTextController.text.trim(),
+                                        whatsapp: phoneNumbers,
+                                      );
+                                    }
+                                  },
+                                  buttonText: 'Update',
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            );
-          }
+                  ],
+                ),
+              );
+            }
 
-          return const Center(child: Text('Failed to fetch about us.'));
-        },
+            return const Center(child: Text('Failed to fetch about us.'));
+          },
+        ),
       ),
     );
   }

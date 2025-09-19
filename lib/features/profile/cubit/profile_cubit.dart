@@ -27,7 +27,10 @@ class ProfileCubit extends Cubit<ProfileState> {
         ),
       );
 
+      logger.i(response.data);
+
       final profile = GetProfileModel.fromJson(response.data);
+
       emit(GetProfileSuccess(profile: profile));
     } on DioException catch (e) {
       logger.e(e.response!.data);
@@ -60,6 +63,8 @@ class ProfileCubit extends Cubit<ProfileState> {
         if (birthDate != null) 'birth_date': birthDate,
       };
 
+      logger.i(data);
+
       final response = await dio.put(
         '$HOST/users/$id',
         options: Options(
@@ -73,6 +78,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       );
 
       final profile = GetProfileModel.fromJson(response.data['user']);
+
       emit(UpdateProfileSuccess(profile: profile));
     } on DioException catch (e) {
       logger.e(e.response!.data);

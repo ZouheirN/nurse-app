@@ -335,21 +335,21 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                 ],
                               ),
                             ),
-                            const SizedBox(height: 10),
-                            MyThirdButton(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  '/chat',
-                                  arguments: {
-                                    'requestId': request.id,
-                                    'isAdmin': true,
-                                    'patientName': request.fullName,
-                                  },
-                                );
-                              },
-                              buttonText: 'Chat with Patient',
-                            ),
+                            // const SizedBox(height: 10),
+                            // MyThirdButton(
+                            //   onTap: () {
+                            //     Navigator.pushNamed(
+                            //       context,
+                            //       '/chat',
+                            //       arguments: {
+                            //         'requestId': request.id,
+                            //         'isAdmin': true,
+                            //         'patientName': request.fullName,
+                            //       },
+                            //     );
+                            //   },
+                            //   buttonText: 'Chat with Patient',
+                            // ),
                           ],
                         ),
                       );

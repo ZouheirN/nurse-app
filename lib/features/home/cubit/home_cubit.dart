@@ -101,8 +101,8 @@ class HomeCubit extends Cubit<HomeState> {
 
       emit(GetPopupsAdminSuccess(popups: popups));
     } on DioException catch (e) {
-      logger.e(e.response!.data);
-      emit(GetPopupsFailure(message: e.response!.data['message']));
+      logger.e(e.response?.data);
+      emit(GetPopupsFailure(message: e.response?.data['message'] ?? 'Failed to get popups.'));
     } catch (e) {
       logger.e(e);
       emit(GetPopupsFailure(message: 'Failed to get popups.'));

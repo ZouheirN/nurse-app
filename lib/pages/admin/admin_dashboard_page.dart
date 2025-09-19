@@ -174,7 +174,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                       const SizedBox(height: 20),
                       AdminCard(
                         // imagePath: 'assets/images/notification.png',
-                        text: 'Areas',
+                        text: 'Manage Areas',
                         onTap: () {
                           Navigator.pushNamed(context, '/manageAreas');
                         },
@@ -190,7 +190,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                       const SizedBox(height: 20),
                       AdminCard(
                         // imagePath: 'assets/images/notification.png',
-                        text: 'Sliders',
+                        text: 'Manage Sliders',
                         onTap: () {
                           Navigator.pushNamed(context, '/sliders');
                         },
@@ -198,7 +198,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                       const SizedBox(height: 20),
                       AdminCard(
                         // imagePath: 'assets/images/notification.png',
-                        text: 'Edit FAQs',
+                        text: 'Manage FAQs',
                         onTap: () {
                           Navigator.pushNamed(context, '/faqs');
                         },
@@ -206,7 +206,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                       const SizedBox(height: 20),
                       AdminCard(
                         // imagePath: 'assets/images/notification.png',
-                        text: 'Edit Popups',
+                        text: 'Manage Popups',
                         onTap: () {
                           Navigator.pushNamed(context, '/popups');
                         },

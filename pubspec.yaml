@@ -55,6 +55,7 @@ dependencies:
   stream_video_push_notification: ^0.10.3
   web_socket_channel: ^3.0.3 # check later
   laravel_echo_null: ^0.1.1 # check later
+  socket_io_client: ^3.1.2 # check later
   lazy_load_indexed_stack: ^1.2.1
   firebase_core: ^3.15.2
   firebase_messaging: ^15.2.10

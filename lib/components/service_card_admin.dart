@@ -66,7 +66,7 @@ class ServiceCardAdmin extends StatelessWidget {
                     alignment: Alignment.center,
                     children: [
                       Text(
-                        price,
+                        "\$$price",
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
@@ -83,7 +83,7 @@ class ServiceCardAdmin extends StatelessWidget {
                   ),
                   if (salePrice != null)
                     Text(
-                      salePrice!,
+                      "\$$salePrice!",
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,

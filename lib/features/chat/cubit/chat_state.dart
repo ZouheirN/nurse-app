@@ -10,9 +10,9 @@ final class ChatLoading extends ChatState {}
 
 final class ChatLoaded extends ChatState {
   final int chatId;
-  final WebSocketChannel channel;
+  // final IO.Socket channel;
 
-  ChatLoaded(this.chatId, this.channel);
+  ChatLoaded(this.chatId);
 }
 
 final class ChatError extends ChatState {

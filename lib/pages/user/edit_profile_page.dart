@@ -11,6 +11,8 @@ import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/consts.dart';
 import 'package:nurse_app/extensions/context_extension.dart';
 import 'package:nurse_app/features/profile/cubit/profile_cubit.dart';
+import 'package:nurse_app/main.dart';
+import 'package:nurse_app/utilities/dialogs.dart';
 import 'package:nurse_app/utilities/helper_functions.dart';
 import 'package:quickalert/quickalert.dart';
 
@@ -31,7 +33,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final TextEditingController locationController = TextEditingController();
   final TextEditingController birthDateController = TextEditingController();
 
-  String completeNumber = '';
+  String originalCompleteNumber = '';
+  String editedCompleteNumber = '';
 
   final _profileCubit = ProfileCubit();
   final _profileCubitBtn = ProfileCubit();
@@ -92,12 +95,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 final number = PhoneNumber.fromCompleteNumber(
                     completeNumber: profile.phoneNumber!);
                 phoneController.text = number.number;
+                originalCompleteNumber = profile.phoneNumber!;
+                editedCompleteNumber = profile.phoneNumber!;
               } else {
                 phoneController.text = '';
               }
               emailController.text = profile.email ?? '';
               locationController.text = profile.location ?? '';
-              birthDateController.text = formatDateYYYYMMDD(profile.birthDate) ?? '';
+              birthDateController.text =
+                  formatDateYYYYMMDD(profile.birthDate) ?? '';
             }
           },
           builder: (context, state) {
@@ -165,8 +171,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 outlineColor: const Color(0xFFC2C2C2),
                                 focusedColor:
                                     const Color.fromARGB(255, 185, 185, 185),
-                                setCompleteNumber: (number) {
-                                  completeNumber = number;
+                                setCompleteNumber: (String number) {
+                                  editedCompleteNumber = number;
                                 },
                               ),
                               const SizedBox(height: 22),
@@ -190,23 +196,32 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       //   ),
                       // ),
                       const SizedBox(height: 20),
-                      Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 0,
-                        color: const Color.fromRGBO(255, 255, 255, 1),
-                        child: const ListTile(
-                          title: Text(
-                            'Change Password',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/forgotPassword',
+                            arguments: originalCompleteNumber.trim(),
+                          );
+                        },
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          leading: Icon(
-                            Icons.lock_outline,
-                            size: 20,
+                          elevation: 0,
+                          color: const Color.fromRGBO(255, 255, 255, 1),
+                          child: const ListTile(
+                            title: Text(
+                              'Change Password',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            leading: Icon(
+                              Icons.lock_outline,
+                              size: 20,
+                            ),
                           ),
                         ),
                       ),
@@ -258,18 +273,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
       bloc: _profileCubitBtn,
       listener: (context, state) {
         if (state is UpdateProfileSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Profile updated successfully'),
-            ),
-          );
-          _profileCubit.getProfile();
+          Dialogs.showSuccessDialog(
+              context,
+              'Success', // todo localize
+              'Profile updated successfully' // todo localize
+              );
+          // _profileCubit.getProfile();
         } else if (state is UpdateProfileFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-            ),
-          );
+          Dialogs.showErrorDialog(context, 'Error', state.message);
         }
       },
       builder: (context, state) {
@@ -290,7 +301,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
               location: locationController.text.trim().isEmpty
                   ? null
                   : locationController.text.trim(),
-              phoneNumber: completeNumber.isEmpty ? null : completeNumber,
+              phoneNumber:
+                  editedCompleteNumber.isEmpty ? null : editedCompleteNumber,
               email: emailController.text.trim().isEmpty
                   ? null
                   : emailController.text.trim(),

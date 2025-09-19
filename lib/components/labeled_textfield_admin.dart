@@ -6,6 +6,7 @@ class LabeledTextFieldAdmin extends StatefulWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final bool? hasPadding;
+  final bool? removeRightPadding;
   final Function? onChanged;
 
   const LabeledTextFieldAdmin({
@@ -16,6 +17,7 @@ class LabeledTextFieldAdmin extends StatefulWidget {
     this.validator,
     this.hasPadding = true,
     this.onChanged,
+    this.removeRightPadding = false,
   });
 
   @override
@@ -42,9 +44,11 @@ class _LabeledTextFieldAdminState extends State<LabeledTextFieldAdmin> {
     return Container(
       // height: 70,
       width: double.infinity,
-      padding: widget.hasPadding == true
-          ? const EdgeInsets.symmetric(horizontal: 40)
-          : EdgeInsets.zero,
+      padding: widget.removeRightPadding == true
+          ? const EdgeInsets.only(left: 40)
+          : widget.hasPadding == true
+              ? const EdgeInsets.symmetric(horizontal: 40)
+              : EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -18,7 +18,8 @@ import 'package:nurse_app/main.dart';
 import 'package:nurse_app/services/user.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stream_video_flutter/stream_video_flutter.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:nurse_app/services/user_token.dart' as ut;
 
 import 'call_screen.dart';
 import 'custom_message_bar.dart';
@@ -28,11 +29,12 @@ class ChatPage extends StatefulWidget {
   final bool isAdmin;
   final String? patientName;
 
-  const ChatPage(
-      {super.key,
-      required this.requestId,
-      required this.isAdmin,
-      this.patientName});
+  const ChatPage({
+    super.key,
+    required this.requestId,
+    required this.isAdmin,
+    this.patientName,
+  });
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -150,7 +152,7 @@ class _ChatPageState extends State<ChatPage> {
             } else if (state is ChatLoaded) {
               final chatId = state.chatId;
 
-              return _buildChatPage(chatId: chatId, channel: state.channel);
+              return _buildChatPage(chatId: chatId);
             } else {
               return const Center(
                 child: Text(
@@ -167,7 +169,6 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _buildChatPage({
     required int chatId,
-    required WebSocketChannel channel,
   }) {
     return Column(
       children: [
@@ -264,60 +265,58 @@ class _ChatPageState extends State<ChatPage> {
           child: Stack(
             children: [
               ListView(
-                // shrinkWrap: true,
-                // children: [
-                //   _buildMessages(
-                //     channel: channel,
-                //   ),
-                // ],
-                children :[
-                const BubbleSpecialOne(
-                  text: 'Hello! How can I assist you today?',
-                  color: Color.fromRGBO(122, 179, 65, 1.0),
-                  isSender: false,
-                  tail: true,
-                  textStyle: TextStyle(color: Colors.white),
-                ),
-                const BubbleSpecialOne(
-                  text: 'Hi! I have a question about my order.',
-                  color: Color.fromRGBO(64, 115, 15, 1.0),
-                  isSender: true,
-                  tail: true,
-                  textStyle: TextStyle(color: Colors.white),
-                ),
-                BubbleNormalImage(
-                  id: '1',
-                  image: FlutterMap(
-                    options: MapOptions(
-                      onTap: (tapPosition, point) async {
-                        final availableMaps = await MapLauncher.installedMaps;
-
-                        await availableMaps.first.showDirections(
-                          destination: Coords(
-                            33.563520668688156,
-                            35.389677252154485,
-                          ),
-                          destinationTitle: 'Patient Location',
-                        );
-                      },
-                      interactionOptions: const InteractionOptions(
-                          flags: InteractiveFlag.none),
-                      initialCenter: const lat_lng.LatLng(
-                          33.563520668688156, 35.389677252154485),
-                      initialZoom: 15.0,
-                    ),
-                    children: [
-                      TileLayer(
-                        urlTemplate:
-                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                        subdomains: const ['a', 'b', 'c'],
-                        userAgentPackageName: "com.devzur.alahmad",
-                      ),
-                    ],
-                  ),
-                  isSender: false,
-                ),
+                shrinkWrap: true,
+                children: [
+                  _buildMessages(),
                 ],
+                // children :[
+                // const BubbleSpecialOne(
+                //   text: 'Hello! How can I assist you today?',
+                //   color: Color.fromRGBO(122, 179, 65, 1.0),
+                //   isSender: false,
+                //   tail: true,
+                //   textStyle: TextStyle(color: Colors.white),
+                // ),
+                // const BubbleSpecialOne(
+                //   text: 'Hi! I have a question about my order.',
+                //   color: Color.fromRGBO(64, 115, 15, 1.0),
+                //   isSender: true,
+                //   tail: true,
+                //   textStyle: TextStyle(color: Colors.white),
+                // ),
+                // BubbleNormalImage(
+                //   id: '1',
+                //   image: FlutterMap(
+                //     options: MapOptions(
+                //       onTap: (tapPosition, point) async {
+                //         final availableMaps = await MapLauncher.installedMaps;
+                //
+                //         await availableMaps.first.showDirections(
+                //           destination: Coords(
+                //             33.563520668688156,
+                //             35.389677252154485,
+                //           ),
+                //           destinationTitle: 'Patient Location',
+                //         );
+                //       },
+                //       interactionOptions: const InteractionOptions(
+                //           flags: InteractiveFlag.none),
+                //       initialCenter: const lat_lng.LatLng(
+                //           33.563520668688156, 35.389677252154485),
+                //       initialZoom: 15.0,
+                //     ),
+                //     children: [
+                //       TileLayer(
+                //         urlTemplate:
+                //             'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                //         subdomains: const ['a', 'b', 'c'],
+                //         userAgentPackageName: "com.devzur.alahmad",
+                //       ),
+                //     ],
+                //   ),
+                //   isSender: false,
+                // ),
+                // ],
               ),
               Positioned(
                 bottom: 0,
@@ -492,122 +491,121 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget _buildMessages({
-    required WebSocketChannel channel,
-  }) {
+  Widget _buildMessages() {
     return BlocConsumer(
-        bloc: _chatCubitMsg,
-        listener: (context, state) {
-          if (state is MessagesLoaded) {
-            final messages = state.messages.data?.messages;
+      bloc: _chatCubitMsg,
+      listener: (context, state) {
+        if (state is MessagesLoaded) {
+          final messages = state.messages.data?.messages;
 
-            for (var msg in messages!) {
-              if (!this.messages.any((m) => m.id == msg.id)) {
-                this.messages.add(msg);
-              }
+          for (var msg in messages!) {
+            if (!this.messages.any((m) => m.id == msg.id)) {
+              this.messages.add(msg);
             }
           }
-
-          if (state is SendMessageSuccess) {
-            _messageController.clear();
-            _scrollController.animateTo(
-              _scrollController.position.maxScrollExtent + 100,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeOut,
-            );
-
-            // add message to the start
-            messages.insert(0, state.message);
-          }
-        },
-        builder: (context, state) {
-          final userId = UserBox.getUser()!.id?.toInt();
-
-          return ListView.builder(
-            reverse: true,
-            itemCount: messages.length,
-            shrinkWrap: true,
-            controller: _scrollController,
-            itemBuilder: (context, index) {
-              final message = messages[index];
-
-              switch (message.type) {
-                case 'text':
-                  return userId != message.senderId
-                      ? BubbleSpecialOne(
-                          text: message.text ?? '',
-                          color: const Color.fromRGBO(122, 179, 65, 1.0),
-                          isSender: false,
-                          tail: true,
-                          textStyle: const TextStyle(color: Colors.white),
-                        )
-                      : BubbleSpecialOne(
-                          text: message.text ?? '',
-                          color: const Color.fromRGBO(64, 115, 15, 1.0),
-                          isSender: true,
-                          tail: true,
-                          textStyle: const TextStyle(color: Colors.white),
-                        );
-                default:
-                  return const Text('Unsupported message type');
-              }
-            },
-          );
         }
-        // StreamBuilder(
-        //   stream: channel.stream,
-        //   initialData: messages,
-        //   builder: (context, snapshot) {
-        //     if (snapshot.hasError) {
-        //       return Center(
-        //         child: Text(
-        //           'Error: ${snapshot.error}',
-        //           style: const TextStyle(color: Colors.red),
-        //         ),
-        //       );
-        //     }
-        //
-        //     if (!snapshot.hasData) {
-        //       return const Loader();
-        //     }
-        //
-        //     final data = snapshot.data;
-        //
-        //     if (data is! List<Message>) {
-        //       return const Text('No messages');
-        //     }
-        //
-        //     return ListView.builder(
-        //       itemCount: data.length,
-        //       shrinkWrap: true,
-        //       controller: _scrollController,
-        //       itemBuilder: (context, index) {
-        //         final message = data[index];
-        //
-        //         switch (message.type) {
-        //           case 'text':
-        //             return widget.isAdmin
-        //                 ? BubbleSpecialOne(
-        //                     text: message.text ?? '',
-        //                     color: const Color.fromRGBO(122, 179, 65, 1.0),
-        //                     isSender: false,
-        //                     tail: true,
-        //                     textStyle: const TextStyle(color: Colors.white),
-        //                   )
-        //                 : BubbleSpecialOne(
-        //                     text: message.text ?? '',
-        //                     color: const Color.fromRGBO(64, 115, 15, 1.0),
-        //                     isSender: true,
-        //                     tail: true,
-        //                     textStyle: const TextStyle(color: Colors.white),
-        //                   );
-        //           default:
-        //             return const Text('Unsupported message type');
-        //         }
-        //       },
-        //     );
-        //   },
-        // ),
+
+        if (state is SendMessageSuccess) {
+          _messageController.clear();
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent + 100,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+
+          // add message to the start
+          messages.insert(0, state.message);
+        }
+      },
+      builder: (context, state) {
+        final userId = UserBox.getUser()!.id?.toInt();
+
+        return ListView.builder(
+          reverse: true,
+          itemCount: messages.length,
+          shrinkWrap: true,
+          controller: _scrollController,
+          itemBuilder: (context, index) {
+            final message = messages[index];
+
+            switch (message.type) {
+              case 'text':
+                return userId != message.senderId
+                    ? BubbleSpecialOne(
+                        text: message.text ?? '',
+                        color: const Color.fromRGBO(122, 179, 65, 1.0),
+                        isSender: false,
+                        tail: true,
+                        textStyle: const TextStyle(color: Colors.white),
+                      )
+                    : BubbleSpecialOne(
+                        text: message.text ?? '',
+                        color: const Color.fromRGBO(64, 115, 15, 1.0),
+                        isSender: true,
+                        tail: true,
+                        textStyle: const TextStyle(color: Colors.white),
+                      );
+              default:
+                return const Text('Unsupported message type');
+            }
+          },
         );
+      },
+    );
+
+    // return StreamBuilder(
+    //   stream: streamSocket.getResponse,
+    //   initialData: messages,
+    //   builder: (context, snapshot) {
+    //     if (snapshot.hasError) {
+    //       return Center(
+    //         child: Text(
+    //           'Error: ${snapshot.error}',
+    //           style: const TextStyle(color: Colors.red),
+    //         ),
+    //       );
+    //     }
+    //
+    //     if (!snapshot.hasData) {
+    //       return const Loader();
+    //     }
+    //
+    //     final data = snapshot.data;
+    //
+    //     if (data is! List<Message>) {
+    //       return const Text('No messages');
+    //     }
+    //
+    //     return ListView.builder(
+    //       itemCount: data.length,
+    //       shrinkWrap: true,
+    //       controller: _scrollController,
+    //       itemBuilder: (context, index) {
+    //         final message = data[index];
+    //
+    //         switch (message.type) {
+    //           case 'text':
+    //             return widget.isAdmin
+    //                 ? BubbleSpecialOne(
+    //                     text: message.text ?? '',
+    //                     color: const Color.fromRGBO(122, 179, 65, 1.0),
+    //                     isSender: false,
+    //                     tail: true,
+    //                     textStyle: const TextStyle(color: Colors.white),
+    //                   )
+    //                 : BubbleSpecialOne(
+    //                     text: message.text ?? '',
+    //                     color: const Color.fromRGBO(64, 115, 15, 1.0),
+    //                     isSender: true,
+    //                     tail: true,
+    //                     textStyle: const TextStyle(color: Colors.white),
+    //                   );
+    //           default:
+    //             return const Text('Unsupported message type');
+    //         }
+    //       },
+    //     );
+    //   },
+    // );
   }
 }
