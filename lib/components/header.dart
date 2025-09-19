@@ -70,8 +70,8 @@ class _HeaderState extends State<Header> {
     }
   }
 
-  Future<void> fetchLocationFromCoordinates(
-      double latitude, double longitude) async {
+  Future<void> fetchLocationFromCoordinates(double latitude,
+      double longitude) async {
     try {
       final response = await http.get(
         Uri.parse(
@@ -97,6 +97,11 @@ class _HeaderState extends State<Header> {
 
   @override
   Widget build(BuildContext context) {
+    final double statusBarHeight = MediaQuery
+        .of(context)
+        .padding
+        .top;
+
     return ValueListenableBuilder(
       valueListenable: UserBox.listenToUser(),
       builder: (context, value, child) {
@@ -105,23 +110,28 @@ class _HeaderState extends State<Header> {
         return Column(
           children: [
             Container(
+              height: 56 + statusBarHeight,
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/header_background.png'),
                   fit: BoxFit.cover,
                 ),
               ),
+              padding: EdgeInsets.only(
+                top: statusBarHeight,
+              ),
               child: ListTile(
                 minVerticalPadding: 0,
                 leading: const ColorFiltered(
                   colorFilter:
-                      ColorFilter.mode(Colors.white, BlendMode.srcATop),
+                  ColorFilter.mode(Colors.white, BlendMode.srcATop),
                   child: Image(
                     image: AssetImage('assets/images/square_logo.png'),
                   ),
                 ),
                 title: IntrinsicHeight(
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const VerticalDivider(
                         color: Colors.white,
@@ -132,7 +142,7 @@ class _HeaderState extends State<Header> {
                           '${context.localizations.welcomeBack}\n${user?.name ?? ''}',
                           style: const TextStyle(
                             fontWeight: FontWeight.w800,
-                            fontSize: 20,
+                            fontSize: 16,
                             fontStyle: FontStyle.italic,
                             color: Colors.white,
                           ),

@@ -86,6 +86,7 @@ class SocialProfilesPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
+        top: false,
         child: Column(
           children: [
             const Header(

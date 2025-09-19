@@ -48,9 +48,10 @@ class _HistoryCardState extends State<HistoryCard>
     final size = MediaQuery.of(context).size;
     final aspectRatio = size.height / size.width;
 
-    final isOngoing = widget.request.status == 'ongoing';
+    final isOngoing = isRequestOngoing(widget.request.status);
     // final name = widget.request.name.toString();
-    final problemDescription = widget.request.problemDescription.toString();
+    // final problemDescription = widget.request.problemDescription.toString();
+    final name = widget.request.name.toString();
     final time = formatDateTimeForCard(widget.request.scheduledTime ?? widget.request.createdAt!);
 
     // final sumOfPrices = widget.request.services
@@ -116,7 +117,7 @@ class _HistoryCardState extends State<HistoryCard>
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
-                                  problemDescription,
+                                  name,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,

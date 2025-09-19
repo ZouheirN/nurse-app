@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/labeled_expandable_textfield_admin.dart';
 import 'package:nurse_app/components/loader.dart';
+import 'package:nurse_app/components/textfield.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/features/notification/cubit/notification_cubit.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
@@ -269,6 +270,9 @@ class _SendNotificationPageState extends State<SendNotificationPage> {
   }
 
   Widget _buildSpecificUserScreen() {
+    List filteredUsers = [];
+    ValueNotifier<String> searchQuery = ValueNotifier<String>('');
+
     return Column(
       children: [
         ListTile(
@@ -293,21 +297,48 @@ class _SendNotificationPageState extends State<SendNotificationPage> {
               } else if (state is GetNotificationUsersSuccess) {
                 final users = state.users.users;
 
-                return ListView.builder(
-                  itemCount: users.length,
-                  itemBuilder: (context, index) {
-                    final user = users[index];
+                return ValueListenableBuilder(
+                    valueListenable: searchQuery,
+                    builder: (context, value, child) {
+                      filteredUsers = users.where((user) {
+                        final nameLower = user.name.toString().toLowerCase();
+                        final emailLower = user.email.toString().toLowerCase();
+                        final searchLower = value.toLowerCase();
+                        return nameLower.contains(searchLower) ||
+                            emailLower.contains(searchLower);
+                      }).toList();
 
-                    return ListTile(
-                      title: Text(user.name.toString()),
-                      subtitle: Text(user.email.toString()),
-                      onTap: () {
-                        _selectedScreen.value =
-                            'send_specific_notification+${user.id}+${user.name}';
-                      },
-                    );
-                  },
-                );
+                      return Column(
+                        children: [
+                          MyTextField(
+                            icon: const Icon(Icons.search),
+                            hintText: 'Search Users',
+                            inputType: TextInputType.text,
+                            obscureText: false,
+                            onChanged: (p0) {
+                              searchQuery.value = p0;
+                            },
+                          ),
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: filteredUsers.length,
+                              itemBuilder: (context, index) {
+                                final user = filteredUsers[index];
+
+                                return ListTile(
+                                  title: Text(user.name.toString()),
+                                  subtitle: Text(user.email.toString()),
+                                  onTap: () {
+                                    _selectedScreen.value =
+                                        'send_specific_notification+${user.id}+${user.name}';
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                    });
               }
 
               return const Center(child: Text('An unexpected error occurred.'));

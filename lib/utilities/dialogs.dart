@@ -23,10 +23,10 @@ class Dialogs {
         final path =
             '${(await getTemporaryDirectory()).path}/${image.split('/').last}';
 
-        // final response = await dio.download(
-        //   image,
-        //   path,
-        // );
+        final response = await dio.download(
+          image,
+          path,
+        );
 
         showDialog(
           context: context,
@@ -37,7 +37,11 @@ class Dialogs {
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.file(File(path)),
+                  if (response.statusCode == 200)
+                    Image.file(
+                      File(path),
+                      height: 150,
+                    ),
                   if (content != null) ...[
                     const SizedBox(height: 16),
                     Text(

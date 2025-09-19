@@ -64,3 +64,9 @@ void showCustomDatePicker(
     }
   });
 }
+
+bool isRequestOngoing(String? status) {
+  if (status == null) return false;
+
+  return status == 'assigned' || status == 'in_progress';
+}

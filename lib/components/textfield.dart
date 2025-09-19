@@ -8,6 +8,7 @@ class MyTextField extends StatefulWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final bool? enabled;
+  final Function(String)? onChanged;
 
   const MyTextField({
     super.key,
@@ -18,6 +19,7 @@ class MyTextField extends StatefulWidget {
     this.controller,
     this.validator,
     this.enabled = true,
+    this.onChanged,
   });
 
   @override
@@ -45,6 +47,7 @@ class _MyTextFieldState extends State<MyTextField> {
       // height: 50,
       padding: const EdgeInsets.symmetric(horizontal: 27),
       child: TextFormField(
+        onChanged: widget.onChanged,
         enabled: widget.enabled,
         controller: widget.controller,
         keyboardType: widget.inputType,

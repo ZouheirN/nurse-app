@@ -41,11 +41,15 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
       emit(AuthenticationSignUpSuccess(phoneNumber: phoneNumber));
     } on DioException catch (e) {
+      logger.e(e);
+      logger.e(e.response);
       if (e.response!.statusCode == 422) {
         emit(AuthenticationSignUpFailure(
             message: e.response!.data['errors']['email'][0]));
       } else {
-        emit(AuthenticationSignUpFailure(message: e.response!.data['message']));
+        emit(AuthenticationSignUpFailure(
+            message: e.response?.data['error'] ??
+                'An error occurred. Please try again later.'));
       }
     } catch (e) {
       logger.e(e.toString());

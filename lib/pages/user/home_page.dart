@@ -34,7 +34,16 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      // appBar: AppBar(
+      //   centerTitle: true,
+      //   flexibleSpace: const Image(
+      //     image: AssetImage('assets/images/header_background.png'),
+      //     fit: BoxFit.cover,
+      //   ),
+      //   backgroundColor: Colors.transparent,
+      // ),
       body: SafeArea(
+        top: false,
         child: ValueListenableBuilder(
           valueListenable: _selectedOption,
           builder: (context, value, child) {
@@ -87,13 +96,25 @@ class _HomePageState extends State<HomePage> {
                                             _selectedOption.value =
                                                 category.name;
                                           },
-                                          child: ClipRRect(
+                                          child: SizedBox(
+                                            width: categories.length % 2 == 1 &&
+                                                    category == categories.last
+                                                ? MediaQuery.sizeOf(context)
+                                                        .width -
+                                                    32
+                                                : (MediaQuery.sizeOf(context)
+                                                            .width -
+                                                        48) /
+                                                    2,
+                                            child: ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               child: // todo fix
                                                   CachedNetworkImage(
                                                       imageUrl:
-                                                          'https://i.ibb.co/d0KcQgdz/category1.jpg')),
+                                                          'https://i.ibb.co/d0KcQgdz/category1.jpg'),
+                                            ),
+                                          ),
                                         ),
                                     ],
                                   ),

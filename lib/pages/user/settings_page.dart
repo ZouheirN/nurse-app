@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nurse_app/components/profile_button.dart';
 import 'package:nurse_app/components/second_button.dart';
@@ -6,10 +7,18 @@ import 'package:nurse_app/extensions/context_extension.dart';
 import 'package:nurse_app/features/authentication/models/user_model.dart';
 import 'package:nurse_app/utilities/localization_box.dart';
 
+import '../../features/home/cubit/home_cubit.dart';
 import '../../services/user.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  final _homeCubit = HomeCubit();
 
   void _showSupportSheet(BuildContext context) {
     showModalBottomSheet(
@@ -180,6 +189,12 @@ class SettingsPage extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    _homeCubit.getFaqs(isAdmin: false);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     UserModel? user = UserBox.getUser();
 
@@ -202,273 +217,308 @@ class SettingsPage extends StatelessWidget {
         ),
         backgroundColor: Colors.transparent,
       ),
-      body: Stack(
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // const SizedBox(height: 40),
+            // const Center(
+            //   child: Image(
+            //     image: AssetImage('assets/images/logo.png'),
+            //     height: 110,
+            //     width: 220,
+            //   ),
+            // ),
+            const SizedBox(height: 16),
+            // Center(
+            //   child: SettingsButton(
+            //     icon: const Icon(Icons.account_circle),
+            //     buttonText: 'Account Details',
+            //     onTap: () {
+            //       Navigator.pushNamed(context, '/editProfile');
+            //     },
+            //   ),
+            // ),
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              margin: const EdgeInsets.symmetric(horizontal: 12),
+              elevation: 0,
+              color: const Color.fromRGBO(255, 255, 255, 1),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    // const SizedBox(height: 40),
-                    // const Center(
-                    //   child: Image(
-                    //     image: AssetImage('assets/images/logo.png'),
-                    //     height: 110,
-                    //     width: 220,
-                    //   ),
-                    // ),
-                    const SizedBox(height: 16),
-                    // Center(
-                    //   child: SettingsButton(
-                    //     icon: const Icon(Icons.account_circle),
-                    //     buttonText: 'Account Details',
-                    //     onTap: () {
-                    //       Navigator.pushNamed(context, '/editProfile');
-                    //     },
-                    //   ),
-                    // ),
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                    ProfileButton(
+                      iconImage: const AssetImage(
+                        'assets/images/user2.png',
                       ),
-                      margin: const EdgeInsets.symmetric(horizontal: 12),
-                      elevation: 0,
-                      color: const Color.fromRGBO(255, 255, 255, 1),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ProfileButton(
-                              iconImage: const AssetImage(
-                                'assets/images/user2.png',
-                              ),
-                              buttonText: context.localizations.profile,
-                              onTap: () {
-                                Navigator.pushNamed(context, '/editProfile');
-                              },
-                            ),
-                            ProfileButton(
-                              iconImage: const AssetImage(
-                                'assets/images/support.png',
-                              ),
-                              buttonText: context.localizations.support,
-                              onTap: () {
-                                _showSupportSheet(context);
-                              },
-                            ),
-                            ProfileButton(
-                              iconImage: const AssetImage(
-                                'assets/images/language.png',
-                              ),
-                              buttonText: context.localizations.languageText,
-                              onTap: () {
-                                _showLanguageSheet(context);
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
+                      buttonText: context.localizations.profile,
+                      onTap: () {
+                        Navigator.pushNamed(context, '/editProfile');
+                      },
                     ),
-                    const SizedBox(height: 12),
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                    ProfileButton(
+                      iconImage: const AssetImage(
+                        'assets/images/support.png',
                       ),
-                      margin: const EdgeInsets.symmetric(horizontal: 12),
-                      elevation: 0,
-                      color: const Color.fromRGBO(255, 255, 255, 1),
-                      child: Column(
-                        children: [
-                          ListTile(
-                            dense: true,
-                            title: Text(
-                              context.localizations.accountDetails,
-                              style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          ListTile(
-                            leading: Image.asset(
-                              'assets/images/notification2.png',
-                              height: 25,
-                              width: 25,
-                            ),
-                            title: Text(
-                              context.localizations.notifications,
-                              style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            onTap: () {
-                              Navigator.pushNamed(context, '/notifications', arguments: {
-                                'showLeading': true,
-                              });
-                            },
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 16,
-                            ),
-                            child: Divider(
-                              color: Color.fromRGBO(120, 120, 120, 1),
-                              height: 1,
-                            ),
-                          ),
-                          ListTile(
-                            onTap: () {
-                              Navigator.pushNamed(context, '/updateLocation');
-                            },
-                            leading: const Icon(Icons.location_on_outlined),
-                            title: Text(
-                              context.localizations.location,
-                              style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      buttonText: context.localizations.support,
+                      onTap: () {
+                        _showSupportSheet(context);
+                      },
                     ),
-                    // Center(
-                    //   child: SettingsButton(
-                    //     icon: const Icon(Icons.location_on),
-                    //     buttonText: 'Update Location',
-                    //     onTap: () {
-                    //       Navigator.pushNamed(context, '/updateLocation');
-                    //     },
-                    //   ),
-                    // ),
-                    const SizedBox(height: 14),
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                    ProfileButton(
+                      iconImage: const AssetImage(
+                        'assets/images/language.png',
                       ),
-                      margin: const EdgeInsets.symmetric(horizontal: 12),
-                      elevation: 0,
-                      color: const Color.fromRGBO(255, 255, 255, 1),
-                      child: Column(
-                        children: [
-                          ListTile(
-                            dense: true,
-                            title: Text(
-                              context.localizations.helpCenter,
-                              style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          ListTile(
-                            leading: Image.asset(
-                              'assets/images/job.png',
-                              height: 25,
-                              width: 25,
-                            ),
-                            title: Text(
-                              context.localizations.applyForAJob,
-                              style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            trailing: const Icon(
-                              Icons.chevron_right,
-                              size: 20,
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 16,
-                            ),
-                            child: Divider(
-                              color: Color.fromRGBO(120, 120, 120, 1),
-                              height: 1,
-                            ),
-                          ),
-                          ExpansionTile(
-                            iconColor: Colors.black,
-                            collapsedIconColor: Colors.black,
-                            leading: Image.asset(
-                              'assets/images/faq.png',
-                              height: 25,
-                              width: 25,
-                            ),
-                            title: Text(
-                              context.localizations.fAQs,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            collapsedShape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ],
-                      ),
+                      buttonText: context.localizations.languageText,
+                      onTap: () {
+                        _showLanguageSheet(context);
+                      },
                     ),
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(horizontal: 24),
-                    //   child: LogoutButton(
-                    //     icon: const Icon(Icons.logout),
-                    //     buttonText: 'Logout',
-                    //     onTap: () {
-                    //       logoutUser();
-                    //       Navigator.pushNamedAndRemoveUntil(
-                    //           context, '/login', (route) => false);
-                    //     },
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(bottom: 16),
-                child: Center(
-                  child: ColorFiltered(
-                    colorFilter:
-                        ColorFilter.mode(Colors.black, BlendMode.srcATop),
-                    child: Image(
-                      height: 80,
-                      image: AssetImage(
-                        'assets/images/square_logo.png',
+            ),
+            const SizedBox(height: 12),
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              margin: const EdgeInsets.symmetric(horizontal: 12),
+              elevation: 0,
+              color: const Color.fromRGBO(255, 255, 255, 1),
+              child: Column(
+                children: [
+                  ListTile(
+                    dense: true,
+                    title: Text(
+                      context.localizations.accountDetails,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
+                  ListTile(
+                    leading: Image.asset(
+                      'assets/images/notification2.png',
+                      height: 25,
+                      width: 25,
+                    ),
+                    title: Text(
+                      context.localizations.notifications,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/notifications',
+                          arguments: {
+                            'showLeading': true,
+                          });
+                    },
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16,
+                    ),
+                    child: Divider(
+                      color: Color.fromRGBO(120, 120, 120, 1),
+                      height: 1,
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/updateLocation');
+                    },
+                    leading: const Icon(Icons.location_on_outlined),
+                    title: Text(
+                      context.localizations.location,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Center(
+            //   child: SettingsButton(
+            //     icon: const Icon(Icons.location_on),
+            //     buttonText: 'Update Location',
+            //     onTap: () {
+            //       Navigator.pushNamed(context, '/updateLocation');
+            //     },
+            //   ),
+            // ),
+            const SizedBox(height: 14),
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              margin: const EdgeInsets.symmetric(horizontal: 12),
+              elevation: 0,
+              color: const Color.fromRGBO(255, 255, 255, 1),
+              child: Column(
+                children: [
+                  ListTile(
+                    dense: true,
+                    title: Text(
+                      context.localizations.helpCenter,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    leading: Image.asset(
+                      'assets/images/job.png',
+                      height: 25,
+                      width: 25,
+                    ),
+                    title: Text(
+                      context.localizations.applyForAJob,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      size: 20,
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16,
+                    ),
+                    child: Divider(
+                      color: Color.fromRGBO(120, 120, 120, 1),
+                      height: 1,
+                    ),
+                  ),
+                  ExpansionTile(
+                    iconColor: Colors.black,
+                    collapsedIconColor: Colors.black,
+                    leading: Image.asset(
+                      'assets/images/faq.png',
+                      height: 25,
+                      width: 25,
+                    ),
+                    title: Text(
+                      context.localizations.fAQs,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    collapsedShape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    children: [
+                      BlocBuilder<HomeCubit, HomeState>(
+                          bloc: _homeCubit,
+                          builder: (context, state) {
+                            if (state is GetFaqsSuccess) {
+                              final faqs = state.faqs.data;
+
+                              return ListView.separated(
+                                shrinkWrap: true,
+                                physics:
+                                    const NeverScrollableScrollPhysics(),
+                                itemCount: faqs.length,
+                                separatorBuilder: (context, index) =>
+                                    const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 16),
+                                  child: Divider(
+                                    color: Color.fromRGBO(
+                                        120, 120, 120, 1),
+                                    height: 1,
+                                  ),
+                                ),
+                                itemBuilder: (context, index) {
+                                  final faq = faqs[index];
+                                  return ListTile(
+                                    title: Text(
+                                      faq.question.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                      faq.answer.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              return const SizedBox.shrink();
+                            }
+                          }),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Center(
+              child: ColorFiltered(
+                colorFilter:
+                    ColorFilter.mode(Colors.black, BlendMode.srcATop),
+                child: Image(
+                  height: 80,
+                  image: AssetImage(
+                    'assets/images/square_logo.png',
+                  ),
                 ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.only(bottom: 30),
-              //   child: Center(
-              //     child: Column(
-              //       children: [
-              //         const Text(
-              //           'Powered By',
-              //           style: TextStyle(
-              //               fontSize: 18, fontWeight: FontWeight.w900),
-              //         ),
-              //         const SizedBox(height: 3),
-              //         Image.asset(
-              //           'assets/images/powered_by.png',
-              //           width: 150,
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
-            ],
-          ),
-        ],
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: Column(
+                children: [
+                  const Text(
+                    'Powered By',
+                    style: TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.w900),
+                  ),
+                  // const SizedBox(height: 3),
+                  Image.asset(
+                    'assets/images/powered_by.png',
+                    width: 150,
+                  ),
+                ],
+              ),
+            ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 24),
+            //   child: LogoutButton(
+            //     icon: const Icon(Icons.logout),
+            //     buttonText: 'Logout',
+            //     onTap: () {
+            //       logoutUser();
+            //       Navigator.pushNamedAndRemoveUntil(
+            //           context, '/login', (route) => false);
+            //     },
+            //   ),
+            // ),
+          ],
+        ),
       ),
     );
   }

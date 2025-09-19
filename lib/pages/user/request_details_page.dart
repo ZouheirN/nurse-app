@@ -61,8 +61,8 @@ class RequestDetailsPage extends StatelessWidget {
             if (state is RequestDetailsSuccess) {
               final request = state.request;
 
-              // final isOngoing = request.status == 'ongoing';
-              const isOngoing = true;
+              final isOngoing = isRequestOngoing(request.status);
+              // const isOngoing = true;
 
               // todo fix names of requests (not hardcoded)
               if (isOngoing) {
@@ -283,9 +283,9 @@ class RequestDetailsPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Critical Care Service',
-                  style: TextStyle(
+                Text(
+                  request.name,
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
                   ),
@@ -307,7 +307,7 @@ class RequestDetailsPage extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      '\$${formatPrice(20)}',
+                      '\$${formatPrice(request.totalPrice)}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 8,

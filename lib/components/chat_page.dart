@@ -265,59 +265,59 @@ class _ChatPageState extends State<ChatPage> {
             children: [
               ListView(
                 // shrinkWrap: true,
-                children: [
-                  _buildMessages(
-                    channel: channel,
-                  ),
-                ],
-                // [
-                // const BubbleSpecialOne(
-                //   text: 'Hello! How can I assist you today?',
-                //   color: Color.fromRGBO(122, 179, 65, 1.0),
-                //   isSender: false,
-                //   tail: true,
-                //   textStyle: TextStyle(color: Colors.white),
-                // ),
-                // const BubbleSpecialOne(
-                //   text: 'Hi! I have a question about my order.',
-                //   color: Color.fromRGBO(64, 115, 15, 1.0),
-                //   isSender: true,
-                //   tail: true,
-                //   textStyle: TextStyle(color: Colors.white),
-                // ),
-                // BubbleNormalImage(
-                //   id: '1',
-                //   image: FlutterMap(
-                //     options: MapOptions(
-                //       onTap: (tapPosition, point) async {
-                //         final availableMaps = await MapLauncher.installedMaps;
-                //
-                //         await availableMaps.first.showDirections(
-                //           destination: Coords(
-                //             33.563520668688156,
-                //             35.389677252154485,
-                //           ),
-                //           destinationTitle: 'Patient Location',
-                //         );
-                //       },
-                //       interactionOptions: const InteractionOptions(
-                //           flags: InteractiveFlag.none),
-                //       initialCenter: const lat_lng.LatLng(
-                //           33.563520668688156, 35.389677252154485),
-                //       initialZoom: 15.0,
-                //     ),
-                //     children: [
-                //       TileLayer(
-                //         urlTemplate:
-                //             'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                //         subdomains: const ['a', 'b', 'c'],
-                //         userAgentPackageName: "com.devzur.alahmad",
-                //       ),
-                //     ],
+                // children: [
+                //   _buildMessages(
+                //     channel: channel,
                 //   ),
-                //   isSender: false,
-                // ),
                 // ],
+                children :[
+                const BubbleSpecialOne(
+                  text: 'Hello! How can I assist you today?',
+                  color: Color.fromRGBO(122, 179, 65, 1.0),
+                  isSender: false,
+                  tail: true,
+                  textStyle: TextStyle(color: Colors.white),
+                ),
+                const BubbleSpecialOne(
+                  text: 'Hi! I have a question about my order.',
+                  color: Color.fromRGBO(64, 115, 15, 1.0),
+                  isSender: true,
+                  tail: true,
+                  textStyle: TextStyle(color: Colors.white),
+                ),
+                BubbleNormalImage(
+                  id: '1',
+                  image: FlutterMap(
+                    options: MapOptions(
+                      onTap: (tapPosition, point) async {
+                        final availableMaps = await MapLauncher.installedMaps;
+
+                        await availableMaps.first.showDirections(
+                          destination: Coords(
+                            33.563520668688156,
+                            35.389677252154485,
+                          ),
+                          destinationTitle: 'Patient Location',
+                        );
+                      },
+                      interactionOptions: const InteractionOptions(
+                          flags: InteractiveFlag.none),
+                      initialCenter: const lat_lng.LatLng(
+                          33.563520668688156, 35.389677252154485),
+                      initialZoom: 15.0,
+                    ),
+                    children: [
+                      TileLayer(
+                        urlTemplate:
+                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        subdomains: const ['a', 'b', 'c'],
+                        userAgentPackageName: "com.devzur.alahmad",
+                      ),
+                    ],
+                  ),
+                  isSender: false,
+                ),
+                ],
               ),
               Positioned(
                 bottom: 0,

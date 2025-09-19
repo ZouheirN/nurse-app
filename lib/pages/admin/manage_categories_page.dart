@@ -163,6 +163,7 @@ class _ManageCategoriesPageState extends State<ManageCategoriesPage> {
                               ? const Icon(Icons.image_not_supported)
                               : CachedNetworkImage(
                                   imageUrl: category.imageUrl.toString(),
+                                  width: 50,
                                 ),
                         );
                       },
