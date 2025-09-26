@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 import 'package:nurse_app/features/chat/models/get_messages_model.dart';
 import 'package:nurse_app/services/user.dart';
 import 'package:nurse_app/services/user_token.dart';
+import 'package:stream_video/stream_video.dart' as sv;
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../consts.dart';
@@ -14,6 +15,38 @@ part 'chat_state.dart';
 
 class ChatCubit extends Cubit<ChatState> {
   ChatCubit() : super(ChatInitial());
+
+  Future<void> getStreamToken() async {
+    if (await UserToken.getStreamToken() != null) {
+      logger.i("Already have Stream Token");
+      return;
+    }
+
+    try {
+      final token = await UserToken.getToken();
+
+      final response = await dio.get(
+        '$HOST/stream/token',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      final streamToken = response.data['token'];
+
+      UserToken.setStreamToken(streamToken);
+      logger.i("Got Stream Token: $streamToken");
+      await sv.StreamVideo.reset(disconnect: true);
+      initializeStreamVideo(streamToken);
+    } on DioException catch (e) {
+      logger.e(e.response?.data);
+    } catch (e) {
+      logger.e(e.toString());
+    }
+  }
 
   Future<void> initializeChat(int requestId) async {
     emit(ChatLoading());

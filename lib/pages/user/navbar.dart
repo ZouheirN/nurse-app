@@ -16,6 +16,7 @@ import 'package:stream_video/stream_video.dart';
 import 'package:badges/badges.dart' as badges;
 
 import '../../components/call_screen.dart';
+import '../../features/chat/cubit/chat_cubit.dart';
 import '../../features/home/cubit/home_cubit.dart';
 import '../../services/firebase_messaging_handler.dart';
 
@@ -117,6 +118,9 @@ class _NavbarState extends State<Navbar> {
 
     _observeFcmMessages();
     _observeCallKitEvents();
+
+    // Get Stream Video Token
+    ChatCubit().getStreamToken();
 
     super.initState();
   }

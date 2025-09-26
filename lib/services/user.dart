@@ -19,46 +19,13 @@ void loginUser(num userId, num roleId) async {
     OneSignal.login(userId.toString());
   }
 
-  final user = UserBox.getUser();
-
-  final isAdmin = user?.roleId == 1;
-
   await StreamVideo.reset(disconnect: true);
-  StreamVideo(
-    STREAM_API_KEY,
-    user: User.regular(
-      // userId: user!.id.toString(),
-      userId: '2',
-      role: isAdmin ? 'admin' : 'user',
-      name: user?.name,
-    ),
-    // userToken:
-    //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSJ9.YNCFmWqRfWNwzjWzy8CcsRe6D9aVxL45u8gvuRofVbY',
-    userToken:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMiJ9.2jqV-NqPiD9toEOo8RDu37F--rKxPMkObGKsbvvRUf0',
-    options: const StreamVideoOptions(
-      keepConnectionsAliveWhenInBackground: true,
-    ),
-    pushNotificationManagerProvider: StreamVideoPushNotificationManager.create(
-      iosPushProvider: const StreamVideoPushProvider.apn(
-        name: iosPushProviderName,
-      ),
-      androidPushProvider: const StreamVideoPushProvider.firebase(
-        name: androidPushProviderName,
-      ),
-      pushParams: const StreamVideoPushParams(
-        appName: 'Al Ahmad',
-        ios: IOSParams(iconName: 'IconMask'),
-      ),
-      registerApnDeviceToken: true,
-    ),
-  ).connect();
-
-  // StreamVideo(
-  //   'mmhfdzb5evj2',
-  //   user: User.regular(userId: 'Separate_Twig', role: 'admin', name: 'John Doe'),
-  //   userToken:
-  //       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3Byb250by5nZXRzdHJlYW0uaW8iLCJzdWIiOiJ1c2VyL1NlcGFyYXRlX1R3aWciLCJ1c2VyX2lkIjoiU2VwYXJhdGVfVHdpZyIsInZhbGlkaXR5X2luX3NlY29uZHMiOjYwNDgwMCwiaWF0IjoxNzU3MzU2NzE0LCJleHAiOjE3NTc5NjE1MTR9.yRYZKRfnAOOH9XxKckIuJrwJDVkN5HiL45hSFvKmoEw'  );
+  final streamToken = await ut.UserToken.getStreamToken();
+  if (streamToken != null) {
+    initializeStreamVideo(streamToken);
+  } else {
+    StreamVideo(STREAM_API_KEY, user: User.anonymous());
+  }
 
   // PusherChannelsFlutter pusher = PusherChannelsFlutter.getInstance();
   // try {
@@ -100,6 +67,39 @@ void logoutUser() {
 
   ut.UserToken.deleteToken();
   UserBox.deleteUser();
+}
+
+void initializeStreamVideo(String token) {
+  final user = UserBox.getUser();
+
+  final isAdmin = user?.roleId == 1;
+
+  StreamVideo(
+    STREAM_API_KEY,
+    user: User.regular(
+      userId: user!.id.toString(),
+      role: isAdmin ? 'admin' : 'user',
+      name: user.name,
+    ),
+    userToken: token,
+    options: const StreamVideoOptions(
+      keepConnectionsAliveWhenInBackground: true,
+      autoConnect: false,
+    ),
+    pushNotificationManagerProvider: StreamVideoPushNotificationManager.create(
+      iosPushProvider: const StreamVideoPushProvider.apn(
+        name: iosPushProviderName,
+      ),
+      androidPushProvider: const StreamVideoPushProvider.firebase(
+        name: androidPushProviderName,
+      ),
+      pushParams: const StreamVideoPushParams(
+        appName: 'Al Ahmad',
+        ios: IOSParams(iconName: 'IconMask'),
+      ),
+      registerApnDeviceToken: true,
+    ),
+  ).connect();
 }
 
 class UserBox {

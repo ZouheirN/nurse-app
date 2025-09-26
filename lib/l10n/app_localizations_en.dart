@@ -139,4 +139,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pleaseFillTheBelowForm => 'Please fill the below form:';
+
+  @override
+  String get name => 'Name';
 }

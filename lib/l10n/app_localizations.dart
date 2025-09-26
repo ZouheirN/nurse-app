@@ -361,6 +361,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please fill the below form:'**
   String get pleaseFillTheBelowForm;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
 }
 
 class _AppLocalizationsDelegate

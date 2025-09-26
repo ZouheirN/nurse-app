@@ -33,7 +33,9 @@ final class GetPopupsFailure extends HomeState {
 
 // Edit Popup
 final class EditPopupLoading extends HomeState {}
+
 final class EditPopupSuccess extends HomeState {}
+
 final class EditPopupFailure extends HomeState {
   final String message;
 
@@ -41,7 +43,6 @@ final class EditPopupFailure extends HomeState {
     required this.message,
   });
 }
-
 
 final class GetSlidersLoading extends HomeState {}
 
@@ -76,7 +77,9 @@ final class AddSliderFailure extends HomeState {
 
 // Delete Slider
 final class DeleteSliderLoading extends HomeState {}
+
 final class DeleteSliderSuccess extends HomeState {}
+
 final class DeleteSliderFailure extends HomeState {
   final String message;
 
@@ -87,7 +90,9 @@ final class DeleteSliderFailure extends HomeState {
 
 // Reorder Sliders
 final class ReorderSlidersLoading extends HomeState {}
+
 final class ReorderSlidersSuccess extends HomeState {}
+
 final class ReorderSlidersFailure extends HomeState {
   final String message;
 
@@ -98,6 +103,7 @@ final class ReorderSlidersFailure extends HomeState {
 
 // Get FAQs
 final class GetFaqsLoading extends HomeState {}
+
 final class GetFaqsSuccess extends HomeState {
   final GetFaqsModel faqs;
 
@@ -105,6 +111,7 @@ final class GetFaqsSuccess extends HomeState {
     required this.faqs,
   });
 }
+
 final class GetFaqsFailure extends HomeState {
   final String message;
 
@@ -113,9 +120,30 @@ final class GetFaqsFailure extends HomeState {
   });
 }
 
+// Get FAQ Translation
+final class GetFaqTranslationLoading extends HomeState {}
+
+final class GetFaqTranslationSuccess extends HomeState {
+  final GetFaqTranslationModel faq;
+
+  GetFaqTranslationSuccess({
+    required this.faq,
+  });
+}
+
+final class GetFaqTranslationFailure extends HomeState {
+  final String message;
+
+  GetFaqTranslationFailure({
+    required this.message,
+  });
+}
+
 // Add FAQ
 final class AddFaqLoading extends HomeState {}
+
 final class AddFaqSuccess extends HomeState {}
+
 final class AddFaqFailure extends HomeState {
   final String message;
 
@@ -126,7 +154,9 @@ final class AddFaqFailure extends HomeState {
 
 // Reorder FAQs
 final class ReorderFaqsLoading extends HomeState {}
+
 final class ReorderFaqsSuccess extends HomeState {}
+
 final class ReorderFaqsFailure extends HomeState {
   final String message;
 
@@ -137,7 +167,9 @@ final class ReorderFaqsFailure extends HomeState {
 
 // Delete FAQ
 final class DeleteFaqLoading extends HomeState {}
+
 final class DeleteFaqSuccess extends HomeState {}
+
 final class DeleteFaqFailure extends HomeState {
   final String message;
 
@@ -148,7 +180,9 @@ final class DeleteFaqFailure extends HomeState {
 
 // Edit FAQ
 final class EditFaqLoading extends HomeState {}
+
 final class EditFaqSuccess extends HomeState {}
+
 final class EditFaqFailure extends HomeState {
   final String message;
 
@@ -159,6 +193,7 @@ final class EditFaqFailure extends HomeState {
 
 // Get Categories
 final class GetCategoriesLoading extends HomeState {}
+
 final class GetCategoriesSuccess extends HomeState {
   final GetCategoriesModel categories;
 
@@ -166,6 +201,7 @@ final class GetCategoriesSuccess extends HomeState {
     required this.categories,
   });
 }
+
 final class GetCategoriesFailure extends HomeState {
   final String message;
 
@@ -176,7 +212,9 @@ final class GetCategoriesFailure extends HomeState {
 
 // Add Category
 final class AddCategoryLoading extends HomeState {}
+
 final class AddCategorySuccess extends HomeState {}
+
 final class AddCategoryFailure extends HomeState {
   final String message;
 
@@ -187,6 +225,7 @@ final class AddCategoryFailure extends HomeState {
 
 // Get Dashboard
 final class GetDashboardLoading extends HomeState {}
+
 final class GetDashboardSuccess extends HomeState {
   final GetDashboardModel dashboard;
 
@@ -194,6 +233,7 @@ final class GetDashboardSuccess extends HomeState {
     required this.dashboard,
   });
 }
+
 final class GetDashboardFailure extends HomeState {
   final String message;
 

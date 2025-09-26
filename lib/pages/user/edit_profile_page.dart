@@ -10,6 +10,7 @@ import 'package:nurse_app/components/phone_number_field.dart';
 import 'package:nurse_app/components/third_button.dart';
 import 'package:nurse_app/consts.dart';
 import 'package:nurse_app/extensions/context_extension.dart';
+import 'package:nurse_app/features/authentication/models/user_model.dart';
 import 'package:nurse_app/features/profile/cubit/profile_cubit.dart';
 import 'package:nurse_app/main.dart';
 import 'package:nurse_app/utilities/dialogs.dart';
@@ -198,10 +199,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       const SizedBox(height: 20),
                       GestureDetector(
                         onTap: () {
+                          final user = UserBox.getUser();
+
+                          String phoneNumber = originalCompleteNumber.trim();
+
+                          if (user?.phoneNumber != null) {
+                            phoneNumber = user!.phoneNumber!;
+                          }
+
                           Navigator.pushNamed(
                             context,
                             '/forgotPassword',
-                            arguments: originalCompleteNumber.trim(),
+                            arguments: phoneNumber,
                           );
                         },
                         child: Card(
@@ -273,6 +282,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
       bloc: _profileCubitBtn,
       listener: (context, state) {
         if (state is UpdateProfileSuccess) {
+          final user = state.profile;
+
+          UserBox.saveUser(UserModel(
+            roleId: user.roleId,
+            longitude: user.longitude,
+            location: user.location,
+            latitude: user.latitude,
+            birthDate: user.birthDate,
+            id: user.id,
+            name: user.name,
+            phoneNumber: user.phoneNumber,
+            email: user.email,
+          ));
+
           Dialogs.showSuccessDialog(
               context,
               'Success', // todo localize

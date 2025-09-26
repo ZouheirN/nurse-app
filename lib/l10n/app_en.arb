@@ -46,5 +46,6 @@
     "selectNurseGender": "Select Nurse Gender",
     "selectServices": "Select Services",
     "scheduleAppointment": "Schedule Appointment",
-    "pleaseFillTheBelowForm": "Please fill the below form:"
+    "pleaseFillTheBelowForm": "Please fill the below form:",
+    "name": "Name"
 }

@@ -46,5 +46,6 @@
     "selectNurseGender": "اختر جنس الممرضة",
     "selectServices": "اختر الخدمات",
     "scheduleAppointment": "جدولة موعد",
-    "pleaseFillTheBelowForm": "يرجى تعبئة النموذج أدناه:"
+    "pleaseFillTheBelowForm": "يرجى تعبئة النموذج أدناه:",
+    "name": "الاسم"
 }

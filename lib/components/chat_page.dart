@@ -226,7 +226,7 @@ class _ChatPageState extends State<ChatPage> {
                       );
 
                       final result = await call.getOrCreate(
-                        memberIds: ['2'],
+                        // memberIds: ['2'],
                         video: false,
                         ringing: true,
                       );

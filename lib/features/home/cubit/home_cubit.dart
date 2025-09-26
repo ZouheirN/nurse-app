@@ -6,8 +6,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:nurse_app/consts.dart';
+import 'package:nurse_app/features/home/models/get_faq_translation_model.dart';
 import 'package:nurse_app/features/home/models/get_popups_admin.dart';
 import 'package:nurse_app/features/home/models/get_popups_model.dart';
+import 'package:nurse_app/utilities/localization_box.dart';
 
 import '../../../main.dart';
 import '../../../services/user_token.dart';
@@ -74,7 +76,8 @@ class HomeCubit extends Cubit<HomeState> {
       emit(GetPopupsSuccess(popups: popups));
     } on DioException catch (e) {
       logger.e(e.response!.data);
-      emit(GetPopupsFailure(message: e.response?.data['message'] ?? 'Failed to get popups.'));
+      emit(GetPopupsFailure(
+          message: e.response?.data['message'] ?? 'Failed to get popups.'));
     } catch (e) {
       logger.e(e);
       emit(GetPopupsFailure(message: 'Failed to get popups.'));
@@ -102,7 +105,8 @@ class HomeCubit extends Cubit<HomeState> {
       emit(GetPopupsAdminSuccess(popups: popups));
     } on DioException catch (e) {
       logger.e(e.response?.data);
-      emit(GetPopupsFailure(message: e.response?.data['message'] ?? 'Failed to get popups.'));
+      emit(GetPopupsFailure(
+          message: e.response?.data['message'] ?? 'Failed to get popups.'));
     } catch (e) {
       logger.e(e);
       emit(GetPopupsFailure(message: 'Failed to get popups.'));
@@ -255,31 +259,34 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  Future<void> reorderSlider(int id, int newPosition) async {
+  Future<void> reorderSliders(List<int> newOrder) async {
     emit(ReorderSlidersLoading());
 
     final token = await UserToken.getToken();
 
     try {
-      await dio.put(
-        '$HOST/admin/sliders/$id',
-        data: {'position': newPosition},
+      await dio.post(
+        '$HOST/admin/sliders/reorder',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
             'Accept': 'application/json',
           },
         ),
+        data: {
+          'slider_ids': newOrder,
+        },
       );
 
       emit(ReorderSlidersSuccess());
     } on DioException catch (e) {
       logger.e(e.response?.statusCode);
       emit(ReorderSlidersFailure(
-          message: e.response?.data['message'] ?? 'Failed to reorder slider.'));
+          message:
+              e.response?.data['message'] ?? 'Failed to reorder sliders.'));
     } catch (e) {
       logger.e('Error reordering slider: $e');
-      emit(ReorderSlidersFailure(message: 'Failed to reorder slider.'));
+      emit(ReorderSlidersFailure(message: 'Failed to reorder sliders.'));
     }
   }
 
@@ -295,7 +302,13 @@ class HomeCubit extends Cubit<HomeState> {
       };
 
       if (!isAdmin) {
-        headers['Accept-Language'] = 'en'; // todo: make dynamic
+        headers['Accept-Language'] = 'en';
+
+        final locale = LocalizationBox.getLocale();
+
+        if (locale != null) {
+          headers['Accept-Language'] = locale.languageCode;
+        }
       }
 
       final response = await dio.get(
@@ -304,6 +317,8 @@ class HomeCubit extends Cubit<HomeState> {
           headers: headers,
         ),
       );
+
+      logger.i(response.data);
 
       final faqs = GetFaqsModel.fromJson(response.data);
 
@@ -314,6 +329,34 @@ class HomeCubit extends Cubit<HomeState> {
     } catch (e) {
       logger.e(e);
       emit(GetFaqsFailure(message: 'Failed to get faqs.'));
+    }
+  }
+
+  Future<void> getFaqTranslation(int faqId) async {
+    emit(GetFaqTranslationLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      final response = await dio.get(
+        '$HOST/admin/faqs/$faqId/translations',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      final faq = GetFaqTranslationModel.fromJson(response.data);
+
+      emit(GetFaqTranslationSuccess(faq: faq));
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(GetFaqTranslationFailure(message: e.response!.data['message']));
+    } catch (e) {
+      logger.e(e);
+      emit(GetFaqTranslationFailure(message: 'Failed to get faqs.'));
     }
   }
 
@@ -354,6 +397,79 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
+  Future<void> addFaqTranslation({
+    required int faqId,
+    required String question,
+    required String answer,
+  }) async {
+    emit(AddFaqLoading());
+
+    final token = await UserToken.getToken();
+
+    try {
+      await dio.post(
+        '$HOST/admin/faqs/$faqId/translations',
+        data: {
+          'question': question,
+          'answer': answer,
+          'locale': 'ar',
+        },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      emit(AddFaqSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response?.statusCode);
+      emit(AddFaqFailure(
+          message:
+              e.response?.data['message'] ?? 'Failed to add FAQ translation.'));
+    } catch (e) {
+      logger.e('Error adding FAQ: $e');
+      emit(AddFaqFailure(message: 'Failed to add FAQ translation.'));
+    }
+  }
+
+  Future<void> editFaqTranslation({
+    required int faqId,
+    required String question,
+    required String answer,
+  }) async {
+    emit(EditFaqLoading());
+
+    final token = await UserToken.getToken();
+
+    try {
+      await dio.put(
+        '$HOST/admin/faqs/$faqId/translations/ar',
+        data: {
+          'question': question,
+          'answer': answer,
+        },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      emit(EditFaqSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response?.statusCode);
+      emit(EditFaqFailure(
+          message: e.response?.data['message'] ??
+              'Failed to edit FAQ translation.'));
+    } catch (e) {
+      logger.e('Error adding FAQ: $e');
+      emit(EditFaqFailure(message: 'Failed to edit FAQ translation.'));
+    }
+  }
+
   Future<void> reorderFaq(List<int> newOrder) async {
     emit(ReorderFaqsLoading());
 
@@ -362,13 +478,13 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       await dio.post(
         '$HOST/admin/faqs/reorder',
-        data: {'faq_ids': newOrder},
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
             'Accept': 'application/json',
           },
         ),
+        data: {'faq_ids': newOrder},
       );
 
       emit(ReorderFaqsSuccess());

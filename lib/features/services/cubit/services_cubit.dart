@@ -6,13 +6,14 @@ import 'package:nurse_app/main.dart';
 import 'package:nurse_app/services/user_token.dart';
 
 import '../../../consts.dart';
+import '../models/get_services_from_area_model.dart';
 
 part 'services_state.dart';
 
 class ServicesCubit extends Cubit<ServicesState> {
   ServicesCubit() : super(ServicesInitial());
 
-  Future<void> fetchServices({int? areaId}) async {
+  Future<void> fetchServices() async {
     emit(ServicesFetchLoading());
 
     try {
@@ -27,20 +28,7 @@ class ServicesCubit extends Cubit<ServicesState> {
         ),
       );
 
-      // logger.i(response.data);
-
       final services = GetServicesModel.fromJson(response.data);
-
-      // if (areaId != null) {
-      //   final serviceIds = services.services.map(
-      //     (e) {
-      //       return e.id!;
-      //     },
-      //   ).toList();
-      //
-      //   final quotedServices =
-      //       await quoteServices(areaId: areaId, serviceIds: serviceIds);
-      // }
 
       emit(ServicesFetchSuccess(services: services));
     } on DioException catch (e) {
@@ -49,6 +37,33 @@ class ServicesCubit extends Cubit<ServicesState> {
     } catch (e) {
       logger.e(e);
       emit(ServicesFetchFailure(message: 'Failed to fetch services.'));
+    }
+  }
+
+  Future<void> fetchServicesFromArea({required int areaId}) async {
+    emit(ServicesFetchFromAreaLoading());
+
+    try {
+      final token = await UserToken.getToken();
+
+      final response = await dio.get(
+        '$HOST/services/area/$areaId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      final services = GetServicesFromAreaModel.fromJson(response.data);
+
+      emit(ServicesFetchFromAreaSuccess(services: services));
+    } on DioException catch (e) {
+      logger.e(e.response!.data);
+      emit(ServicesFetchFromAreaFailure(message: 'Failed to fetch services.'));
+    } catch (e) {
+      logger.e(e);
+      emit(ServicesFetchFromAreaFailure(message: 'Failed to fetch services.'));
     }
   }
 

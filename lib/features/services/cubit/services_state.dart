@@ -19,6 +19,22 @@ final class ServicesFetchFailure extends ServicesState {
   ServicesFetchFailure({required this.message});
 }
 
+// Fetch Services From Area
+
+final class ServicesFetchFromAreaLoading extends ServicesState {}
+
+final class ServicesFetchFromAreaSuccess extends ServicesState {
+  final GetServicesFromAreaModel services;
+
+  ServicesFetchFromAreaSuccess({required this.services});
+}
+
+final class ServicesFetchFromAreaFailure extends ServicesState {
+  final String message;
+
+ServicesFetchFromAreaFailure({required this.message});
+}
+
 final class ServicesFetchDetailsLoading extends ServicesState {}
 
 final class ServicesFetchDetailsSuccess extends ServicesState {

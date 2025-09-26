@@ -8,6 +8,7 @@ import 'package:nurse_app/consts.dart';
 import 'package:stream_video/stream_video.dart';
 
 import '../../components/call_screen.dart';
+import '../../features/chat/cubit/chat_cubit.dart';
 import '../../main.dart';
 import '../../services/firebase_messaging_handler.dart';
 import '../../services/user.dart';
@@ -86,6 +87,9 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
 
     _observeFcmMessages();
     _observeCallKitEvents();
+
+    // Get Stream Video Token
+    ChatCubit().getStreamToken();
 
     super.initState();
   }

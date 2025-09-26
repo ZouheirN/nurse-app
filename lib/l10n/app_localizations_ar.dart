@@ -139,4 +139,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get pleaseFillTheBelowForm => 'يرجى تعبئة النموذج أدناه:';
+
+  @override
+  String get name => 'الاسم';
 }

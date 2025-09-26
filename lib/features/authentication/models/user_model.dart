@@ -20,6 +20,8 @@ class UserModel {
   num? latitude;
   @HiveField(7)
   num? longitude;
+  @HiveField(8)
+  String? birthDate;
 
   UserModel({
     this.id,
@@ -30,6 +32,7 @@ class UserModel {
     this.roleId,
     this.latitude,
     this.longitude,
+    this.birthDate
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -42,6 +45,7 @@ class UserModel {
       roleId: json['role_id'],
       latitude: json['latitude'],
       longitude: json['longitude'],
+      birthDate: json['birth_date'],
     );
   }
 }

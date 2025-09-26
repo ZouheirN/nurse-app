@@ -228,8 +228,6 @@ class _SlidersPageState extends State<SlidersPage> {
   }
 
   Widget _buildSliders() {
-    int dotIndex = 0;
-
     return BlocBuilder<HomeCubit, HomeState>(
       bloc: getSliders,
       builder: (context, state) {
@@ -259,14 +257,15 @@ class _SlidersPageState extends State<SlidersPage> {
                 BlocConsumer<HomeCubit, HomeState>(
                   bloc: slidersOrder,
                   listener: (context, state) {
-                    if (state is ReorderSlidersSuccess) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Sliders reordered successfully!'),
-                        ),
-                      );
-                      getSliders.getSliders();
-                    } else if (state is ReorderSlidersFailure) {
+                    // if (state is ReorderSlidersSuccess) {
+                    //   ScaffoldMessenger.of(context).showSnackBar(
+                    //     const SnackBar(
+                    //       content: Text('Sliders reordered successfully!'),
+                    //     ),
+                    //   );
+                    //   getSliders.getSliders();
+                    // } else
+                    if (state is ReorderSlidersFailure) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(state.message),
@@ -310,11 +309,19 @@ class _SlidersPageState extends State<SlidersPage> {
                             );
                           },
                           onReorder: (oldIndex, newIndex) {
-                            final id = items[oldIndex].id!;
+                            // get list of all index after reorder
                             if (newIndex > oldIndex) {
                               newIndex -= 1;
                             }
-                            slidersOrder.reorderSlider(id, newIndex);
+                            final item = items.removeAt(oldIndex);
+                            items.insert(newIndex, item);
+                            setState(() {});
+
+                            // Get list of ids in new order
+                            final newOrder =
+                            items.map((slider) => slider.id!).toList();
+
+                            slidersOrder.reorderSliders(newOrder);
                           },
                         ),
                       ),

@@ -13,6 +13,7 @@ import '../../components/services_list.dart';
 import '../../features/areas/cubit/areas_cubit.dart';
 import '../../features/request/cubit/request_cubit.dart';
 import '../../features/services/cubit/services_cubit.dart';
+import '../../features/services/models/get_services_model.dart';
 
 class MakeAppointmentPage extends StatefulWidget {
   final String category;
@@ -298,9 +299,11 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                                     .toString();
                               });
 
-                              _servicesCubit.fetchServices(
-                                areaId: selectedAreaId,
-                              );
+                              if (selectedAreaId != null) {
+                                _servicesCubit.fetchServicesFromArea(
+                                  areaId: selectedAreaId!,
+                                );
+                              }
                             },
                             validator: (value) {
                               if (value == null) {
@@ -345,13 +348,29 @@ class _MakeAppointmentPageState extends State<MakeAppointmentPage> {
                       return const Text('Select an area to view services');
                     }
 
-                    if (state is ServicesFetchLoading) {
+                    if (state is ServicesFetchFromAreaLoading) {
                       return const Loader();
-                    } else if (state is ServicesFetchSuccess) {
+                    } else if (state is ServicesFetchFromAreaSuccess) {
                       final services = state.services;
 
                       return ServicesList(
-                        services: services,
+                        services: GetServicesModel(
+                          services: services.services.map(
+                            (e) {
+                              return Service(
+                                id: e.id,
+                                name: e.name,
+                                description: e.description,
+                                price: e.price.toString(),
+                                discountPrice: e.discountPrice.toString(),
+                                servicePic: e.servicePic,
+                                categoryId: e.categoryId,
+                                createdAt: e.createdAt,
+                                updatedAt: e.updatedAt,
+                              );
+                            },
+                          ).toList(),
+                        ),
                         selectedServiceIds: selectedServiceIds,
                       );
                     } else {
