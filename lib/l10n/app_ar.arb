@@ -47,5 +47,9 @@
     "selectServices": "اختر الخدمات",
     "scheduleAppointment": "جدولة موعد",
     "pleaseFillTheBelowForm": "يرجى تعبئة النموذج أدناه:",
-    "name": "الاسم"
+    "name": "الاسم",
+    "goBack": "العودة",
+    "yourRequestHasBeenSubmitted": "تم تقديم طلبك!",
+    "success": "نجاح",
+    "profileUpdatedSuccessfully": "تم تحديث الملف الشخصي بنجاح"
 }

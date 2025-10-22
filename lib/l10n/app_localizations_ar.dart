@@ -142,4 +142,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get name => 'الاسم';
+
+  @override
+  String get goBack => 'العودة';
+
+  @override
+  String get yourRequestHasBeenSubmitted => 'تم تقديم طلبك!';
+
+  @override
+  String get success => 'نجاح';
+
+  @override
+  String get profileUpdatedSuccessfully => 'تم تحديث الملف الشخصي بنجاح';
 }

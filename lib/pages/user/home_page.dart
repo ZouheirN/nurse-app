@@ -109,9 +109,10 @@ class _HomePageState extends State<HomePage> {
                                             child: ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(10),
-                                              child: // todo fix
+                                              child:
                                                   CachedNetworkImage(
-                                                      imageUrl:
+                                                      imageUrl: category
+                                                              .imageUrl ??
                                                           'https://i.ibb.co/d0KcQgdz/category1.jpg'),
                                             ),
                                           ),

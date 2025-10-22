@@ -142,4 +142,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get name => 'Name';
+
+  @override
+  String get goBack => 'Go Back';
+
+  @override
+  String get yourRequestHasBeenSubmitted => 'Your request has been submitted!';
+
+  @override
+  String get success => 'Success';
+
+  @override
+  String get profileUpdatedSuccessfully => 'Profile updated successfully';
 }

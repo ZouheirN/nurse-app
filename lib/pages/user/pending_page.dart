@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nurse_app/components/pending_button.dart';
+import 'package:nurse_app/extensions/context_extension.dart';
 
 class PendingPage extends StatelessWidget {
   final Function(String?) setValue;
@@ -23,17 +24,17 @@ class PendingPage extends StatelessWidget {
               onTap: () {
                 setValue(null);
               },
-              buttonText: 'Go Back', // todo localize
+              buttonText: context.localizations.goBack,
               icon: const Icon(
                 Icons.arrow_back,
                 color: Colors.white,
               ),
             ),
             const SizedBox(height: 15),
-            const Center(
+            Center(
               child: Text(
-                'Your Request has been\nsubmitted!', // todo localize
-                style: TextStyle(
+                context.localizations.yourRequestHasBeenSubmitted,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: Color(0xFF7BB442),

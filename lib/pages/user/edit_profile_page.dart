@@ -135,7 +135,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           child: Column(
                             children: [
                               LabeledEditTextfield(
-                                label: "Name", // todo localize
+                                label: context.localizations.name,
                                 keyboardType: TextInputType.name,
                                 controller: nameController,
                               ),
@@ -297,10 +297,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ));
 
           Dialogs.showSuccessDialog(
-              context,
-              'Success', // todo localize
-              'Profile updated successfully' // todo localize
-              );
+            context,
+            context.localizations.success,
+            context.localizations.profileUpdatedSuccessfully,
+          );
           // _profileCubit.getProfile();
         } else if (state is UpdateProfileFailure) {
           Dialogs.showErrorDialog(context, 'Error', state.message);

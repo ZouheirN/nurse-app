@@ -47,5 +47,9 @@
     "selectServices": "Select Services",
     "scheduleAppointment": "Schedule Appointment",
     "pleaseFillTheBelowForm": "Please fill the below form:",
-    "name": "Name"
+    "name": "Name",
+    "goBack": "Go Back",
+    "yourRequestHasBeenSubmitted": "Your request has been submitted!",
+    "success": "Success",
+    "profileUpdatedSuccessfully": "Profile updated successfully"
 }
