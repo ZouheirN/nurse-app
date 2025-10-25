@@ -64,7 +64,6 @@ class RequestDetailsPage extends StatelessWidget {
               final isOngoing = isRequestOngoing(request.status);
               // const isOngoing = true;
 
-              // todo fix names of requests (not hardcoded)
               if (isOngoing) {
                 return _buildOngoingDetails(request, context);
               } else {
@@ -156,26 +155,27 @@ class RequestDetailsPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            const Row(
-              children: [
-                Text(
-                  'Nurse Name: ',
-                  style: TextStyle(
-                    fontSize: 22,
-                    color: Color.fromRGBO(122, 179, 65, 1.0),
-                    fontWeight: FontWeight.w600,
+            if (request.nurseName != null)
+              Row(
+                children: [
+                  const Text(
+                    'Nurse Name: ',
+                    style: TextStyle(
+                      fontSize: 22,
+                      color: Color.fromRGBO(122, 179, 65, 1.0),
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                Text(
-                  'TODO',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w400,
-                    fontStyle: FontStyle.italic,
-                  ),
-                )
-              ],
-            ),
+                  Text(
+                    request.nurseName!,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w400,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  )
+                ],
+              ),
             if (request.timeNeededToArrive != null)
               Row(
                 children: [
@@ -332,26 +332,27 @@ class RequestDetailsPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            const Row(
-              children: [
-                Text(
-                  'Nurse Name: ',
-                  style: TextStyle(
-                    fontSize: 22,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+            if (request.nurseName != null)
+              Row(
+                children: [
+                  const Text(
+                    'Nurse Name: ',
+                    style: TextStyle(
+                      fontSize: 22,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                Text(
-                  'TODO',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w400,
-                    fontStyle: FontStyle.italic,
-                  ),
-                )
-              ],
-            ),
+                  Text(
+                    request.nurseName!,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w400,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  )
+                ],
+              ),
             const SizedBox(height: 20),
             const Align(
               alignment: Alignment.centerLeft,
@@ -365,17 +366,26 @@ class RequestDetailsPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Arriving at 11:25 PM',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400,
+            if (request.timeNeededToArrive != null)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Builder(
+                  builder: (context) {
+                    // Calculate estimated arrival time
+                    final arrivalTime = DateTime.now()
+                        .add(Duration(minutes: request.timeNeededToArrive!.toInt()));
+
+                    return Text(
+                      'Arriving at ${formatTimeOnly(arrivalTime)}',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    );
+                  }
                 ),
               ),
-            ),
             const SizedBox(height: 20),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),

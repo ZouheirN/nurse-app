@@ -73,20 +73,21 @@ class _ManageOrdersPageState extends State<ManageOrdersPage> {
                                     },
                                   ),
                                 ),
-                                IconButton(
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      '/chat',
-                                      arguments: {
-                                        'chatId': request.threadId,
-                                        'isAdmin': true,
-                                        'patientName': request.fullName,
-                                      },
-                                    );
-                                  },
-                                  icon: const Icon(Icons.chat),
-                                )
+                                if (request.threadId != null)
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        '/chat',
+                                        arguments: {
+                                          'chatId': request.threadId,
+                                          'isAdmin': true,
+                                          'patientName': request.fullName,
+                                        },
+                                      );
+                                    },
+                                    icon: const Icon(Icons.chat),
+                                  )
                               ],
                             ),
                           ),

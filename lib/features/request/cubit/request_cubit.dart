@@ -101,7 +101,7 @@ class RequestCubit extends Cubit<RequestState> {
         ),
       );
 
-      logger.i(response.data);
+      // logger.i(response.data);
 
       final List<RequestsHistoryModel> requests = (List.from(response.data))
           .map((request) => RequestsHistoryModel.fromJson(request))

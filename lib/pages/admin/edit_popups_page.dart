@@ -153,7 +153,7 @@ class _EditPopupsPageState extends State<EditPopupsPage> {
                       content: Text('Popup added successfully!'),
                     ),
                   );
-                  _homeCubit.getPopups();
+                  _homeCubit.getPopupsAdmin();
                 } else if (state is AddPopupFailure) {
                   Dialogs.showErrorDialog(
                     context,
@@ -177,7 +177,7 @@ class _EditPopupsPageState extends State<EditPopupsPage> {
                       type: selectedType.toLowerCase(),
                     );
                   },
-                  buttonText: 'Add Slider',
+                  buttonText: 'Add Popup',
                 );
               },
             ),

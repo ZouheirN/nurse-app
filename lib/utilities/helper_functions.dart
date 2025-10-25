@@ -10,6 +10,11 @@ String formatDateTimeForCard(DateTime dateTime) {
   return '${dateLocal.hour.toString().padLeft(2, '0')}:${dateLocal.minute.toString().padLeft(2, '0')}\n${dateLocal.month}/${dateLocal.day}/${dateLocal.year}';
 }
 
+String formatTimeOnly(DateTime dateTime) {
+  var dateLocal = dateTime.toLocal();
+  return '${(dateLocal.hour % 12 == 0 ? 12 : dateLocal.hour % 12).toString().padLeft(2, '0')}:${dateLocal.minute.toString().padLeft(2, '0')} ${dateLocal.hour >= 12 ? 'pm' : 'am'}';
+}
+
 String formatDateTimeForRequestDetails(DateTime dateTime) {
   var dateLocal = dateTime.toLocal();
   return '${dateLocal.month}/${dateLocal.day}/${dateLocal.year}@${(dateLocal.hour % 12 == 0 ? 12 : dateLocal.hour % 12).toString().padLeft(2, '0')}:${dateLocal.minute.toString().padLeft(2, '0')} ${dateLocal.hour >= 12 ? 'pm' : 'am'}';

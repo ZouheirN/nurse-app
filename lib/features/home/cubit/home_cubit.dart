@@ -40,8 +40,6 @@ class HomeCubit extends Cubit<HomeState> {
         ),
       );
 
-      logger.i(response.data);
-
       final dashboard = GetDashboardModel.fromJson(response.data);
 
       emit(GetDashboardSuccess(dashboard: dashboard));

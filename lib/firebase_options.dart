@@ -7,20 +7,17 @@ import 'package:flutter/foundation.dart'
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
 /// Example:
-/// ```dart
+/// dart
 /// import 'firebase_options.dart';
 /// // ...
 /// await Firebase.initializeApp(
 ///   options: DefaultFirebaseOptions.currentPlatform,
 /// );
-/// ```
+///
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -30,17 +27,17 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.',
         );
       default:
         throw UnsupportedError(
@@ -49,21 +46,30 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBUIYmbPNGwlGntz4EPsPI3_5y_qClIvkI',
+    appId: '1:700423121842:web:e662a7c166899afe5692ab',
+    messagingSenderId: '700423121842',
+    projectId: 'alahmadnursecare-f93ff',
+    authDomain: 'alahmadnursecare-f93ff.firebaseapp.com',
+    storageBucket: 'alahmadnursecare-f93ff.firebasestorage.app',
+    measurementId: 'G-MTSGVYTTM6',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCPjprijrb6SahTJlCLlCCboYrddt8Z9YA',
-    appId: '1:180751287958:android:8840db2b41fb50623b24b7',
-    messagingSenderId: '180751287958',
-    projectId: 'nurse-app-9b8bc',
-    storageBucket: 'nurse-app-9b8bc.firebasestorage.app',
+    apiKey: 'AIzaSyADUsbAjAyxf2lBjzK5zDTySyJxsf8Lov0',
+    appId: '1:700423121842:android:293fed7f7eb125b35692ab',
+    messagingSenderId: '700423121842',
+    projectId: 'alahmadnursecare-f93ff',
+    storageBucket: 'alahmadnursecare-f93ff.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDmC2TsR24Shqwkgh7ey7E7iNam_7Esxh0',
-    appId: '1:180751287958:ios:0ef4dc032bb07c133b24b7',
-    messagingSenderId: '180751287958',
-    projectId: 'nurse-app-9b8bc',
-    storageBucket: 'nurse-app-9b8bc.firebasestorage.app',
+    apiKey: 'AIzaSyDeD267MW3PuLAZ9UnFwwHl9MJfaYlYG1Y',
+    appId: '1:700423121842:ios:66a5f71a9d7913515692ab',
+    messagingSenderId: '700423121842',
+    projectId: 'alahmadnursecare-f93ff',
+    storageBucket: 'alahmadnursecare-f93ff.firebasestorage.app',
     iosBundleId: 'com.devzur.nursecare',
   );
-
 }

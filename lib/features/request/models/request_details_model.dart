@@ -7,6 +7,7 @@ class RequestDetailsModel {
     required this.problemDescription,
     required this.status,
     required this.nurseGender,
+    required this.nurseName,
     required this.timeType,
     required this.scheduledTime,
     required this.endingTime,
@@ -29,6 +30,7 @@ class RequestDetailsModel {
   final String problemDescription;
   final String status;
   final String nurseGender;
+  final String? nurseName;
   final String? timeType;
   final DateTime? scheduledTime;
   final DateTime? endingTime;
@@ -51,6 +53,7 @@ class RequestDetailsModel {
     String? problemDescription,
     String? status,
     String? nurseGender,
+    String? nurseName,
     String? timeType,
     DateTime? scheduledTime,
     DateTime? endingTime,
@@ -73,6 +76,7 @@ class RequestDetailsModel {
       problemDescription: problemDescription ?? this.problemDescription,
       status: status ?? this.status,
       nurseGender: nurseGender ?? this.nurseGender,
+      nurseName: nurseName ?? this.nurseName,
       timeType: timeType ?? this.timeType,
       scheduledTime: scheduledTime ?? this.scheduledTime,
       endingTime: endingTime ?? this.endingTime,
@@ -98,6 +102,7 @@ class RequestDetailsModel {
       problemDescription: json["problem_description"] ?? "",
       status: json["status"] ?? "",
       nurseGender: json["nurse_gender"] ?? "",
+      nurseName: json["nurse_name"],
       timeType: json["time_type"] ?? "",
       scheduledTime: DateTime.tryParse(json["scheduled_time"] ?? ""),
       endingTime: DateTime.tryParse(json["ending_time"] ?? ""),
@@ -125,6 +130,7 @@ class RequestDetailsModel {
         "problem_description": problemDescription,
         "status": status,
         "nurse_gender": nurseGender,
+        "nurse_name": nurseName,
         "time_type": timeType,
         "scheduled_time": scheduledTime?.toIso8601String(),
         "location": location,
