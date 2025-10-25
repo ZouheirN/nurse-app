@@ -113,6 +113,50 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
+  Future<void> addPopup({
+    required XFile? pickedFile,
+    required String title,
+    required String content,
+    required String type,
+  }) async {
+    emit(AddPopupLoading());
+
+    final formData = FormData.fromMap({
+      if (pickedFile != null)
+        'image': await MultipartFile.fromFile(
+          pickedFile.path,
+          filename: pickedFile.name,
+        ),
+      'title': title,
+      'content': content,
+      'type': type,
+    });
+
+    final token = await UserToken.getToken();
+
+    try {
+      await dio.post(
+        '$HOST/admin/popups',
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      emit(AddPopupSuccess());
+    } on DioException catch (e) {
+      logger.e(e.response?.data);
+      emit(AddPopupFailure(
+          message: e.response?.data['message'] ?? 'Failed to add slider.'));
+    } catch (e) {
+      logger.e('Error creating popup: $e');
+      emit(AddPopupFailure(message: 'Failed to add slider.'));
+    }
+  }
+
   Future<void> editPopup({
     required String id,
     required String title,

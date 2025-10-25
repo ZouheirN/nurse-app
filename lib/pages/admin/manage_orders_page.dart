@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nurse_app/components/admin_header.dart';
 import 'package:nurse_app/components/order_card.dart';
 import 'package:nurse_app/features/request/cubit/request_cubit.dart';
+import 'package:nurse_app/main.dart';
 import 'package:nurse_app/utilities/helper_functions.dart';
 
 import '../../components/loader.dart';
@@ -78,7 +79,7 @@ class _ManageOrdersPageState extends State<ManageOrdersPage> {
                                       context,
                                       '/chat',
                                       arguments: {
-                                        'requestId': request.id,
+                                        'chatId': request.threadId,
                                         'isAdmin': true,
                                         'patientName': request.fullName,
                                       },

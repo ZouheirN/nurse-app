@@ -65,4 +65,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'nurse-app-9b8bc.firebasestorage.app',
     iosBundleId: 'com.devzur.nursecare.OneSignalNotificationServiceExtension',
   );
+
 }

@@ -11,3 +11,6 @@ const String STREAM_API_KEY = '2suxv6nf5jg8';
 const String iosPushProviderName = 'apn-dev';
 
 const String androidPushProviderName = 'alahmad_firebase_provider';
+
+const String REVERB_HOST = 'devzurapi.alahmadnursecare.com';
+const int REVERB_PORT = 8080;

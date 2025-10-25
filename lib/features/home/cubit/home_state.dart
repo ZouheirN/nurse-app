@@ -31,6 +31,17 @@ final class GetPopupsFailure extends HomeState {
   });
 }
 
+// Add Popup
+final class AddPopupLoading extends HomeState {}
+final class AddPopupSuccess extends HomeState {}
+final class AddPopupFailure extends HomeState {
+  final String message;
+
+  AddPopupFailure({
+    required this.message,
+  });
+}
+
 // Edit Popup
 final class EditPopupLoading extends HomeState {}
 
@@ -44,6 +55,7 @@ final class EditPopupFailure extends HomeState {
   });
 }
 
+// Get Sliders
 final class GetSlidersLoading extends HomeState {}
 
 final class GetSlidersSuccess extends HomeState {

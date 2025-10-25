@@ -25,7 +25,8 @@ import 'call_screen.dart';
 import 'custom_message_bar.dart';
 
 class ChatPage extends StatefulWidget {
-  final int requestId;
+  final int? requestId;
+  final int? chatId;
   final bool isAdmin;
   final String? patientName;
 
@@ -34,6 +35,7 @@ class ChatPage extends StatefulWidget {
     required this.requestId,
     required this.isAdmin,
     this.patientName,
+    this.chatId,
   });
 
   @override
@@ -63,7 +65,13 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void initState() {
-    _chatCubit.initializeChat(widget.requestId);
+    if (widget.requestId != null) {
+      _chatCubit.initializeChat(widget.requestId!);
+    } else if (widget.chatId != null) {
+      _chatCubit.initializeChatWithChatId(widget.chatId!);
+    } else {
+      throw Exception('Either requestId or chatId must be provided');
+    }
     _openAudio();
     super.initState();
   }
@@ -136,6 +144,7 @@ class _ChatPageState extends State<ChatPage> {
           bloc: _chatCubit,
           listener: (context, state) {
             if (state is ChatLoaded) {
+              logger.i('Chat loaded with ID: ${state.chatId}');
               _chatCubitMsg.getMessages(chatId: state.chatId);
             }
           },

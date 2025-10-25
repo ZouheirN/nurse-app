@@ -8,6 +8,7 @@ class RequestsHistoryModel {
     required this.problemDescription,
     required this.status,
     required this.timeNeededToArrive,
+    required this.threadId,
     required this.nurseGender,
     required this.timeType,
     required this.scheduledTime,
@@ -30,6 +31,7 @@ class RequestsHistoryModel {
   final String? problemDescription;
   final String? status;
   final num? timeNeededToArrive;
+  final int? threadId;
   final String? nurseGender;
   final String? timeType;
   final DateTime? scheduledTime;
@@ -52,6 +54,7 @@ class RequestsHistoryModel {
     String? problemDescription,
     String? status,
     num? timeNeededToArrive,
+    int? threadId,
     String? nurseGender,
     String? timeType,
     DateTime? scheduledTime,
@@ -74,6 +77,7 @@ class RequestsHistoryModel {
       problemDescription: problemDescription ?? this.problemDescription,
       status: status ?? this.status,
       timeNeededToArrive: timeNeededToArrive ?? this.timeNeededToArrive,
+      threadId: threadId ?? this.threadId,
       nurseGender: nurseGender ?? this.nurseGender,
       timeType: timeType ?? this.timeType,
       scheduledTime: scheduledTime ?? this.scheduledTime,
@@ -99,6 +103,7 @@ class RequestsHistoryModel {
       problemDescription: json["problem_description"],
       status: json["status"],
       timeNeededToArrive: json["time_needed_to_arrive"],
+      threadId: json["thread_id"],
       nurseGender: json["nurse_gender"],
       timeType: json["time_type"],
       scheduledTime: DateTime.tryParse(json["scheduled_time"] ?? ""),
@@ -126,6 +131,7 @@ class RequestsHistoryModel {
         "problem_description": problemDescription,
         "status": status,
         "time_needed_to_arrive": timeNeededToArrive,
+        "thread_id": threadId,
         "nurse_gender": nurseGender,
         "time_type": timeType,
         "scheduled_time": scheduledTime?.toIso8601String(),

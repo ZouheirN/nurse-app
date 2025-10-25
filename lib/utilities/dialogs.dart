@@ -89,6 +89,24 @@ class Dialogs {
           confirmBtnText: 'OK',
         );
         break;
+      case 'warning':
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.warning,
+          title: title ?? '',
+          text: content ?? '',
+          confirmBtnText: 'OK',
+        );
+        break;
+      case 'promo':
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.info,
+          title: title ?? '',
+          text: content ?? '',
+          confirmBtnText: 'OK',
+        );
+        break;
       default:
         QuickAlert.show(
           context: context,

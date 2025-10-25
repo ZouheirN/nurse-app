@@ -1,12 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:meta/meta.dart';
 import 'package:nurse_app/features/chat/models/get_messages_model.dart';
 import 'package:nurse_app/services/user.dart';
 import 'package:nurse_app/services/user_token.dart';
 import 'package:stream_video/stream_video.dart' as sv;
-import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:nurse_app/services/websocket_service.dart'; // Import WebSocketService
 
 import '../../../consts.dart';
 import '../../../main.dart';
@@ -15,6 +14,48 @@ part 'chat_state.dart';
 
 class ChatCubit extends Cubit<ChatState> {
   ChatCubit() : super(ChatInitial());
+
+  // Define a variable to hold the chat channel name for the chat thread
+  String? _chatChannelName;
+
+  @override
+  Future<void> close() {
+    _unsubscribeFromChatChannel(); // Unsubscribe when ChatCubit is closed
+    return super.close();
+  }
+
+  Future<void> _subscribeToChatChannel(int chatId) async {
+    _chatChannelName = 'private-chat.$chatId';
+    await WebSocketService.subscribe(
+      _chatChannelName!,
+      (eventPayload) {
+        final eventName = eventPayload['eventName'];
+        final eventData = eventPayload['data'];
+
+        if (eventName == 'message.created') {
+          // Handle new message
+          try {
+            final message = Message.fromJson(eventData);
+            emit(SendMessageSuccess(message));
+            logger.i('New message received: $eventData');
+          } catch (e) {
+            logger.e('Error parsing new message: $e');
+          }
+        } else if (eventName == 'thread.closed') {
+          // Handle thread closed
+          logger.i('Chat thread closed: $eventData');
+          // Optionally emit a state for thread closed
+        }
+      },
+    );
+  }
+
+  void _unsubscribeFromChatChannel() {
+    if (_chatChannelName != null) {
+      WebSocketService.unsubscribe(_chatChannelName!); // Unsubscribe from the channel
+      _chatChannelName = null;
+    }
+  }
 
   Future<void> getStreamToken() async {
     if (await UserToken.getStreamToken() != null) {
@@ -65,6 +106,26 @@ class ChatCubit extends Cubit<ChatState> {
       );
 
       final chatId = response.data['data']['threadId'];
+
+      // Subscribe to the chat channel after getting the chatId
+      _subscribeToChatChannel(chatId);
+
+      emit(ChatLoaded(chatId));
+    } on DioException catch (e) {
+      logger.e(e.response?.data);
+      emit(ChatError(
+          e.response?.data['message'] ?? 'Failed to initialize chat'));
+    } catch (e) {
+      logger.e(e.toString());
+      emit(ChatError('An unexpected error occurred'));
+    }
+  }
+
+  Future<void> initializeChatWithChatId(int chatId) async {
+    emit(ChatLoading());
+
+    try {
+      _subscribeToChatChannel(chatId);
 
       emit(ChatLoaded(chatId));
     } on DioException catch (e) {

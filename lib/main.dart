@@ -257,6 +257,7 @@ class _MyAppState extends State<MyApp> {
               final args = ModalRoute.of(context)?.settings.arguments as Map?;
               return ChatPage(
                 requestId: args!['requestId'],
+                chatId: args['chatId'],
                 isAdmin: args['isAdmin'],
                 patientName: args['patientName'],
               );
