@@ -65,12 +65,12 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void initState() {
-    if (widget.requestId != null) {
-      _chatCubit.initializeChat(widget.requestId!);
-    } else if (widget.chatId != null) {
-      _chatCubit.initializeChatWithChatId(widget.chatId!);
-    } else {
-      throw Exception('Either requestId or chatId must be provided');
+    _chatCubit.initializeChat(
+      chatId: widget.chatId,
+      requestId: widget.requestId,
+    );
+    if (widget.chatId != null) {
+      _chatCubitMsg.getMessages(chatId: widget.chatId!);
     }
     _openAudio();
     super.initState();
@@ -144,7 +144,6 @@ class _ChatPageState extends State<ChatPage> {
           bloc: _chatCubit,
           listener: (context, state) {
             if (state is ChatLoaded) {
-              logger.i('Chat loaded with ID: ${state.chatId}');
               _chatCubitMsg.getMessages(chatId: state.chatId);
             }
           },

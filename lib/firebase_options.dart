@@ -63,7 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '180751287958',
     projectId: 'nurse-app-9b8bc',
     storageBucket: 'nurse-app-9b8bc.firebasestorage.app',
-    iosBundleId: 'com.devzur.nursecare.OneSignalNotificationServiceExtension',
+    iosBundleId: 'com.devzur.nursecare',
   );
 
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:http/http.dart' as http; // 👈 add this
 import 'package:nurse_app/consts.dart';
 import 'package:nurse_app/main.dart';
 import 'package:nurse_app/services/user_token.dart';
@@ -7,9 +8,13 @@ import 'package:nurse_app/services/user_token.dart';
 class WebSocketService {
   static WebSocketChannel? _channel;
   static bool _isConnected = false;
-  static String? _socketId;
+  static String? _socketId;                       // 👈 used for auth step
   static final Map<String, Function(dynamic)> _channelCallbacks = {};
   static final Map<String, List<String>> _channelEvents = {};
+
+  static const String _appKey = '343b7b28924b70e72293'; // 👈 your Pusher key
+  static const String _pusherWsUrl =
+      'wss://ws-eu.pusher.com/app/$_appKey?protocol=7&client=flutter&version=1.0';
 
   static Future<void> initialize() async {
     if (_channel != null && _isConnected) return;
@@ -21,28 +26,21 @@ class WebSocketService {
         return;
       }
 
-      const appKey = 'zrjhzajatsf5exsgvlgw'; // your Reverb app key from .env
+      logger.i('🔌 Connecting to Pusher…');
+      logger.i('🔗 URL: $_pusherWsUrl');
 
-      final wsUrl =
-          'wss://ws-eu.pusher.com/app/$appKey?protocol=7&client=flutter&version=1.0';
-
-      logger.i('🔌 Connecting to Reverb...');
-      logger.i('🔗 URL: $wsUrl');
-      logger.i('🔑 Token (truncated): ${token.substring(0, 25)}...');
-
-      _channel = WebSocketChannel.connect(Uri.parse(wsUrl));
+      _channel = WebSocketChannel.connect(Uri.parse(_pusherWsUrl));
 
       _channel!.stream.listen(
-        (message) {
-          _handleMessage(message);
-        },
+            (message) => _handleMessage(message),
         onError: (error) {
           logger.e('❌ WebSocket error: $error');
           _isConnected = false;
         },
         onDone: () {
-          logger.w('🔌 Disconnected from Reverb');
+          logger.w('🔌 Disconnected from Pusher');
           _isConnected = false;
+          _socketId = null;
         },
       );
     } catch (e) {
@@ -60,24 +58,22 @@ class WebSocketService {
 
       if (event == 'pusher:connection_established') {
         final payload = jsonDecode(data);
-        _socketId = payload['socket_id'];
+        _socketId = payload['socket_id'];   // 👈 capture socket_id
         _isConnected = true;
-        logger.i('✅ Connected to Reverb | Socket ID: $_socketId');
+        logger.i('✅ Connected | socket_id: $_socketId');
       } else if (event == 'pusher_internal:subscription_succeeded') {
-        logger.i('✅ Channel subscription succeeded');
+        logger.i('✅ Channel subscription succeeded: $data');
       } else if (event == 'pusher:error') {
-        logger.e('⚠️ Pusher error: $data');
+        logger.e('⚠ Pusher error: $data');
       } else {
-        // normal app-level events
         _dispatchEvent(event, data);
       }
     } catch (e) {
-      logger.w('⚠️ Non-JSON message: $message');
+      logger.w('⚠ Non-JSON message: $message');
     }
   }
 
   static void _dispatchEvent(String eventName, dynamic data) {
-    logger.d('🎯 Dispatching $eventName');
     for (final entry in _channelCallbacks.entries) {
       final channelName = entry.key;
       final callback = entry.value;
@@ -87,22 +83,61 @@ class WebSocketService {
     }
   }
 
-  static Future<void> subscribe(String channelName, Function(dynamic) callback) async {
-    logger.i('📡 Attempting to subscribe to: $channelName');
+  // 👇 NEW: ask Laravel for the 'key:signature' auth
+  static Future<String?> _fetchPusherAuth({
+    required String channelName,
+    required String socketId,
+  }) async {
+    try {
+      final token = await UserToken.getToken();
+      final uri = Uri.parse('$HOST/broadcasting/auth');
 
-    if (!_isConnected) {
-      logger.i('⏳ Not connected, initializing...');
+      // Laravel expects form or JSON. Either works; we'll send form-urlencoded:
+      final response = await http.post(
+        uri,
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: {
+          'channel_name': channelName,
+          'socket_id': socketId,
+        },
+      );
+
+      logger.d('🔐 Auth status: ${response.statusCode} body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        return json['auth'] as String?; // "key:signature"
+      } else if (response.statusCode == 401) {
+        logger.e('❌ Auth 401: invalid token/unauthenticated');
+      } else if (response.statusCode == 403) {
+        logger.e('❌ Auth 403: not authorized for $channelName');
+      } else {
+        logger.e('❌ Auth failed: HTTP ${response.statusCode}');
+      }
+    } catch (e) {
+      logger.e('❌ Auth request error: $e');
+    }
+    return null;
+  }
+
+  static Future<void> subscribe(String channelName, Function(dynamic) callback) async {
+    logger.i('📡 Subscribe → $channelName');
+
+    if (!_isConnected || _socketId == null) {
+      logger.i('⏳ Not connected yet, initializing…');
       await initialize();
 
-      int attempts = 0;
-      while (!_isConnected && attempts < 20) {
+      // Wait up to ~10s for connection/socket_id
+      for (var i = 0; i < 20 && (!_isConnected || _socketId == null); i++) {
         await Future.delayed(const Duration(milliseconds: 500));
-        attempts++;
-        logger.d('⏳ Waiting for connection... attempt $attempts');
+        logger.d('⏳ Waiting for connection/socket_id… attempt ${i + 1}');
       }
-
-      if (!_isConnected) {
-        logger.e('❌ Failed to connect after 10 seconds');
+      if (!_isConnected || _socketId == null) {
+        logger.e('❌ No connection/socket_id — cannot subscribe.');
         return;
       }
     }
@@ -110,43 +145,53 @@ class WebSocketService {
     _channelCallbacks[channelName] = callback;
     _channelEvents[channelName] = ['message.created', 'thread.closed'];
 
-    final token = await UserToken.getToken();
+    // 👇 get the 'key:signature' from Laravel
+    final auth = await _fetchPusherAuth(
+      channelName: channelName,
+      socketId: _socketId!,
+    );
+    if (auth == null) {
+      logger.e('❌ No auth signature returned — subscription aborted.');
+      return;
+    }
 
-    final subscribePayload = {
+    // 👇 now send the real subscribe payload
+    final payload = {
       "event": "pusher:subscribe",
       "data": {
-        "auth": "Bearer $token",
         "channel": channelName,
+        "auth": auth, // "key:signature"
+        // "channel_data": "{\"user_id\":123}" // only for presence channels
       }
     };
 
-    _channel!.sink.add(jsonEncode(subscribePayload));
-
-    logger.i('📡 Subscribed to channel: $channelName');
+    _channel!.sink.add(jsonEncode(payload));
+    logger.i('✅ Sent subscription for $channelName');
   }
 
   static void unsubscribe(String channelName) {
     if (!_isConnected || _channel == null) return;
 
-    final unsubscribePayload = {
+    final payload = {
       "event": "pusher:unsubscribe",
       "data": {"channel": channelName}
     };
+    _channel!.sink.add(jsonEncode(payload));
 
-    _channel!.sink.add(jsonEncode(unsubscribePayload));
     _channelCallbacks.remove(channelName);
     _channelEvents.remove(channelName);
 
-    logger.i('📴 Unsubscribed from channel: $channelName');
+    logger.i('📴 Unsubscribed: $channelName');
   }
 
   static void disconnect() {
     _channel?.sink.close();
     _channel = null;
     _isConnected = false;
+    _socketId = null;
     _channelCallbacks.clear();
     _channelEvents.clear();
-    logger.w('🔌 Reverb Socket disconnected.');
+    logger.w('🔌 WebSocket disconnected.');
   }
 
   static bool get isConnected => _isConnected;

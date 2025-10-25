@@ -52,7 +52,8 @@ class ChatCubit extends Cubit<ChatState> {
 
   void _unsubscribeFromChatChannel() {
     if (_chatChannelName != null) {
-      WebSocketService.unsubscribe(_chatChannelName!); // Unsubscribe from the channel
+      WebSocketService.unsubscribe(
+          _chatChannelName!); // Unsubscribe from the channel
       _chatChannelName = null;
     }
   }
@@ -89,45 +90,38 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
-  Future<void> initializeChat(int requestId) async {
+  Future<void> initializeChat({
+    int? requestId,
+    int? chatId,
+  }) async {
     emit(ChatLoading());
 
     try {
-      final token = await UserToken.getToken();
+      if (requestId != null) {
+        final token = await UserToken.getToken();
 
-      final response = await dio.post(
-        '$HOST/requests/$requestId/chat/open',
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-            'Accept': 'application/json',
-          },
-        ),
-      );
+        final response = await dio.post(
+          '$HOST/requests/$requestId/chat/open',
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Accept': 'application/json',
+            },
+          ),
+        );
 
-      final chatId = response.data['data']['threadId'];
+        final chatId = response.data['data']['threadId'];
 
-      // Subscribe to the chat channel after getting the chatId
-      _subscribeToChatChannel(chatId);
+        // Subscribe to the chat channel after getting the chatId
+        _subscribeToChatChannel(chatId);
 
-      emit(ChatLoaded(chatId));
-    } on DioException catch (e) {
-      logger.e(e.response?.data);
-      emit(ChatError(
-          e.response?.data['message'] ?? 'Failed to initialize chat'));
-    } catch (e) {
-      logger.e(e.toString());
-      emit(ChatError('An unexpected error occurred'));
-    }
-  }
-
-  Future<void> initializeChatWithChatId(int chatId) async {
-    emit(ChatLoading());
-
-    try {
-      _subscribeToChatChannel(chatId);
-
-      emit(ChatLoaded(chatId));
+        emit(ChatLoaded(chatId));
+      } else if (chatId != null) {
+        _subscribeToChatChannel(chatId);
+        emit(ChatLoaded(chatId));
+      } else {
+        emit(ChatError('Either requestId or chatId must be provided'));
+      }
     } on DioException catch (e) {
       logger.e(e.response?.data);
       emit(ChatError(
