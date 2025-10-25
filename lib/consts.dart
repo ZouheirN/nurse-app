@@ -1,16 +1,13 @@
-const String HOST = 'https://devzurapi.alahmadnursecare.com/api';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-const String IMGBB_API_KEY = '86cf97d76521b4372c8f13547d9d129c';
-
-const String ONE_SIGNAL_APP_ID = '26d738eb-ef7f-4560-b40a-8aa54455170f';
-
-const String ONE_SIGNAL_API_KEY = 'os_v2_app_e3ltr27pp5cwbnakrksuivixb763xuhedo3ee3m627rjrdr5gd5dityr7xkikzwuvrmbszczz66lejoovjni2rcasnqmnsa22ayr4jq';
-
-const String STREAM_API_KEY = '2suxv6nf5jg8';
-
-const String iosPushProviderName = 'apn-dev';
-
-const String androidPushProviderName = 'alahmad_firebase_provider';
-
-const String REVERB_HOST = 'devzurapi.alahmadnursecare.com';
-const int REVERB_PORT = 8080;
+class Consts {
+  static String get host => dotenv.env['HOST'] ?? '';
+  static String get imgbbApiKey => dotenv.env['IMGBB_API_KEY'] ?? '';
+  static String get oneSignalAppId => dotenv.env['ONE_SIGNAL_APP_ID'] ?? '';
+  static String get oneSignalApiKey => dotenv.env['ONE_SIGNAL_API_KEY'] ?? '';
+  static String get streamApiKey => dotenv.env['STREAM_API_KEY'] ?? '';
+  static String get iosPushProviderName => dotenv.env['IOS_PUSH_PROVIDER_NAME'] ?? '';
+  static String get androidPushProviderName => dotenv.env['ANDROID_PUSH_PROVIDER_NAME'] ?? '';
+  static String get reverbHost => dotenv.env['REVERB_HOST'] ?? '';
+  static int get reverbPort => int.tryParse(dotenv.env['REVERB_PORT'] ?? '') ?? 8080;
+}

@@ -26,7 +26,7 @@
 //       final token = await UserToken.getToken();
 //
 //       final response = await dio.get(
-//         '$HOST/stream/token',
+//         '${Consts.host}/stream/token',
 //         options: Options(
 //           headers: {
 //             'Authorization': 'Bearer $token',
@@ -55,7 +55,7 @@
 //       final token = await UserToken.getToken();
 //
 //       final response = await dio.post(
-//         '$HOST/requests/$requestId/chat/open',
+//         '${Consts.host}/requests/$requestId/chat/open',
 //         options: Options(
 //           headers: {
 //             'Authorization': 'Bearer $token',
@@ -95,7 +95,7 @@
 //       }
 //
 //       final response = await dio.get(
-//         '$HOST/chat/threads/$chatId/messages',
+//         '${Consts.host}/chat/threads/$chatId/messages',
 //         queryParameters: queryParams,
 //         options: Options(
 //           headers: {
@@ -128,7 +128,7 @@
 //       final token = await UserToken.getToken();
 //
 //       final response = await dio.post(
-//         '$HOST/chat/threads/$chatId/messages',
+//         '${Consts.host}/chat/threads/$chatId/messages',
 //         options: Options(
 //           headers: {
 //             'Authorization': 'Bearer $token',

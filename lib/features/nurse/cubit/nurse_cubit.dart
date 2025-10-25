@@ -23,7 +23,7 @@ class NurseCubit extends Cubit<NurseState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/nurses',
+        '${Consts.host}/nurses',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -58,7 +58,7 @@ class NurseCubit extends Cubit<NurseState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/nurses/$nurseId',
+        '${Consts.host}/nurses/$nurseId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -91,7 +91,7 @@ class NurseCubit extends Cubit<NurseState> {
       final token = await UserToken.getToken();
 
       await dio.put(
-        '$HOST/admin/nurses/$nurseId',
+        '${Consts.host}/admin/nurses/$nurseId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -125,7 +125,7 @@ class NurseCubit extends Cubit<NurseState> {
       final token = await UserToken.getToken();
 
       final response = await dio.post(
-        '$HOST/nurses/$nurseId/rate',
+        '${Consts.host}/nurses/$nurseId/rate',
         options: Options(headers: {
           'Authorization': 'Bearer $token',
         }),
@@ -161,7 +161,7 @@ class NurseCubit extends Cubit<NurseState> {
       final token = await UserToken.getToken();
 
       await dio.post(
-        '$HOST/admin/nurses',
+        '${Consts.host}/admin/nurses',
         options: Options(
             headers: {
               'Authorization': 'Bearer $token',

@@ -24,7 +24,7 @@ void loginUser(num userId, num roleId) async {
   if (streamToken != null) {
     initializeStreamVideo(streamToken);
   } else {
-    StreamVideo(STREAM_API_KEY, user: User.anonymous());
+    StreamVideo(Consts.streamApiKey, user: User.anonymous());
   }
 
   // PusherChannelsFlutter pusher = PusherChannelsFlutter.getInstance();
@@ -75,7 +75,7 @@ void initializeStreamVideo(String token) {
   final isAdmin = user?.roleId == 1;
 
   StreamVideo(
-    STREAM_API_KEY,
+    Consts.streamApiKey,
     user: User.regular(
       userId: user!.id.toString(),
       role: isAdmin ? 'admin' : 'user',
@@ -87,11 +87,11 @@ void initializeStreamVideo(String token) {
       autoConnect: false,
     ),
     pushNotificationManagerProvider: StreamVideoPushNotificationManager.create(
-      iosPushProvider: const StreamVideoPushProvider.apn(
-        name: iosPushProviderName,
+      iosPushProvider: StreamVideoPushProvider.apn(
+        name: Consts.iosPushProviderName,
       ),
-      androidPushProvider: const StreamVideoPushProvider.firebase(
-        name: androidPushProviderName,
+      androidPushProvider: StreamVideoPushProvider.firebase(
+        name: Consts.androidPushProviderName,
       ),
       pushParams: const StreamVideoPushParams(
         appName: 'Al Ahmad',

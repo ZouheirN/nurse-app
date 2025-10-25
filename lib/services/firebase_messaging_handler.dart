@@ -18,7 +18,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     if (user == null) return;
 
     final streamVideo = StreamVideo.create(
-      STREAM_API_KEY,
+      Consts.streamApiKey,
       user: User.regular(
         userId: user.id.toString(),
         // userId: user.id.toString(),
@@ -32,9 +32,9 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       pushNotificationManagerProvider:
           StreamVideoPushNotificationManager.create(
         iosPushProvider:
-            const StreamVideoPushProvider.apn(name: iosPushProviderName),
-        androidPushProvider: const StreamVideoPushProvider.firebase(
-            name: androidPushProviderName),
+            StreamVideoPushProvider.apn(name: Consts.iosPushProviderName),
+        androidPushProvider:  StreamVideoPushProvider.firebase(
+            name: Consts.androidPushProviderName),
         pushParams: const StreamVideoPushParams(
           appName: 'Al Ahmad',
           ios: IOSParams(iconName: 'IconMask'),

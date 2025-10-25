@@ -51,12 +51,15 @@ import 'package:stream_video/stream_video.dart';
 import 'features/request/models/request_details_model.dart';
 import 'firebase_options.dart';
 import 'pages/admin/send_notification_page.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 final logger = Logger();
 final dio = Dio();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await dotenv.load(fileName: ".env");
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -70,7 +73,7 @@ Future<void> main() async {
   await Hive.openBox('localizationBox');
 
   if (!kIsWeb) {
-    OneSignal.initialize(ONE_SIGNAL_APP_ID);
+    OneSignal.initialize(Consts.oneSignalAppId);
     OneSignal.Notifications.requestPermission(true);
   }
 

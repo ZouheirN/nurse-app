@@ -27,7 +27,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
     try {
       await dio.post(
-        '$HOST/register',
+        '${Consts.host}/register',
         data: {
           'name': name,
           'phone_number': phoneNumber,
@@ -67,7 +67,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
     try {
       final response = await Dio().post(
-        '$HOST/login',
+        '${Consts.host}/login',
         data: {
           'email': email,
           'password': password,
@@ -104,7 +104,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
     try {
       final response = await dio.post(
-        '$HOST/verify-sms',
+        '${Consts.host}/verify-sms',
         data: {
           'phone_number': phoneNumber,
           'verification_code': pin,
@@ -134,7 +134,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
     try {
       await dio.post(
-        '$HOST/send-password-reset-otp',
+        '${Consts.host}/send-password-reset-otp',
         data: {
           'phone_number': phoneNumber,
         },
@@ -167,7 +167,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
     try {
       await dio.post(
-        '$HOST/reset-password',
+        '${Consts.host}/reset-password',
         data: {
           'phone_number': phoneNumber,
           'token': pin,
@@ -190,7 +190,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   Future<bool> resendOtp(String phoneNumber) async {
     try {
       await dio.post(
-        '$HOST/resend-verification-code',
+        '${Consts.host}/resend-verification-code',
         data: {
           'phone_number': phoneNumber,
         },
@@ -211,7 +211,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
       final token = await UserToken.getToken();
 
       await dio.post(
-        '$HOST/logout',
+        '${Consts.host}/logout',
         options: Options(headers: {
           'Authorization': 'Bearer $token',
         }),

@@ -19,7 +19,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/me',
+        '${Consts.host}/me',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -66,7 +66,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       logger.i(data);
 
       final response = await dio.put(
-        '$HOST/users/$id',
+        '${Consts.host}/users/$id',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',

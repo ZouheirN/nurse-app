@@ -18,7 +18,7 @@ class AboutUsCubit extends Cubit<AboutUsState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/about',
+        '${Consts.host}/about',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -46,7 +46,7 @@ class AboutUsCubit extends Cubit<AboutUsState> {
       final token = await UserToken.getToken();
 
       final response = await dio.put(
-        '$HOST/admin/about',
+        '${Consts.host}/admin/about',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -84,7 +84,7 @@ class AboutUsCubit extends Cubit<AboutUsState> {
       final token = await UserToken.getToken();
 
       await dio.post(
-        '$HOST/contact',
+        '${Consts.host}/contact',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -118,7 +118,7 @@ class AboutUsCubit extends Cubit<AboutUsState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/admin/contacts',
+        '${Consts.host}/admin/contacts',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -145,7 +145,7 @@ class AboutUsCubit extends Cubit<AboutUsState> {
       final token = await UserToken.getToken();
 
       await dio.delete(
-        '$HOST/admin/contacts/$id',
+        '${Consts.host}/admin/contacts/$id',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',

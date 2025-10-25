@@ -90,7 +90,7 @@ class WebSocketService {
   }) async {
     try {
       final token = await UserToken.getToken();
-      final uri = Uri.parse('$HOST/broadcasting/auth');
+      final uri = Uri.parse('${Consts.host}/broadcasting/auth');
 
       // Laravel expects form or JSON. Either works; we'll send form-urlencoded:
       final response = await http.post(

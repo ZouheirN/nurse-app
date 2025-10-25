@@ -55,7 +55,7 @@ class _AddServicePageState extends State<AddServicePage> {
   //     }
   //
   //     final response = await http.post(
-  //       Uri.parse('$HOST/admin/services'),
+  //       Uri.parse('${Consts.host}/admin/services'),
   //       headers: {
   //         'Authorization': 'Bearer $token',
   //         'Content-Type': 'application/json',

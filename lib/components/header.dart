@@ -41,7 +41,7 @@ class _HeaderState extends State<Header> {
 
       if (token != null) {
         final response = await http.get(
-          Uri.parse('$HOST/me'),
+          Uri.parse('${Consts.host}/me'),
           headers: {
             'Authorization': 'Bearer $token',
           },

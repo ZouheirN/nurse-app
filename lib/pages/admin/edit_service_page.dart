@@ -60,7 +60,7 @@ class _EditServicePageState extends State<EditServicePage> {
   //   };
   //
   //   final response = await http.put(
-  //     Uri.parse('$HOST/admin/services/${widget.serviceId}'),
+  //     Uri.parse('${Consts.host}/admin/services/${widget.serviceId}'),
   //     headers: {
   //       'Authorization': 'Bearer $token',
   //       'Content-Type': 'application/json',

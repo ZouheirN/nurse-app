@@ -20,7 +20,7 @@ class ServicesCubit extends Cubit<ServicesState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/services',
+        '${Consts.host}/services',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -47,7 +47,7 @@ class ServicesCubit extends Cubit<ServicesState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/services/area/$areaId',
+        '${Consts.host}/services/area/$areaId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -75,7 +75,7 @@ class ServicesCubit extends Cubit<ServicesState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/services/quote',
+        '${Consts.host}/services/quote',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -110,7 +110,7 @@ class ServicesCubit extends Cubit<ServicesState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/services/$serviceId',
+        '${Consts.host}/services/$serviceId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -143,7 +143,7 @@ class ServicesCubit extends Cubit<ServicesState> {
       final token = await UserToken.getToken();
 
       await dio.put(
-        '$HOST/admin/services/$serviceId',
+        '${Consts.host}/admin/services/$serviceId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -179,7 +179,7 @@ class ServicesCubit extends Cubit<ServicesState> {
       final token = await UserToken.getToken();
 
       await dio.post(
-        '$HOST/admin/services',
+        '${Consts.host}/admin/services',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',

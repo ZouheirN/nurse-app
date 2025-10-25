@@ -23,7 +23,7 @@ class LocationCubit extends Cubit<LocationState> {
       final token = await UserToken.getToken();
 
       await dio.post(
-        '$HOST/submit-location',
+        '${Consts.host}/submit-location',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -60,7 +60,7 @@ class LocationCubit extends Cubit<LocationState> {
       final token = await UserToken.getToken();
 
       await dio.put(
-        '$HOST/users/$userId',
+        '${Consts.host}/users/$userId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',

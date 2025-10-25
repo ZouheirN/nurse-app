@@ -30,7 +30,7 @@ class HomeCubit extends Cubit<HomeState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/user/dashboard',
+        '${Consts.host}/user/dashboard',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -60,7 +60,7 @@ class HomeCubit extends Cubit<HomeState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/popups',
+        '${Consts.host}/popups',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -89,7 +89,7 @@ class HomeCubit extends Cubit<HomeState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/admin/popups',
+        '${Consts.host}/admin/popups',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -134,7 +134,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     try {
       await dio.post(
-        '$HOST/admin/popups',
+        '${Consts.host}/admin/popups',
         data: formData,
         options: Options(
           headers: {
@@ -170,7 +170,7 @@ class HomeCubit extends Cubit<HomeState> {
       final token = await UserToken.getToken();
 
       await dio.put(
-        '$HOST/admin/popups/$id',
+        '${Consts.host}/admin/popups/$id',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -208,7 +208,7 @@ class HomeCubit extends Cubit<HomeState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        isAdmin ? '$HOST/admin/sliders' : '$HOST/sliders',
+        isAdmin ? '${Consts.host}/admin/sliders' : '${Consts.host}/sliders',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -252,7 +252,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     try {
       await dio.post(
-        '$HOST/admin/sliders',
+        '${Consts.host}/admin/sliders',
         data: formData,
         options: Options(
           headers: {
@@ -281,7 +281,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     try {
       await dio.delete(
-        '$HOST/admin/sliders/$id',
+        '${Consts.host}/admin/sliders/$id',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -308,7 +308,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     try {
       await dio.post(
-        '$HOST/admin/sliders/reorder',
+        '${Consts.host}/admin/sliders/reorder',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -354,7 +354,7 @@ class HomeCubit extends Cubit<HomeState> {
       }
 
       final response = await dio.get(
-        isAdmin ? '$HOST/admin/faqs' : '$HOST/faqs',
+        isAdmin ? '${Consts.host}/admin/faqs' : '${Consts.host}/faqs',
         options: Options(
           headers: headers,
         ),
@@ -381,7 +381,7 @@ class HomeCubit extends Cubit<HomeState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/admin/faqs/$faqId/translations',
+        '${Consts.host}/admin/faqs/$faqId/translations',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -413,7 +413,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     try {
       await dio.post(
-        '$HOST/admin/faqs',
+        '${Consts.host}/admin/faqs',
         data: {
           'question': question,
           'answer': answer,
@@ -450,7 +450,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     try {
       await dio.post(
-        '$HOST/admin/faqs/$faqId/translations',
+        '${Consts.host}/admin/faqs/$faqId/translations',
         data: {
           'question': question,
           'answer': answer,
@@ -487,7 +487,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     try {
       await dio.put(
-        '$HOST/admin/faqs/$faqId/translations/ar',
+        '${Consts.host}/admin/faqs/$faqId/translations/ar',
         data: {
           'question': question,
           'answer': answer,
@@ -519,7 +519,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     try {
       await dio.post(
-        '$HOST/admin/faqs/reorder',
+        '${Consts.host}/admin/faqs/reorder',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -547,7 +547,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     try {
       await dio.delete(
-        '$HOST/admin/faqs/$id',
+        '${Consts.host}/admin/faqs/$id',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -580,7 +580,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     try {
       await dio.put(
-        '$HOST/admin/faqs/$id',
+        '${Consts.host}/admin/faqs/$id',
         data: {
           'question': question,
           'answer': answer,
@@ -613,7 +613,7 @@ class HomeCubit extends Cubit<HomeState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/categories',
+        '${Consts.host}/categories',
         options: Options(headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
@@ -651,7 +651,7 @@ class HomeCubit extends Cubit<HomeState> {
       });
 
       await dio.post(
-        '$HOST/admin/categories',
+        '${Consts.host}/admin/categories',
         data: formData,
         options: Options(
           headers: {

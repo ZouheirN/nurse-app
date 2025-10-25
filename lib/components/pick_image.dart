@@ -137,7 +137,7 @@ class _PickImageState extends State<PickImage> {
 
   Future<String?> _uploadImage(Uint8List image) async {
     final Uri uploadUrl =
-        Uri.parse('https://api.imgbb.com/1/upload?key=$IMGBB_API_KEY');
+        Uri.parse('https://api.imgbb.com/1/upload?key=${Consts.imgbbApiKey}');
 
     try {
       final request = http.MultipartRequest('POST', uploadUrl)

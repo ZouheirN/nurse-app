@@ -20,7 +20,7 @@ class AreasCubit extends Cubit<AreasState> {
 
     try {
       final response = await dio.get(
-        '$HOST/areas',
+        '${Consts.host}/areas',
       );
 
       final areas = GetAreasModel.fromJson(response.data);
@@ -42,7 +42,7 @@ class AreasCubit extends Cubit<AreasState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/admin/service-area-prices',
+        '${Consts.host}/admin/service-area-prices',
         options: Options(headers: {
           'Authorization': 'Bearer $token',
         }),
@@ -69,7 +69,7 @@ class AreasCubit extends Cubit<AreasState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/admin/service-area-prices/service/$serviceId',
+        '${Consts.host}/admin/service-area-prices/service/$serviceId',
         options: Options(headers: {
           'Authorization': 'Bearer $token',
         }),
@@ -100,7 +100,7 @@ class AreasCubit extends Cubit<AreasState> {
       final token = await UserToken.getToken();
 
        await dio.post(
-        '$HOST/admin/service-area-prices',
+        '${Consts.host}/admin/service-area-prices',
         data: {
           'service_id': serviceId,
           'area_id': areaId,
@@ -132,7 +132,7 @@ class AreasCubit extends Cubit<AreasState> {
       final token = await UserToken.getToken();
 
       await dio.put(
-        '$HOST/admin/service-area-prices/$servicePriceId',
+        '${Consts.host}/admin/service-area-prices/$servicePriceId',
         data: {
           'price': price,
         },
@@ -157,7 +157,7 @@ class AreasCubit extends Cubit<AreasState> {
 
     try {
       final response = await dio.get(
-        '$HOST/admin/areas',
+        '${Consts.host}/admin/areas',
         options: Options(headers: {
           'Authorization': 'Bearer ${await UserToken.getToken()}',
         }),
@@ -181,7 +181,7 @@ class AreasCubit extends Cubit<AreasState> {
 
     try {
       await dio.post(
-        '$HOST/admin/areas',
+        '${Consts.host}/admin/areas',
         options: Options(headers: {
           'Authorization': 'Bearer ${await UserToken.getToken()}',
         }),
@@ -203,7 +203,7 @@ class AreasCubit extends Cubit<AreasState> {
 
     try {
       await dio.put(
-        '$HOST/admin/areas/$areaId',
+        '${Consts.host}/admin/areas/$areaId',
         options: Options(headers: {
           'Authorization': 'Bearer ${await UserToken.getToken()}',
         }),
@@ -226,7 +226,7 @@ class AreasCubit extends Cubit<AreasState> {
 
     try {
       await dio.delete(
-        '$HOST/admin/areas/$areaId',
+        '${Consts.host}/admin/areas/$areaId',
         options: Options(headers: {
           'Authorization': 'Bearer ${await UserToken.getToken()}',
         }),

@@ -62,7 +62,7 @@ class RequestCubit extends Cubit<RequestState> {
       logger.i(data);
 
       await dio.post(
-        '$HOST/requests',
+        '${Consts.host}/requests',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -89,8 +89,8 @@ class RequestCubit extends Cubit<RequestState> {
     try {
       final token = await UserToken.getToken();
 
-      // final url = isAdmin ? '$HOST/admin/requests' : '$HOST/requests';
-      final url = isAdmin ? '$HOST/requests' : '$HOST/requests';
+      // final url = isAdmin ? '${Consts.host}/admin/requests' : '${Consts.host}/requests';
+      final url = isAdmin ? '${Consts.host}/requests' : '${Consts.host}/requests';
 
       final response = await dio.get(
         url,
@@ -127,7 +127,7 @@ class RequestCubit extends Cubit<RequestState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/requests/$orderId',
+        '${Consts.host}/requests/$orderId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -194,7 +194,7 @@ class RequestCubit extends Cubit<RequestState> {
       }
 
       await dio.put(
-        '$HOST/admin/requests/$id',
+        '${Consts.host}/admin/requests/$id',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -226,7 +226,7 @@ class RequestCubit extends Cubit<RequestState> {
       final token = await UserToken.getToken();
 
       final response = await dio.put(
-        '$HOST/admin/requests/${order.id}',
+        '${Consts.host}/admin/requests/${order.id}',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -269,7 +269,7 @@ class RequestCubit extends Cubit<RequestState> {
       final token = await UserToken.getToken();
 
       await dio.delete(
-        '$HOST/admin/requests/${order.id}',
+        '${Consts.host}/admin/requests/${order.id}',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',

@@ -22,7 +22,7 @@ class NotificationCubit extends Cubit<NotificationState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/notifications',
+        '${Consts.host}/notifications',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -50,7 +50,7 @@ class NotificationCubit extends Cubit<NotificationState> {
       final token = await UserToken.getToken();
 
       final response = await dio.post(
-        '$HOST/notifications/$notificationId/read',
+        '${Consts.host}/notifications/$notificationId/read',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -75,7 +75,7 @@ class NotificationCubit extends Cubit<NotificationState> {
       final token = await UserToken.getToken();
 
       final response = await dio.delete(
-        '$HOST/notifications/$notificationId',
+        '${Consts.host}/notifications/$notificationId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -140,7 +140,7 @@ class NotificationCubit extends Cubit<NotificationState> {
       // );
 
       final response = await dio.post(
-        '$HOST/admin/notifications/custom',
+        '${Consts.host}/admin/notifications/custom',
         options: Options(
           headers: {
             'Authorization': 'Bearer ${await UserToken.getToken()}',
@@ -171,7 +171,7 @@ class NotificationCubit extends Cubit<NotificationState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/admin/notifications/users',
+        '${Consts.host}/admin/notifications/users',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -199,7 +199,7 @@ class NotificationCubit extends Cubit<NotificationState> {
       final token = await UserToken.getToken();
 
       final response = await dio.get(
-        '$HOST/admin/notifications/custom',
+        '${Consts.host}/admin/notifications/custom',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
